@@ -1,0 +1,9 @@
+version: "3.7"
+services:
+  app:
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    build:
+      context: ../../..
+      shm_size: "2gb"
+      dockerfile: .devops/docker/codespaces/Dockerfile
+    shm_size: "2gb"
