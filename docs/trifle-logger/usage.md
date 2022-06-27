@@ -5,9 +5,9 @@ nav_order: 3
 
 # Usage
 
-`Trifle::Logger` comes with `tracer` and `trace` module methods.
+`Trifle::Logger` comes with a couple module level methods that are shorthands for operations.
 
-## Tracer
+## `.tracer`
 
 To start tracking you must initialize Tracer first. There are two tracers included, Hash and Null. They store data in structure as their name says so. Duh.
 
@@ -17,7 +17,7 @@ Trifle::Logger.tracer = Trifle::Logger::Tracer::Hash.new(key: 'my_trace', meta: 
 
 Tracer is stored on `Thread.current`. Be aware when multithreading.
 
-## Trace
+## `.trace`
 
 Once you initialize Tracer, manually or through middleware, you can start tracing your code.
 

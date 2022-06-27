@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "bundler/setup"
-require "trifle/docs"
+require 'bundler/setup'
+require 'trifle/docs'
 require 'puma'
 
 Trifle::Docs.configure do |config|

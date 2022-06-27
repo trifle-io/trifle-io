@@ -5,7 +5,7 @@ nav_order: 3
 
 # Usage
 
-`Trifle::Stats` comes with couple class level methods that are shorthands for operations. They do it's thing to understand what type of operation are you trying to perform. If you pass in `at` parameter, it will know you need timeline operations, etc. There are two main methods `track` and `values`. As you guessed, `track` tracks and `values` values. Duh.
+`Trifle::Stats` comes with a couple module level methods that are shorthands for operations. They do it's thing to understand what type of operation are you trying to perform. If you pass in `at` parameter, it will know you need timeline operations, etc. There are two main methods `track` and `values`. As you guessed, `track` tracks and `values` values. Duh.
 
 Available ranges are `:minute`, `:hour`, `:day`, `:week`, `:month`, `:quarter`, `:year`.
 

@@ -9,6 +9,10 @@ Using `Trifle::Logger.trace('Test', state: :error)` is great way to indicate sta
 
 Use of states is completely optional.
 
+## Lifecycle
+
+Below is a lifecycle of a trace.
+
 ### Running
 
 When `tracer` has been initialized, the default state is `:running`. This way you can indicate that current execution is still being processed.
