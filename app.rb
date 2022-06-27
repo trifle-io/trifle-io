@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 require 'bundler/setup'
@@ -11,5 +10,3 @@ Trifle::Docs.configure do |config|
   config.register_harvester(Trifle::Docs::Harvester::Markdown)
   config.register_harvester(Trifle::Docs::Harvester::File)
 end
-
-Trifle::Docs::App.run!
