@@ -14,7 +14,7 @@ You're gonna have to write an initializer in `config/initializers/trifle.rb` tha
 ```ruby
 Trifle::Docs.configure do |config|
   config.path = File.join(Rails.root, 'docs')
-  config.templates = File.join(Rails.root, 'app', 'views', 'trifle', 'docs')
+  config.views = File.join(Rails.root, 'app', 'views', 'trifle', 'docs')
   config.register_harvester(Trifle::Docs::Harvester::Markdown)
   config.register_harvester(Trifle::Docs::Harvester::File)
 end

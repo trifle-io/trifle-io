@@ -18,7 +18,7 @@ GEM
       rack-protection (= 2.2.0)
       tilt (~> 2.0)
     tilt (2.0.10)
-    trifle-docs (0.1.0)
+    trifle-docs (0.2.0)
       redcarpet
       rouge
       sinatra
