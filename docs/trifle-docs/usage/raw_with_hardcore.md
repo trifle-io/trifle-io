@@ -3,9 +3,13 @@ title: Raw Hardcode Mode
 nav_order: 4
 ---
 
-## Raw configuration
+# Raw Hardcore Mode
 
-Maybe you need to serve files from different locations rendered with different templates (documentation, blog, etc). In this case you want to go hardcore and use `Trifle::Docs` directky, you can create multiple custom configurations. Use this configuration in the module methos (`content`, `meta`, etc).
+At the end of the day, you don't need to use `Trifle::Docs::App` Sinatra App or `Trifle::Docs::Engine` Rails Engine to integrate with `Trifle::Docs`. You can take it one step further and do it all by yourself. After all, `app` and `engine` are really simple and all they do is parse `url` to use `Trifle::Docs` methods.
+
+## Configuration
+
+TODO
 
 ```ruby
 configuration = Trifle::Docs::Configuration.new
