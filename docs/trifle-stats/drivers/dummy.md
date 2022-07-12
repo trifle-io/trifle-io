@@ -9,11 +9,11 @@ Not a real driver, just an example how you could write your own driver in 12 lin
 
 ```ruby
 irb(main):001:1* class Dummy
-irb(main):002:2*   def inc(key:, **values)
-irb(main):003:2*     puts "Incrementing #{key} => #{values}"
+irb(main):002:2*   def inc(keys:, **values)
+irb(main):003:2*     keys.map { |key| puts "Incrementing #{key} => #{values}" }
 irb(main):004:1*   end
-irb(main):005:2*   def set(key:, **values)
-irb(main):006:2*     puts "Setting #{key} => #{values}"
+irb(main):005:2*   def set(keys:, **values)
+irb(main):006:2*     keys.map { |key| puts "Setting #{key} => #{values}" }
 irb(main):007:1*   end
 irb(main):008:2*   def get(keys:)
 irb(main):009:3*     keys.map do |key|
@@ -39,12 +39,12 @@ irb(main):014:0> c.driver = Dummy.new
 irb(main):015:0> c.track_ranges = [:minute, :hour]
 => [:minute, :hour]
 
-irb(main):016:0> Trifle::Stats.track(key: 'sample', at: Time.now, values: {count: 1}, config: c)
+irb(main):016:0> Trifle::Stats.track(keys: ['sample'], at: Time.now, values: {count: 1}, config: c)
 Incrementing ["sample", :minute, 1655361000] => {:count=>1}
 Incrementing ["sample", :hour, 1655359200] => {:count=>1}
 => [nil, nil]
 
-irb(main):017:0> Trifle::Stats.values(key: 'sample', from: Time.now, to: Time.now, range: :hour, config: c)
+irb(main):017:0> Trifle::Stats.values(keys: ['sample'], from: Time.now, to: Time.now, range: :hour, config: c)
 Random for ["sample", :hour, 1655359200]
 => {:at=>[2022-06-16 06:00:00 +0000], :values=>[{:count=>852}]}
 ```
@@ -59,14 +59,14 @@ irb(main):014:0> driver.get(keys: [['test', 'now']])
 Random for ["test", "now"]
 => [{:count=>526}]
 
-irb(main):015:0> driver.inc(key: ['test', 'now'], count: 1, success: 1, error: 0)
+irb(main):015:0> driver.inc(keys: [['test', 'now']], count: 1, success: 1, error: 0)
 Incrementing ["test", "now"] => {:count=>1, :success=>1, :error=>0}
 => nil
 irb(main):016:0> driver.get(keys: [['test', 'now']])
 Random for ["test", "now"]
 => [{:count=>705}]
 
-irb(main):017:0> driver.inc(key: ['test', 'now'], count: 1, success: 0, error: 1, account: { count: 1 })
+irb(main):017:0> driver.inc(keys: [['test', 'now']], count: 1, success: 0, error: 1, account: { count: 1 })
 Incrementing ["test", "now"] => {:count=>1, :success=>0, :error=>1, :account=>{:count=>1}}
 => nil
 irb(main):018:0> driver.get(keys: [['test', 'now']])

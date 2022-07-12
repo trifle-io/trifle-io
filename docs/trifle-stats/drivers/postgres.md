@@ -50,12 +50,12 @@ Once you create instance of a driver, you can use it to `set`, `inc` or `get` yo
 irb(main):003:0> driver.get(keys: [['test', 'now']])
 => [{}]
 
-irb(main):004:0> driver.inc(key: ['test', 'now'], count: 1, success: 1, error: 0)
+irb(main):004:0> driver.inc(keys: [['test', 'now']], count: 1, success: 1, error: 0)
 => {"count"=>1, "success"=>1, "error"=>0}
 irb(main):005:0> driver.get(keys: [['test', 'now']])
 => [{"count"=>1, "error"=>0, "success"=>1}]
 
-irb(main):006:0> driver.inc(key: ['test', 'now'], count: 1, success: 0, error: 1, account: { count: 1 })
+irb(main):006:0> driver.inc(keys: [['test', 'now']], count: 1, success: 0, error: 1, account: { count: 1 })
 => {"count"=>1, "success"=>0, "error"=>1, "account.count"=>1}
 irb(main):007:0> driver.get(keys: [['test', 'now']])
 => [{"count"=>2, "error"=>1, "success"=>1, "account"=>{"count"=>1}}]

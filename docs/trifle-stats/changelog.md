@@ -5,6 +5,9 @@ nav_order: 100
 
 # Changelog
 
+### **1.1.0** - *July 12, 2022*
+  - Feature: MongoDB driver sets and increments all periods at once (single query per operation)
+
 ### **1.0.0** - *June 18, 2022*
   - Final stable release.
   - Feature: Change structure of `.values` return hash.
