@@ -16,7 +16,7 @@ require 'pg'
 
 Trifle::Stats.configure do |config|
   config.driver = Trifle::Stats::Driver::Postgres.new(
-    PG.connect('postgresql://user:pass@postgres:5432/stats?sslmode=require)
+    PG.connect('postgresql://postgres:password@postgres:5432/stats?sslmode=require')
   )
 end
 ```

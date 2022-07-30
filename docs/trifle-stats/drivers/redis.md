@@ -9,14 +9,14 @@ Redis driver uses `redis` client gem to talk to database. It uses `hincrby`, `hm
 
 ## Configuration
 
-Easiest way is to reuse `Redis.current` connection.
+Simply pass in new instance of `Redis` client.
 
 ```ruby
 require 'redis'
 
 Trifle::Stats.configure do |config|
   config.driver = Trifle::Stats::Driver::Redis.new(
-    Redis.current
+    Redis.new(url: 'redis://redis:6379/0')
   )
 end
 ```
@@ -26,7 +26,7 @@ end
 You can either use your current redis client, or pass in instance of custom redis client
 
 ```ruby
-irb(main):001:0> client = Redis.current
+irb(main):001:0> client = Redis.new(url: 'redis://redis:6379/0')
 => #<Redis client v4.3.1 for redis://redis:6379/0>
 irb(main):002:0> driver = Trifle::Stats::Driver::Redis.new(client)
 => #<Trifle::Stats::Driver::Redis:0x0000555f91cf6a98 @client=#<Redis client v4.3.1 for redis://redis:6379/0>, @prefix="trfl", @separator="::">
