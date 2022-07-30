@@ -3,8 +3,8 @@
   <head>
     <meta name="viewport" content="width=device-width"/>
     <meta charSet="utf-8"/>
-    <title>Trifle</title>
-    <meta name="description" content="Cache every single thing your app could ever do ahead of time, so your code never even has to run at all."/>
+    <title><%= meta['breadcrumbs'].count.times.map {|i| sitemap.dig(*meta['breadcrumbs'].take(i+1)).dig('_meta', 'title') }.join('/') || 'Trifle' rescue 'Trifle'%></title>
+    <meta name="description" content="<%= meta['breadcrumbs'].count.times.map {|i| sitemap.dig(*meta['breadcrumbs'].take(i+1)).dig('_meta', 'title') }.join('/') || Trifle rescue 'Trifle: Suite of little big tools.' %>"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
 
