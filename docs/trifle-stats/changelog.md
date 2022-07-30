@@ -5,8 +5,15 @@ nav_order: 100
 
 # Changelog
 
+### **1.1.2** - *July 30, 2022*
+  - Fix: Postgres driver does not use `.try` to stay _pure ruby_.
+
+### **1.1.1** - *July 12, 2022*
+  - Fix: Obviously wrong order of mongo operations.
+  - Chore: Prune 1.1.0 version. Sorry about that.
+
 ### **1.1.0** - *July 12, 2022*
-  - Feature: MongoDB driver sets and increments all periods at once (single query per operation)
+  - Feature: MongoDB driver sets and increments all periods at once (single query per operation).
 
 ### **1.0.0** - *June 18, 2022*
   - Final stable release.

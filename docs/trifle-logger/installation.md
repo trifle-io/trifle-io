@@ -13,12 +13,15 @@ gem 'trifle-logger'
 
 And then execute:
 
-    $ bundle install
+```sh
+$ bundle install
+```
 
 Or install it yourself as:
 
-    $ gem install trifle-logger
-
+```sh
+$ gem install trifle-logger
+```
 
 ## Dependencies
 
