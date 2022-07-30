@@ -11,7 +11,7 @@ There are two ways to integrate `Trifle::Docs` and therefore there are two ways 
 
 ## Sinatra
 
-If you're writing a sinatra app, you will have to point configuration to your template folder. This folder will expect `layout.html.erb` and `page.html.erb`. For example if you specify `config.views = File.join(__dir__, 'templates')`, it will expect `./templates/layout.html.erb` layout file as well as `./templates/page.html.erb` template file. If you change template in metadata, you will need to create page-like file for it. For example if you specify in pages metadata `template: blog`, it will expect `./templates/blog.html.erb` template file.
+If you're writing a sinatra app, you will have to point configuration to your template folder. This folder will expect `layout.erb` and `page.erb`. For example if you specify `config.views = File.join(__dir__, 'templates')`, it will expect `./templates/layout.erb` layout file as well as `./templates/page.erb` template file. If you change template in metadata, you will need to create page-like file for it. For example if you specify in pages metadata `template: blog`, it will expect `./templates/blog.erb` template file.
 
 ## Rails
 

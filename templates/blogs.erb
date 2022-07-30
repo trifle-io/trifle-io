@@ -1,0 +1,11 @@
+<%= content %>
+<br/>
+<ul>
+  <% collection.each do |(key, post)| %>
+    <% next if key == '_meta' %>
+    <li>
+      <a href="<%= post.dig('_meta', 'url') %>"><%= post.dig('_meta', 'title') %></a>
+      <span class="float-right text-gray-500">by <%= post.dig('_meta', 'author') %> on <%= post.dig('_meta', 'date') %></span>
+    </li>
+  <% end %>
+</ul>
