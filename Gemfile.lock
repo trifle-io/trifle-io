@@ -1,28 +1,34 @@
-GEM
-  remote: https://rubygems.org/
+GIT
+  remote: https://github.com/trifle-io/trifle-docs.git
+  revision: 80eff635a1eea00fbf8ad102735282ed002cc655
+  ref: 80eff635a1eea00fbf8ad102735282ed002cc655
   specs:
-    mustermann (1.1.1)
-      ruby2_keywords (~> 0.0.1)
-    nio4r (2.5.8)
-    puma (5.6.4)
-      nio4r (~> 2.0)
-    rack (2.2.3.1)
-    rack-protection (2.2.0)
-      rack
-    redcarpet (3.5.1)
-    rouge (3.29.0)
-    ruby2_keywords (0.0.5)
-    sinatra (2.2.0)
-      mustermann (~> 1.0)
-      rack (~> 2.2)
-      rack-protection (= 2.2.0)
-      tilt (~> 2.0)
-    tilt (2.0.10)
     trifle-docs (0.2.0)
       redcarpet
       rouge
       sinatra
       yaml
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    mustermann (2.0.2)
+      ruby2_keywords (~> 0.0.1)
+    nio4r (2.5.8)
+    puma (5.6.4)
+      nio4r (~> 2.0)
+    rack (2.2.4)
+    rack-protection (2.2.2)
+      rack
+    redcarpet (3.5.1)
+    rouge (3.30.0)
+    ruby2_keywords (0.0.5)
+    sinatra (2.2.2)
+      mustermann (~> 2.0)
+      rack (~> 2.2)
+      rack-protection (= 2.2.2)
+      tilt (~> 2.0)
+    tilt (2.0.11)
     yaml (0.2.0)
 
 PLATFORMS
@@ -30,7 +36,7 @@ PLATFORMS
 
 DEPENDENCIES
   puma
-  trifle-docs
+  trifle-docs!
 
 RUBY VERSION
    ruby 3.0.0p0
