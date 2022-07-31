@@ -145,7 +145,7 @@
                 <% if meta.dig('url') == "/" %>
                   <a href="/" class="font-display font-medium text-slate-900 dark:text-white">Home</a>
                 <% else %>
-                  <a href="/" class="font-display font-medium text-slate-900 dark:text-white">Home</a>
+                  <a href="/" class="font-display font-medium text-slate-600 dark:text-white">Home</a>
                 <% end %>
               </li>
               <% sitemap.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |(key, option)| %>
@@ -154,7 +154,7 @@
                   <% if option.dig('_meta', 'url') == "/#{url}" %>
                     <a href="<%= option.dig('_meta', 'url') %>" class="font-display font-medium text-slate-900 dark:text-white"><%= option.dig('_meta', 'title') %></a>
                   <% else %>
-                    <a href="<%= option.dig('_meta', 'url') %>" class="font-display font-medium text-slate-900 dark:text-white"><%= option.dig('_meta', 'title') %></a>
+                    <a href="<%= option.dig('_meta', 'url') %>" class="font-display font-medium text-slate-600 dark:text-white"><%= option.dig('_meta', 'title') %></a>
                   <% end %>
                   <% next if option.dig('_meta', 'url') == '/blog' %>
 

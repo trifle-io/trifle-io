@@ -12,6 +12,8 @@ All gems from this collection are released under MIT license. You can find detai
 
 Made by galons of ☕️ and 🍺 by [JozefVaclavik](https://twitter.com/JozefVaclavik).
 
+---
+
 # `Trifle::Docs`
 
 [![Gem Version](https://badge.fury.io/rb/trifle-docs.svg)](https://rubygems.org/gems/trifle-docs)
@@ -54,6 +56,7 @@ Templates are completely in your control, you just use few provided variables.
 
 More [here](/trifle-docs/).
 
+---
 
 # `Trifle::Logger`
 
@@ -83,6 +86,8 @@ To being able to say what happened on 25th January 2021.
 ```
 
 More [here](/trifle-logger/).
+
+---
 
 # `Trifle::Stats`
 
