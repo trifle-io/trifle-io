@@ -7,11 +7,15 @@ nav_order: 1
 
 One note about performance of the drivers. While these are small operations against any database, these drivers differ in approach they take.
 
-`Redis` and `Postgres` drivers are performing single inc/set operation for each key/value pair for every specified period. That means to store hash with 10 key/value pairs, it will make 10 calls to database multiplied by tracked periods. It adds up quickly.
+`Redis` driver is performing single `inc`/`set` operation for each key/value pair for every specified period. That means to store hash with 10 key/value pairs, it will make 10 calls to database multiplied by tracked periods. It adds up quickly.
 
-`Mongo` on the other side supports single inc/set operation on multiple key/value pairs at a time. This allows it to make single call to database even if you are tracking 50 values for multiple periods.
+`Mongo` and `Postgres` on the other side supports single `inc`/`set` operation on multiple key/value pairs at a time. This allows it to make single call to database even if you are tracking 50 values for multiple periods. `Mongo` pushes it even further and executes all periods in a single query, while `Postgres` executes separate query for each period.
 
-Keep that in mind when working with data. If content you are tracking has simple structure, it will be just fine with `Redis` or `Postgres` driver. `Redis` is better at writing, but not as persistent as `Postgres`. `Postgres` is terrible at writing stats, but really great at reading them. If your content is structured and tracks lots of values, you will do better using `Mongo` driver.
+Keep that in mind when working with data. Each driver fits better for different usecase.
+
+- `Redis` is best if the content you are tracking has simple structure and persistence is not an issue. Use it for simple stats you _could_ loose.
+- `Postgres` is _pretty slow_ at writing stats, but really great at reading them. Use it for structured stats that you access often, but don't write too often.
+- `Mongo` is kinda best of both worlds. Super fast for writing, but bit slower for reading.
 
 ## (Not so) Sicentific evaluation
 
@@ -32,21 +36,20 @@ And so on. Below is a comparison of tests running on Github Codespaces on 2CPU/4
 The simplest tracking you can do is to track 1 value. Lets see how drivers perform writing/reading these 100 and 1000 times.
 
 ```sh
-Trifle Stats
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 100 '{"a":1}'
 Testing 100x {"a"=>1} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Redis            0.103s          0.0236s
-Trifle::Stats::Driver::Postgres         4.7279s         0.0319s
-Trifle::Stats::Driver::Mongo            0.1498s         0.0897s
-Trifle::Stats::Driver::Process          0.0086s         0.0062s
+Trifle::Stats::Driver::Redis            0.1054s         0.0243s
+Trifle::Stats::Driver::Postgres         6.1116s         0.0291s
+Trifle::Stats::Driver::Mongo            0.1443s         0.0894s
+Trifle::Stats::Driver::Process          0.0085s         0.0063s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 1000 '{"a":1}'
 Testing 1000x {"a"=>1} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Redis            0.81s           0.2441s
-Trifle::Stats::Driver::Postgres         43.4355s        0.328s
-Trifle::Stats::Driver::Mongo            1.4794s         0.9187s
-Trifle::Stats::Driver::Process          0.1263s         0.0605s
+Trifle::Stats::Driver::Redis            0.7743s         0.207s
+Trifle::Stats::Driver::Postgres         60.0427s        0.2758s
+Trifle::Stats::Driver::Mongo            1.5056s         0.9033s
+Trifle::Stats::Driver::Process          0.0884s         0.06s
 ```
 
 It's easy to see that this is where Redis shines. You simply can't beat it.
@@ -61,17 +64,17 @@ First lets start with top level values.
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 100 '{"a":1,"b":2,"c":3,"d":4,"e":5}'
 Testing 100x {"a"=>1, "b"=>2, "c"=>3, "d"=>4, "e"=>5} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Redis            0.3569s         0.0291s
-Trifle::Stats::Driver::Postgres         22.3555s        0.0408s
-Trifle::Stats::Driver::Mongo            0.1516s         0.1041s
-Trifle::Stats::Driver::Process          0.0194s         0.0066s
+Trifle::Stats::Driver::Redis            0.3914s         0.0278s
+Trifle::Stats::Driver::Postgres         5.9491s         0.0319s
+Trifle::Stats::Driver::Mongo            0.152s          0.0909s
+Trifle::Stats::Driver::Process          0.021s          0.007s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 1000 '{"a":1,"b":2,"c":3,"d":4,"e":5}'
 Testing 1000x {"a"=>1, "b"=>2, "c"=>3, "d"=>4, "e"=>5} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Redis            3.1916s         0.2554s
-Trifle::Stats::Driver::Postgres         223.627s        0.3125s
-Trifle::Stats::Driver::Mongo            1.7419s         0.9251s
-Trifle::Stats::Driver::Process          0.2524s         0.0774s
+Trifle::Stats::Driver::Redis            3.209s          0.3205s
+Trifle::Stats::Driver::Postgres         61.6816s        0.309s
+Trifle::Stats::Driver::Mongo            1.7052s         0.9341s
+Trifle::Stats::Driver::Process          0.1981s         0.09s
 ```
 
 And next with nested values.
@@ -80,50 +83,48 @@ And next with nested values.
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 100 '{"a":1,"b":2,"c":{"d":3,"e":{"f":4,"g":5}}}'
 Testing 100x {"a"=>1, "b"=>2, "c"=>{"d"=>3, "e"=>{"f"=>4, "g"=>5}}} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Redis            0.3816s         0.0428s
-Trifle::Stats::Driver::Postgres         22.6353s        0.0355s
-Trifle::Stats::Driver::Mongo            0.1541s         0.0886s
-Trifle::Stats::Driver::Process          0.0206s         0.0071s
+Trifle::Stats::Driver::Redis            0.3611s         0.0281s
+Trifle::Stats::Driver::Postgres         6.0464s         0.0322s
+Trifle::Stats::Driver::Mongo            0.1637s         0.0917s
+Trifle::Stats::Driver::Process          0.0216s         0.0071s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 1000 '{"a":1,"b":2,"c":{"d":3,"e":{"f":4,"g":5}}}'
 Testing 1000x {"a"=>1, "b"=>2, "c"=>{"d"=>3, "e"=>{"f"=>4, "g"=>5}}} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Redis            3.0322s         0.2633s
-Trifle::Stats::Driver::Postgres         228.4836s       0.316s
-Trifle::Stats::Driver::Mongo            1.5254s         0.8802s
-Trifle::Stats::Driver::Process          0.2112s         0.0713s
+Trifle::Stats::Driver::Redis            3.1609s         0.2669s
+Trifle::Stats::Driver::Postgres         60.0148s        0.3058s
+Trifle::Stats::Driver::Mongo            1.7122s         1.0425s
+Trifle::Stats::Driver::Process          0.2121s         0.0727s
 ```
 
 `Trifle::Stats` normalizes nested values to top level before storing them, so overall there is not much performance difference between these. Even then, you can see that `Postgres` driver is performing the worst when it comes to writing. Like hidiously worse. On the other side it keeps up with `Redis` when reading values.
 
 Complex tracking is also where `Mongo` shines. It doesn't matter if you track 1, 5, or 100 values, mongo will perform (almost) lineary.
 
-### Mongo on large(r) set
+### Mongo and Postgres on large(r) set
 
-Now lets compare `Mongo` only. Just to get some sense of it's performance over increasing number of keys that are tracked.
-
-The first run is on a cold database.
+Now lets compare `Mongo` and `Postgres` only. Just to get some sense of it's performance over increasing number of keys that are tracked.
 
 ```sh
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 100 '{"a":1}'
 Testing 100x {"a"=>1} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            0.3255s         0.1319s
+Trifle::Stats::Driver::Postgres         6.1127s         0.0419s
+Trifle::Stats::Driver::Mongo            0.1472s         0.096s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 100 '{"a":1}'
 Testing 100x {"a"=>1} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            0.1805s         0.0942s
-root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 100 '{"a":1}'
-Testing 100x {"a"=>1} increments
-DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            0.1738s         0.1177s
+Trifle::Stats::Driver::Postgres         6.0452s         0.0321s
+Trifle::Stats::Driver::Mongo            0.1472s         0.0898s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 1000 '{"a":1}'
 Testing 1000x {"a"=>1} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            1.6192s         1.1184s
+Trifle::Stats::Driver::Postgres         61.3327s        0.2731s
+Trifle::Stats::Driver::Mongo            1.5735s         0.8923s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 1000 '{"a":1}'
 Testing 1000x {"a"=>1} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            1.6068s         1.0099s
+Trifle::Stats::Driver::Postgres         61.5754s        0.2748s
+Trifle::Stats::Driver::Mongo            1.5316s         0.9703s
 ```
 
 Now that we've seen some base numbers for 1 tracked value, lets increase it to 5.
@@ -132,19 +133,23 @@ Now that we've seen some base numbers for 1 tracked value, lets increase it to 5
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 100 '{"a":1,"b":2,"c":1,"d":2,"e":1}'
 Testing 100x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            0.1729s         0.1027s
+Trifle::Stats::Driver::Postgres         6.2368s         0.0327s
+Trifle::Stats::Driver::Mongo            0.1565s         0.0914s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 100 '{"a":1,"b":2,"c":1,"d":2,"e":1}'
 Testing 100x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            0.1753s         0.1027s
+Trifle::Stats::Driver::Postgres         6.4885s         0.032s
+Trifle::Stats::Driver::Mongo            0.1679s         0.0993s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 1000 '{"a":1,"b":2,"c":1,"d":2,"e":1}'
 Testing 1000x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            1.8558s         1.0397s
+Trifle::Stats::Driver::Postgres         61.0578s        0.2865s
+Trifle::Stats::Driver::Mongo            1.5063s         0.9274s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 1000 '{"a":1,"b":2,"c":1,"d":2,"e":1}'
 Testing 1000x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            1.7479s         0.9489s
+Trifle::Stats::Driver::Postgres         60.5477s        0.3481s
+Trifle::Stats::Driver::Mongo            1.5693s         0.9617s
 ```
 
 This doesn't look like much increase over 1 value. It's _pretty much_ same. What if we track a whole alphabet?
@@ -153,27 +158,23 @@ This doesn't look like much increase over 1 value. It's _pretty much_ same. What
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 100 '{"a":1,"b":2,"c":1,"d":2,"e":1,"f":2,"g":1,"h":2,"i":1,"j":2,"k":1,"l":2,"m":1,"n":2,"o":1,"p":2,"q":1,"r":2,"s":1,"t":2,"u":1,"v":2,"w":1,"x":2,"y":1,"z":2}'
 Testing 100x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1, "f"=>2, "g"=>1, "h"=>2, "i"=>1, "j"=>2, "k"=>1, "l"=>2, "m"=>1, "n"=>2, "o"=>1, "p"=>2, "q"=>1, "r"=>2, "s"=>1, "t"=>2, "u"=>1, "v"=>2, "w"=>1, "x"=>2, "y"=>1, "z"=>2} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            0.2022s         0.1046s
+Trifle::Stats::Driver::Postgres         6.5403s         0.0404s
+Trifle::Stats::Driver::Mongo            0.1815s         0.0915s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 100 '{"a":1,"b":2,"c":1,"d":2,"e":1,"f":2,"g":1,"h":2,"i":1,"j":2,"k":1,"l":2,"m":1,"n":2,"o":1,"p":2,"q":1,"r":2,"s":1,"t":2,"u":1,"v":2,"w":1,"x":2,"y":1,"z":2}'
 Testing 100x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1, "f"=>2, "g"=>1, "h"=>2, "i"=>1, "j"=>2, "k"=>1, "l"=>2, "m"=>1, "n"=>2, "o"=>1, "p"=>2, "q"=>1, "r"=>2, "s"=>1, "t"=>2, "u"=>1, "v"=>2, "w"=>1, "x"=>2, "y"=>1, "z"=>2} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            0.2439s         0.1035s
-root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 100 '{"a":1,"b":2,"c":1,"d":2,"e":1,"f":2,"g":1,"h":2,"i":1,"j":2,"k":1,"l":2,"m":1,"n":2,"o":1,"p":2,"q":1,"r":2,"s":1,"t":2,"u":1,"v":2,"w":1,"x":2,"y":1,"z":2}'
-Testing 100x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1, "f"=>2, "g"=>1, "h"=>2, "i"=>1, "j"=>2, "k"=>1, "l"=>2, "m"=>1, "n"=>2, "o"=>1, "p"=>2, "q"=>1, "r"=>2, "s"=>1, "t"=>2, "u"=>1, "v"=>2, "w"=>1, "x"=>2, "y"=>1, "z"=>2} increments
-DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            0.2194s         0.0957s
+Trifle::Stats::Driver::Postgres         6.5559s         0.0386s
+Trifle::Stats::Driver::Mongo            0.1782s         0.0907s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 1000 '{"a":1,"b":2,"c":1,"d":2,"e":1,"f":2,"g":1,"h":2,"i":1,"j":2,"k":1,"l":2,"m":1,"n":2,"o":1,"p":2,"q":1,"r":2,"s":1,"t":2,"u":1,"v":2,"w":1,"x":2,"y":1,"z":2}'
 Testing 1000x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1, "f"=>2, "g"=>1, "h"=>2, "i"=>1, "j"=>2, "k"=>1, "l"=>2, "m"=>1, "n"=>2, "o"=>1, "p"=>2, "q"=>1, "r"=>2, "s"=>1, "t"=>2, "u"=>1, "v"=>2, "w"=>1, "x"=>2, "y"=>1, "z"=>2} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            2.0934s         0.9797s
+Trifle::Stats::Driver::Postgres         66.0111s        0.3898s
+Trifle::Stats::Driver::Mongo            1.8594s         0.96s
 root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 1000 '{"a":1,"b":2,"c":1,"d":2,"e":1,"f":2,"g":1,"h":2,"i":1,"j":2,"k":1,"l":2,"m":1,"n":2,"o":1,"p":2,"q":1,"r":2,"s":1,"t":2,"u":1,"v":2,"w":1,"x":2,"y":1,"z":2}'
 Testing 1000x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1, "f"=>2, "g"=>1, "h"=>2, "i"=>1, "j"=>2, "k"=>1, "l"=>2, "m"=>1, "n"=>2, "o"=>1, "p"=>2, "q"=>1, "r"=>2, "s"=>1, "t"=>2, "u"=>1, "v"=>2, "w"=>1, "x"=>2, "y"=>1, "z"=>2} increments
 DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            2.0544s         0.9652s
-root@89857c648edb:/workspaces/trifle-stats/spec/performance# ./run 1000 '{"a":1,"b":2,"c":1,"d":2,"e":1,"f":2,"g":1,"h":2,"i":1,"j":2,"k":1,"l":2,"m":1,"n":2,"o":1,"p":2,"q":1,"r":2,"s":1,"t":2,"u":1,"v":2,"w":1,"x":2,"y":1,"z":2}'
-Testing 1000x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1, "f"=>2, "g"=>1, "h"=>2, "i"=>1, "j"=>2, "k"=>1, "l"=>2, "m"=>1, "n"=>2, "o"=>1, "p"=>2, "q"=>1, "r"=>2, "s"=>1, "t"=>2, "u"=>1, "v"=>2, "w"=>1, "x"=>2, "y"=>1, "z"=>2} increments
-DRIVER                                  WRITE           READ
-Trifle::Stats::Driver::Mongo            2.037s          1.0925s
+Trifle::Stats::Driver::Postgres         65.4363s        0.4827s
+Trifle::Stats::Driver::Mongo            1.8078s         0.9655s
 ```
 
-Alrite, there is a slight slow down. Like 300ms on 1000 runs. I'm gonna let you decide if this is good, bad or acceptable.
+Alrite, there is a slight slow down in both `Mongo` and `Postgres`. Like 300ms/6s on 1000 runs. I'm gonna let you decide if this is good, bad or acceptable.

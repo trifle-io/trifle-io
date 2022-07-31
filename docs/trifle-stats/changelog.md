@@ -5,6 +5,10 @@ nav_order: 100
 
 # Changelog
 
+### **1.2.0** - *July 31, 2022*
+  - Feat: Optimise Postgres driver to `inc` and `set` all values at once.
+  - Feat: Optimise Postgres driver to `get` all keys at once.
+
 ### **1.1.2** - *July 30, 2022*
   - Fix: Postgres driver does not use `.try` to stay _pure ruby_.
 
