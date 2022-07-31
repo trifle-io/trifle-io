@@ -177,4 +177,4 @@ Trifle::Stats::Driver::Postgres         65.4363s        0.4827s
 Trifle::Stats::Driver::Mongo            1.8078s         0.9655s
 ```
 
-Alrite, there is a slight slow down in both `Mongo` and `Postgres`. Like 300ms/6s on 1000 runs. I'm gonna let you decide if this is good, bad or acceptable.
+Alrite, there is a slight slow down in both `Mongo` and `Postgres`. Like 300ms/5s on 1000 runs. I'm gonna let you decide if this is good, bad or acceptable.
