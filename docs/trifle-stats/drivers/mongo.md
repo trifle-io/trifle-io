@@ -31,6 +31,29 @@ Trifle::Stats.configure do |config|
 end
 ```
 
+## Setup
+
+Mongo driver requires `trifle_stats` collection to be present. You can override `collection_name` when creating an instance of a driver.
+
+You can create collection and index on your own or simply call `setup!` class method that does this for you. It creates a collection and adds an unique index on a `key` attribute.
+
+Below is a setup and configuration for a custom database and a collection name.
+
+```ruby
+client = Mongo::Client.new('mongodb://mongo:27017/stats')
+Trifle::Stats::Driver::Mongo.setup!(
+  Mongo::Client.new('mongodb://mongo:27017/stats'),
+  collection_name: 'my_stats'
+)
+
+Trifle::Stats.configure do |config|
+  config.driver = Trifle::Stats::Driver::Mongo.new(
+    Mongo::Client.new('mongodb://mongo:27017/stats'),
+    collection_name: 'my_stats'
+  )
+end
+```
+
 ## Driver
 
 You can either use your default Mongoid client, or pass in instance of custom Mongo client.
@@ -63,4 +86,4 @@ irb(main):007:0> driver.get(keys: [['test', 'now']])
 
 ## Performance
 
-All good here! `set` and `inc` are single queries for each period. `get` fetches all keys in a single query.
+All good here! `set` and `inc` are executed in one query and each key in `keys` is executed as a one bulk write operation. `get` fetches all keys in a single query.

@@ -8,6 +8,7 @@ nav_order: 2
 You don't need to use it with Rails, but you still need to run `Trifle::Stats.configure`.
 
 Configuration allows you to specify:
+
 - `driver` - backend driver used to store and retrieve data.
 - `track_ranges` - list of timeline ranges you would like to track. Value must be list of symbols, defaults to `[:minute, :hour, :day, :week, :month, :quarter, :year]`.
 - `separator` - keys can get serialized in backend, separator is used to join these values. Value must be string, defaults to `::`.

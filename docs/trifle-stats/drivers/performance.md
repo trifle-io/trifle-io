@@ -24,7 +24,7 @@ Keep that in mind when working with data. Each driver fits better for different 
 
 Here is a summary of a performance test of each driver. You can check the code under `specs/performance` and run it on your own. Change some connection details in `specs/performance/drivers.rb` that creates configurations.
 
-Then simply run `specs/performance/run COUNT JSON` where `COUNT` represents number of reads writes to be performed and `JSON` needs to be valid JSON structure to be tracked.
+Then simply run `specs/performance/run COUNT JSON` where `COUNT` represents number of reads and writes to be performed and `JSON` needs to be valid JSON structure being tracked.
 
 ```sh
 specs/performance/run 100 '{"a":1}'
@@ -105,9 +105,7 @@ Trifle::Stats::Driver::Process          0.2852s         0.1064s
 Trifle::Stats::Driver::Sqlite           4.3669s         0.193s
 ```
 
-`Trifle::Stats` normalizes nested values to top level before storing them, so overall there is not much performance difference between these.
-
-Complex tracking is also where `Mongo` shines. It doesn't matter if you track 1, 5, or 100 values, mongo will perform (almost) lineary.
+`Trifle::Stats` normalizes nested values to top level before storing them, so overall there is not much performance difference between these. `Mongo` is performing the best, while `Postgres` and `Sqlite` are doing bit worse on writes, but still rocking those reads.
 
 ### Some really _large_ tracking
 
@@ -132,4 +130,4 @@ Trifle::Stats::Driver::Process          0.863s          0.1703s
 Trifle::Stats::Driver::Sqlite           6.3205s         0.2097s
 ```
 
-Here you can really see how `Redis` crumbles under the volume and `Mongo` shines instead. `Postgres` and `Sqlite` slightly slow down.
+Here you can really see how `Redis` crumbles under the volume and `Mongo` shines instead. It doesn't matter if you track 1, 5, or 100 values, `Mongo` will perform (almost) the same. `Postgres` and `Sqlite` slow down a bit more in comparison to `Mongo`.

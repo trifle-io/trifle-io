@@ -21,6 +21,10 @@ Trifle::Stats.configure do |config|
 end
 ```
 
+## Setup
+
+No setup necessary
+
 ## Driver
 
 You can either use your current redis client, or pass in instance of custom redis client
@@ -53,4 +57,4 @@ irb(main):007:0> driver.get(keys: [['test', 'now']])
 
 ## Performance
 
-`inc`, `set` operations are executed for each key/pair value separately. This may lead to degraded performance on large data set.
+`inc`, `set` operations are executed for each key/value pair and key from `keys` separately. This may lead to degraded performance on large data set.

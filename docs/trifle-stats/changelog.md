@@ -5,6 +5,11 @@ nav_order: 100
 
 # Changelog
 
+### **1.3.0** - *August 1, 2022*
+  - Feat: Introduce Sqlite driver.
+  - Feat: Optimise Postgres driver to use transactions for all periods.
+  - Chore: Add performance testing.
+
 ### **1.2.0** - *July 31, 2022*
   - Feat: Optimise Postgres driver to `inc` and `set` all values at once.
   - Feat: Optimise Postgres driver to `get` all keys at once.

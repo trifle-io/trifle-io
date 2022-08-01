@@ -5,11 +5,11 @@ nav_order: 3
 
 # Postgres
 
-Postgres driver uses `pg` client gem to talk to database. It uses `INSERT` with `ONCONFLICT` resolution and regular `SELECT` for interacting with database.
+Postgres driver uses `pg` client gem to talk to database. It uses `INSERT` with `ON CONFLICT` resolution and regular `SELECT` to interact with database.
 
 ## Configuration
 
-You can configure driver directly using `pg` gem;
+You can configure driver directly using `pg` gem.
 
 ```ruby
 require 'pg'
@@ -31,6 +31,37 @@ Trifle::Stats.configure do |config|
 end
 ```
 
+## Setup
+
+Postgres driver requires `trifle_stats` table to be present. You can override `table_name` when creating an instance of a driver.
+
+You can create table and index on your own, using below rails migration or simply call `setup!` class method that does this for you. It creates a table and adds an unique index on a `key` column.
+
+Use this Rails migration to create `trifle_stats` (or name it your own).
+
+```ruby
+create_table :trifle_stats, id: false do |t|
+  t.string :key, null: false, primary_key: true
+  t.jsonb :data, null: false, default: {}
+end
+```
+
+Below is a setup and configuration for a custom database and a table name.
+
+```ruby
+Trifle::Stats::Driver::Postgres.setup!(
+  PG.connect('postgresql://postgres:password@postgres:5432/stats'),
+  table_name: 'my_stats'
+)
+
+Trifle::Stats.configure do |config|
+  config.driver = Trifle::Stats::Driver::Postgres.new(
+    PG.connect('postgresql://postgres:password@postgres:5432/stats'),
+    table_name: 'my_stats'
+  )
+end
+```
+
 ## Driver
 
 You can either use your current pg connection, or pass in instance of custom pg connection.
@@ -44,7 +75,7 @@ irb(main):002:0> driver = Trifle::Stats::Driver::Postgres.new(client)
 
 ## Interaction
 
-Once you create instance of a driver, you can use it to `set`, `inc` or `get` your data.
+Once you create an instance of a driver, you can use it to `set`, `inc` or `get` your data.
 
 ```ruby
 irb(main):003:0> driver.get(keys: [['test', 'now']])
@@ -63,15 +94,4 @@ irb(main):007:0> driver.get(keys: [['test', 'now']])
 
 ## Performance
 
-`inc` and `set` operations are executed for each key/pair value separately. This may lead to degraded performance on large data set.
-
-## Schema
-
-Postgres driver requires `trifle_stats` table to be present. You can create it with following migration or use any other alternative way to create the table by yourself. Primary key column is a `string` column `key` and `data` needs to be `jsonb` format. Don't forget default value.
-
-```ruby
-create_table :trifle_stats, id: false do |t|
-  t.string :key, null: false, primary_key: true
-  t.jsonb :data, null: false, default: {}
-end
-```
+`inc` and `set` operations are executed for each key/pair value in a single query. Queries for each key in `keys` is executed in a single transaction. It also queries data in a single query for each key in `keys`.

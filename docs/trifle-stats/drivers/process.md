@@ -1,6 +1,6 @@
 ---
 title: Process
-nav_order: 5
+nav_order: 6
 ---
 
 # Process
@@ -16,6 +16,10 @@ Trifle::Stats.configure do |config|
   config.driver = Trifle::Stats::Driver::Process.new
 end
 ```
+
+## Setup
+
+No setup necessary.
 
 ## Driver
 
