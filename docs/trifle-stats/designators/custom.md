@@ -1,5 +1,6 @@
 ---
 title: Custom
+description: Learn more how Custom designator creates buckets.
 nav_order: 1
 ---
 

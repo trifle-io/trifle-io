@@ -1,5 +1,6 @@
 ---
 title: State
+description: Learn how to trace state of a log.
 nav_order: 4
 ---
 

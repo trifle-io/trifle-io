@@ -1,5 +1,6 @@
 ---
 title: Walker
+description: Learn how Walker iterates over your files.
 nav_order: 1
 ---
 

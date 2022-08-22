@@ -1,5 +1,6 @@
 ---
 title: Middleware
+description: Learn how to integrate Trifle::Logger into your application automatically.
 nav_order: 6
 ---
 

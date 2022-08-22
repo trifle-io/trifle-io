@@ -1,5 +1,6 @@
 ---
 title: Rails with Engine
+description: Learn how to integrate Trifle::Docs as a Rails Engine.
 nav_order: 3
 ---
 

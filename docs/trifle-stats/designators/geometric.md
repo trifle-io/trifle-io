@@ -1,5 +1,6 @@
 ---
 title: Geometric
+description: Learn more how Geometric designator creates buckets.
 nav_order: 3
 ---
 

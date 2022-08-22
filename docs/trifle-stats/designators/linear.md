@@ -1,5 +1,6 @@
 ---
 title: Linear
+description: Learn more how Linear designator creates buckets.
 nav_order: 2
 ---
 

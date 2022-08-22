@@ -1,5 +1,6 @@
 ---
-title: .assert
+title: Assert values
+description: Learn how to set values.
 nav_order: 2
 ---
 
@@ -7,7 +8,7 @@ nav_order: 2
 
 Asserting values works same way like incrementing, but instead of increment, it sets the value. Asserting values runs `set` on the driver. Every time you assert a value, it will set the metrics.
 
-### `Trifle::Stats.assert(key: String, at: Time, values: Hash, **options)`
+## `Trifle::Stats.assert(key: String, at: Time, values: Hash, **options)`
 - `key` - string identifier for the metrics
 - `at` - timestamp of the sample (in most cases current timestamp)
 - `values` - hash of values. Can contain only nested hashes and numbers (Integer, Float, BigDecimal). Any other objects will cause an error.

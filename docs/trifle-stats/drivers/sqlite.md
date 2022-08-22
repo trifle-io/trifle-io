@@ -1,5 +1,6 @@
 ---
 title: Sqlite
+description: Learn in depth about Sqlite driver implementation.
 nav_order: 4
 ---
 

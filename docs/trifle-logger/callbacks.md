@@ -1,5 +1,6 @@
 ---
 title: Callbacks
+description: Learn how to use callbacks to persist your logs.
 nav_order: 5
 ---
 

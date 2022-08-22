@@ -1,5 +1,6 @@
 ---
 title: Installation
+description: Learn how to install Trifle::Docs in your Ruby application.
 nav_order: 1
 ---
 

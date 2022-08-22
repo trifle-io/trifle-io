@@ -1,5 +1,6 @@
 ---
 title: Raw Hardcode Mode
+description: Learn how to integrate Trifle::Docs the hard way.
 nav_order: 4
 ---
 

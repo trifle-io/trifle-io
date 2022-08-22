@@ -1,5 +1,6 @@
 ---
 title: Tags and Artifacts
+description: Learn how to tag and add attachments to tracer.
 nav_order: 7
 ---
 

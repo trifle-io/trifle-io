@@ -1,5 +1,6 @@
 ---
 title: Render Menu
+description: Learn how to display a navigation from sitemap.
 nav_order: 1
 ---
 

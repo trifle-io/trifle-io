@@ -1,5 +1,6 @@
 ---
 title: Templates
+description: Learn how to write templates and pages.
 nav_order: 7
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: Configuration
+description: Learn how to configure Trifle::Logger for your Ruby application.
 nav_order: 2
 ---
 

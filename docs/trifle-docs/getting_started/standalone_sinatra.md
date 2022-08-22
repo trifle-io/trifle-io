@@ -1,6 +1,6 @@
 ---
 title: Standalone Sinatra
-description: Learn how to configure Trifle::Docs as a Sinatra App.
+description: Learn how to integrate Trifle::Docs as a standalone Sinatra application.
 nav_order: 1
 ---
 

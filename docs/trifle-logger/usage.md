@@ -1,5 +1,6 @@
 ---
 title: Usage
+description: Learn how to use Trifle::Logger DSL.
 nav_order: 3
 ---
 
@@ -7,7 +8,7 @@ nav_order: 3
 
 `Trifle::Logger` comes with a couple module level methods that are shorthands for operations.
 
-## `.tracer`
+## `tracer = Tracer`
 
 To start tracking you must initialize Tracer first. There are two tracers included, Hash and Null. They store data in structure as their name says so. Duh.
 
@@ -17,7 +18,7 @@ Trifle::Logger.tracer = Trifle::Logger::Tracer::Hash.new(key: 'my_trace', meta: 
 
 Tracer is stored on `Thread.current`. Be aware when multithreading.
 
-## `.trace`
+## `trace(String, head: Bool, state: String, &block)`
 
 Once you initialize Tracer, manually or through middleware, you can start tracing your code.
 
@@ -42,6 +43,14 @@ Rest::Client.post('https://example.com', params)
 Trifle::Logger.trace('Done')
 ```
 
+### State
+
+Other times you may wanna point out that something caused an error. Pass `state: :error` argument to `trace` method. You can pass any state you like and then use this to enhance visualisation in your UI. I mean, make the text red when its error.
+
+```ruby
+Trifle::Logger.trace('Connection failed', state: :error)
+```
+
 ### Block
 
 You can see how the above example of using params looks, well, bad. For this you can use `Trifle::Logger.trace` with block and assing result of a block to a variable. Logger will automatically include result of a block in your logs. Result is evaluated through `Object.inspect` method.
@@ -50,14 +59,6 @@ You can see how the above example of using params looks, well, bad. For this you
 params = Trifle::Logger.trace('Passing params') do
   { a: 1 }
 end
-```
-
-### Error
-
-Other times you may wanna point out that something caused an error. Pass `state: :error` argument to `trace` method.
-
-```ruby
-Trifle::Logger.trace('Connection failed', state: :error)
 ```
 
 # Example

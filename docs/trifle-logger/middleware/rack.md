@@ -1,5 +1,6 @@
 ---
 title: Rack
+description: Learn how NOT to integrate Trifle::Logger into your Rails app.
 nav_order: 2
 ---
 

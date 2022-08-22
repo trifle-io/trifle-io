@@ -1,5 +1,6 @@
 ---
 title: Performance
+description: Learn more about performance of each driver.
 nav_order: 1
 ---
 
@@ -63,7 +64,7 @@ It's easy to see that this is where Redis shines. You simply can't beat it.
 
 Now lets compare what happens if we track 5 values. Either stored on top level or nested.
 
-First lets start with top level values. 
+First lets start with top level values.
 
 ```sh
 root@3b5545595714:~/trifle-stats/spec/performance# ./run 100 '{"a":1,"b":2,"c":3,"d":4,"e":5}'

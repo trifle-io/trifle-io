@@ -1,5 +1,6 @@
 ---
-title: .assort
+title: Assort values
+description: Learn how to categorize values in buckets.
 nav_order: 3
 ---
 
@@ -7,7 +8,7 @@ nav_order: 3
 
 Assorting values runs `inc` on the driver with a twist. Before passing values to `inc` method, it categorizes values into a category keys and sets values to `1`. This way it increments the metrics within specific bucket. Effectively creating a metrics for a histogram.
 
-### `Trifle::Stats.assort(key: String, at: Time, values: Hash, **options)`
+## `Trifle::Stats.assort(key: String, at: Time, values: Hash, **options)`
 - `key` - string identifier for the metrics
 - `at` - timestamp of the sample (in most cases current timestamp)
 - `values` - hash of values. Can contain only nested hashes and numbers (Integer, Float, BigDecimal). Any other objects will cause an error.

@@ -1,5 +1,6 @@
 ---
 title: Folder Structure
+description: Learn how to structure your documents for Trifle::Docs.
 nav_order: 5
 ---
 

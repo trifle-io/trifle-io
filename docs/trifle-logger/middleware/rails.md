@@ -1,5 +1,6 @@
 ---
 title: Rails
+description: Learn how to actually integrate Trifle::Logger into your Rails app.
 nav_order: 3
 ---
 

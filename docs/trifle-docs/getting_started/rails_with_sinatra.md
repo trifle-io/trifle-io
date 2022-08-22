@@ -1,5 +1,6 @@
 ---
 title: Rails with Sinatra
+description: Learn how to integrate Trifle::Docs Sinatra app into your Rails application.
 nav_order: 2
 ---
 

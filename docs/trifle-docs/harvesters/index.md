@@ -1,5 +1,6 @@
 ---
 title: Harvesters
+description: Learn about Harvesters and their purpose in routing and rendering.
 nav_order: 6
 ---
 

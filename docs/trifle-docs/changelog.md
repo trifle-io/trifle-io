@@ -1,5 +1,6 @@
 ---
 title: Changelog
+description: Releases and changes in a chronological order.
 nav_order: 100
 ---
 

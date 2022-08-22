@@ -1,5 +1,6 @@
 ---
 title: Sidekiq
+description: Learn how to integrate Trifle::Logger into Sidekiq jobs.
 nav_order: 1
 ---
 
