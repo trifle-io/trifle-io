@@ -1,6 +1,7 @@
 ---
 title: 'Trifle::Docs'
 nav_order: 1
+svg: M16 4v12l-4-2-4 2V4M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z
 ---
 
 # Trifle::Docs
@@ -17,7 +18,7 @@ Simple router for your static documentation. Like markdown, or textile, or whate
 
 Static Site Generators are awesome at what they do. I know, I've used them for a long time. Unfortunately they are _a bit_ cumberstone when customisation is necessary. On the other end of a spectrum are Content Management Systems. They are great at managing content. Unfortunately they are _a bit_ overkill when all your content is static (and somewhat technical).
 
-`Trifle::Docs` fills the void between these two. It is a _way too_ simple tool for developers who want to integrate documentation or blog into their Ruby/Rails website without storing content in database or learning custom templating language/structure. It's for everyone who wants to make UX of your website seamless.
+`Trifle::Docs` lies somewhere in between these two, but slightly on the static side of spectrum. It is a _way too_ simple tool for developers who want to integrate documentation or blog into their Ruby/Rails website without storing content in database or learning custom templating language/structure. This allows them to make UI/UX of their website seamless.
 
 > Oh, and did you know that this documentation is build on top of `Trifle::Docs`? Yup, you can check it out, this source code is [public](https://github.com/trifle-io/trifle-io).
 

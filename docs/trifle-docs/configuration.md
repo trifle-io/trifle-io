@@ -16,7 +16,7 @@ Configuration allows you to specify:
 
 Gem fallbacks to global configuration if custom configuration is not passed to method. You can do this by creating initializer, or calling it on the beginning of your ruby script.
 
-Unfortunately there are three ways to configure `Trifle::Docs`. And that depends on the way you plan to use it. Please refer to [usage](usage) documentation for configuration for your usecase.
+Unfortunately there are three ways to configure `Trifle::Docs`. And that depends on the way you plan to use it. Please refer to [getting started](getting_started) documentation for configuration for your usecase.
 
 ## Global configuration
 

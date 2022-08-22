@@ -1,5 +1,6 @@
 ---
 title: Standalone Sinatra
+description: Learn how to configure Trifle::Docs as a Sinatra App.
 nav_order: 1
 ---
 
@@ -7,7 +8,7 @@ nav_order: 1
 
 Using `Trifle::Docs` as a standalone Sinatra app works great. This website you're reading is running as standalone Sinatra app.
 
-Now, to be fair, this kinda defeats the purpose of using `Trifle::Docs` over Static Site Generator. Coz, after all, you're not really integrating the documentation anywhere. On the other side, maybe you just prefer `Trifle::Docs` simplicity and templating over SSG like Jekyll or Hugo. Who knows. Why am I to gudge.
+Now, to be fair, this kinda defeats the purpose of using `Trifle::Docs` over Static Site Generator. Coz, after all, you're not really integrating the documentation anywhere. On the other side, maybe you just prefer `Trifle::Docs` simplicity and templating over SSG like Jekyll or Hugo. Who knows. Who am I to judge.
 
 ## Sinatra App
 
