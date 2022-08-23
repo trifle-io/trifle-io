@@ -115,9 +115,26 @@ Alrite, but before we really dive in, lets talk a bit about configuration detail
 
 If you inspect `driver.rb` file, you will notice two important parts. Lots of `*_config` methods that prepare database and returns `Trifle::Stats::Configuration` instances. And `configurations` method that provides list of configurations for testing.
 
-If you need to modify connection details or credentials for a specific driver, edit appropriate `*_config` method with your details. Existing values are set for above docker compose configuration.
+If you need to modify connection details or credentials for a specific driver, edit appropriate `*_config` method with your details. Existing values are set for above docker compose configuration. For example to specify your own `redis.my_domain.com` URL, modify the `redis_config` to:
 
-If you don't care about testing _some_ drivers, simply remove them from the array that `configurations` method returns.
+```ruby
+def redis_config
+  client = Redis.new(url: 'redis://redis.my_domain.com:6379/0')
+  client.flushall
+
+  Trifle::Stats::Configuration.new.tap do |config|
+    config.driver = Trifle::Stats::Driver::Redis.new(client)
+  end
+end
+```
+
+If you don't care about testing _some_ drivers, simply remove them from the array that `configurations` method returns. For example if you want to run only `redis` testing, modify `configurations` to:
+
+```ruby
+def configurations
+  [redis_config]
+end
+```
 
 ## Testing
 
