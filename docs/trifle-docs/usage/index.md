@@ -1,6 +1,6 @@
 ---
 title: Usage
-description: Learn how to use underline Trifle::Docs DSL.
+description: Learn how to use Trifle::Docs DSL.
 nav_order: 4
 ---
 

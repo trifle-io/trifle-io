@@ -1,7 +1,7 @@
 <%= content %>
 <br/>
 <ul>
-  <% collection.each do |(key, post)| %>
+  <% collection.to_a.reverse.each do |(key, post)| %>
     <% next if key == '_meta' %>
     <li>
       <a href="<%= post.dig('_meta', 'url') %>"><%= post.dig('_meta', 'title') %></a>
