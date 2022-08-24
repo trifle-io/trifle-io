@@ -1,11 +1,13 @@
 <%= content %>
 <br/>
-<ul>
+<div class="grid grid-cols-1">
   <% collection.to_a.reverse.each do |(key, post)| %>
     <% next if key == '_meta' %>
-    <li>
-      <a href="<%= post.dig('_meta', 'url') %>"><%= post.dig('_meta', 'title') %></a>
-      <span class="float-right text-gray-500">by <%= post.dig('_meta', 'author') %> on <%= post.dig('_meta', 'date') %></span>
-    </li>
+    <div class="flex">
+      <div class="grow text-lg">
+        <a href="<%= post.dig('_meta', 'url') %>"><%= post.dig('_meta', 'title') %></a>
+      </div>
+      <div class="flex-none text-gray-500 font-mono text-sm">by <%= post.dig('_meta', 'author') %> on <%= post.dig('_meta', 'date') %></div>
+    </div>
   <% end %>
-</ul>
+</div>
