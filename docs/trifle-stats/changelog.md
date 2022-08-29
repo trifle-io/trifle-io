@@ -6,6 +6,9 @@ nav_order: 100
 
 # Changelog
 
+### **1.3.1** - *August 29, 2022*
+  - Fix: Do not require database gems by default.
+
 ### **1.3.0** - *August 1, 2022*
   - Feat: Introduce Sqlite driver.
   - Feat: Optimise Postgres driver to use transactions for all periods.
