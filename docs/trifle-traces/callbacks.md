@@ -6,7 +6,7 @@ nav_order: 5
 
 # Callbacks
 
-`Trifle::Logger` does not persist any data. I considered using similar approach as drivers in `Trifle::Stats`, but I decided not to. While `Trifle::Stats` handles persisting and retrieving data in the most optimal way and acts as a single point of access, retrieving log entries and referencing them is a broad topic and can be better handled on user level.
+`Trifle::Traces` does not persist any data. I considered using similar approach as drivers in `Trifle::Stats`, but I decided not to. While `Trifle::Stats` handles persisting and retrieving data in the most optimal way and acts as a single point of access, retrieving log entries and referencing them is a broad topic and can be better handled on user level.
 
 And therefore several callbacks are used that allows user to handle persistance in best possible way.
 
@@ -20,14 +20,14 @@ To provide updates during execution, `bump` callback is executed on new `trace` 
 
 ## Wrapup
 
-Once you finish tracing, calling `Trifle::Logger.tracer.wrapup!` will trigger `wrapup` callback.
+Once you finish tracing, calling `Trifle::Traces.tracer.wrapup!` will trigger `wrapup` callback.
 
 ## Simple wrapup example
 
 Sometimes you don't care about callbacks and all you want is to create a database record that will hold your tracer data.
 
 ```ruby
-Trifle::Logger.configure do |config|
+Trifle::Traces.configure do |config|
   config.on(:wrapup) do |tracer|
     next if tracer.ignore
 
@@ -45,7 +45,7 @@ end
 Here is more complex example with utilizing all 3 callbacks.
 
 ```ruby
-Trifle::Logger.configure do |config|
+Trifle::Traces.configure do |config|
   config.bump_every = 5.seconds
   config.on(:liftoff) do |tracer|
     entry = Entry.create(

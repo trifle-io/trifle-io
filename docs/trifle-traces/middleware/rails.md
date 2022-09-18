@@ -1,6 +1,6 @@
 ---
 title: Rails
-description: Learn how to actually integrate Trifle::Logger into your Rails app.
+description: Learn how to actually integrate Trifle::Traces into your Rails app.
 nav_order: 3
 ---
 
@@ -10,27 +10,27 @@ Instead of tracing every request ever made into your Rails app, there is better 
 
 ## Configuration
 
-You need to include `Trifle::Logger` mixin into your controller and specify which controller actions you would like to trace.
+You need to include `Trifle::Traces` mixin into your controller and specify which controller actions you would like to trace.
 
 ```ruby
 # frozen_string_literal: true
 
 class SessionsController < ApplicationController
-  include Trifle::Logger::Middleware::RailsController
-  with_trifle_logger only: %i[create]
+  include Trifle::Traces::Middleware::RailsController
+  with_trifle_traces only: %i[create]
 
   def create
-    Trifle::Logger.trace('Lets steal some passwords!', head: true)
+    Trifle::Traces.trace('Lets steal some passwords!', head: true)
     # pls, this is not secure, dont do this!
     user = User.find_by(email: params[:email])
 
     if user && user.password == params[:password]
-      Trifle::Logger.trace('Matching user') { user.id }
-      Trifle::Logger.trace('Used password') { params[:password] }
+      Trifle::Traces.trace('Matching user') { user.id }
+      Trifle::Traces.trace('Used password') { params[:password] }
       session[:user_id] = user.id
       redirect_to root_path
     else
-      Trifle::Logger.ignore!
+      Trifle::Traces.ignore!
       redirect_to new_session_path, flash: {
         error: 'Uh oh! Thats a nono for the password.'
       }

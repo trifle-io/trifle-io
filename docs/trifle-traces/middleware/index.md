@@ -1,6 +1,6 @@
 ---
 title: Middleware
-description: Learn how to integrate Trifle::Logger into your application automatically.
+description: Learn how to integrate Trifle::Traces into your application automatically.
 nav_order: 6
 ---
 
@@ -21,13 +21,13 @@ All middlewares implement _fairly standard way to wrap execution_ in a block. Th
 
 ```ruby
 def traced(&block)
-  Trifle::Logger.tracer = Trifle::Logger::Tracer::Hash.new(key: trace_key)
+  Trifle::Traces.tracer = Trifle::Traces::Tracer::Hash.new(key: trace_key)
   yield block
 rescue => e
-  Trifle::Logger.tracer.trace("Exception: #{e}", state: :error)
-  Trifle::Logger.tracer.fail!
+  Trifle::Traces.tracer.trace("Exception: #{e}", state: :error)
+  Trifle::Traces.tracer.fail!
   raise e
 ensure
-  Trifle::Logger.tracer.wrapup
+  Trifle::Traces.tracer.wrapup
 end
 ```

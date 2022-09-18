@@ -9,8 +9,8 @@ nav_order: 7
 Simple array where you can add reference to related objects. Then use this in callbacks to reference logger from these objects. Or whatever you decide to do.
 
 ```ruby
-Trifle::Logger.tag("Item:#{item.id}")
-Trifle::Logger.tag('test')
+Trifle::Traces.tag("Item:#{item.id}")
+Trifle::Traces.tag('test')
 ```
 
 # Artifacts
@@ -21,7 +21,7 @@ Another simple array that holds list of filenames that you may wanna persist in 
 # somewhere in your code
 def screenshot
   file = recorder.screenshot!
-  Trifle::Logger.artifact(file.split('/').last, file)
+  Trifle::Traces.artifact(file.split('/').last, file)
 end
 
 # later in callback

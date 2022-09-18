@@ -6,6 +6,9 @@ nav_order: 100
 
 # Changelog
 
+### **1.0.0** - *September 17, 2022*
+  - Feature: Rename from Trifle::Logger to Trifle::Traces and release as stable.
+
 ### **0.4.1** - *March 28, 2022*
   - Feature: Pop data and artifacts.
 

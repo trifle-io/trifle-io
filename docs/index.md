@@ -19,7 +19,6 @@ Made by galons of ☕️ and 🍺 by [JozefVaclavik](https://twitter.com/JozefVa
 
 [![Gem Version](https://badge.fury.io/rb/trifle-docs.svg)](https://rubygems.org/gems/trifle-docs)
 [![Ruby](https://github.com/trifle-io/trifle-docs/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-docs)
-[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/trifle-io/trifle-docs)
 
 Simple router for your static documentation. Like markdown, or textile, or whatever files.
 
@@ -59,34 +58,41 @@ More [here](/trifle-docs/).
 
 ---
 
-# `Trifle::Logger`
+# `Trifle::Logs`
 
-[![Gem Version](https://badge.fury.io/rb/trifle-logger.svg)](https://rubygems.org/gems/trifle-logger)
-[![Ruby](https://github.com/trifle-io/trifle-logger/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-logger)
-[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/trifle-io/trifle-logger)
+[![Gem Version](https://badge.fury.io/rb/trifle-logs.svg)](https://rubygems.org/gems/trifle-logs)
+[![Ruby](https://github.com/trifle-io/trifle-logs/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-logs)
 
-Simple log tracer that collects messages and values from your code and returns Hash (at least for now).
+Simple log storage where you can dump your data. It allows you to search on top of your log files with `ripgrep` for fast regexp queries and utilises `head` and `tail` to paginate through a file.
 
-It saves you from reading through your standard logger
+It dumps your data
 
 ```ruby
-Trifle::Logger.trace('This is important output')
-now = Trifle::Logger.trace('And it\'s important to know it happened at') do
-  Time.now
-end
+Trifle::Logs.dump('test', 'This is test message')
+Trifle::Logs.dump('test', 'Or another message')
+Trifle::Logs.dump('test', 'That noone cares about')
 ```
 
-To being able to say what happened on 25th January 2021.
+And lets you search on top of it
 
 ```ruby
+search = Trifle::Logs.searcher('test', pattern: 'test')
+search.perform.data
 [
-  {at: 2021-01-25 00:00:00 +0100, message: 'This is important output', state: :success, head: false, meta: false}
-  {at: 2021-01-25 00:00:00 +0100, message: 'And it\'s important to know it happened ', state: :success, head: false, meta: false}
-  {at: 2021-01-25 00:00:00 +0100, message: '=> 2021-01-25 00:00:00 +0100', state: :success, head: false, meta: true}
+  {
+    "type"=>"match",
+    "data"=>{
+      "path"=>{"text"=>"<stdin>"},
+      "lines"=>{"text"=>"2022-09-17T08:33:04.843195 {\"scope\":{},\"content\":\"This is test message\"}\n"},
+      "line_number"=>1,
+      "absolute_offset"=>0,
+      "submatches"=>[{"match"=>{"text"=>"test"}, "start"=>58, "end"=>62}]
+    }
+  }
 ]
 ```
 
-More [here](/trifle-logger/).
+More [here](/trifle-logs/).
 
 ---
 
@@ -94,7 +100,6 @@ More [here](/trifle-logger/).
 
 [![Gem Version](https://badge.fury.io/rb/trifle-stats.svg)](https://rubygems.org/gems/trifle-stats)
 [![Ruby](https://github.com/trifle-io/trifle-stats/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-stats)
-[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/trifle-io/trifle-stats)
 
 Simple analytics backed by Redis, Postgres, MongoDB, Google Analytics, Segment, or whatever.
 
@@ -114,3 +119,33 @@ Trifle::Stats.values(key: 'event::logs', from: Time.now, to: Time.now, range: :d
 ```
 
 More [here](/trifle-stats/).
+
+---
+
+# `Trifle::Traces`
+
+[![Gem Version](https://badge.fury.io/rb/trifle-traces.svg)](https://rubygems.org/gems/trifle-traces)
+[![Ruby](https://github.com/trifle-io/trifle-traces/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-traces)
+
+Simple log tracer that collects messages and values from your code and returns Hash (at least for now).
+
+It saves you from reading through your standard logger
+
+```ruby
+Trifle::Traces.trace('This is important output')
+now = Trifle::Traces.trace('And it\'s important to know it happened at') do
+  Time.now
+end
+```
+
+To being able to say what happened on 25th January 2021.
+
+```ruby
+[
+  {at: 2021-01-25 00:00:00 +0100, message: 'This is important output', state: :success, head: false, meta: false}
+  {at: 2021-01-25 00:00:00 +0100, message: 'And it\'s important to know it happened ', state: :success, head: false, meta: false}
+  {at: 2021-01-25 00:00:00 +0100, message: '=> 2021-01-25 00:00:00 +0100', state: :success, head: false, meta: true}
+]
+```
+
+More [here](/trifle-traces/).
