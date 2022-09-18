@@ -6,6 +6,9 @@ nav_order: 100
 
 # Changelog
 
+### **0.3.0** - *September 18, 2022*
+  - Feature: Harvester with configurable cache.
+
 ### **0.2.0** - *June 29, 2022*
   - Feature: Introduce `Trifle::Docs::Engine` for Rails integration.
 

@@ -14,6 +14,7 @@ Configuration allows you to specify:
 - `views` - path to a views folder used for rendering (Sinatra App).
 - `template` - name of a rails template (Rails Engine).
 - `register_harvester(HARVESTER_KLASS)` - register a Harvester class used for serving files.
+- `cache` - boolean to enable or disable content cache. Defaults to `true`.
 
 Gem fallbacks to global configuration if custom configuration is not passed to method. You can do this by creating initializer, or calling it on the beginning of your ruby script.
 
@@ -27,6 +28,7 @@ Trifle::Docs.configure do |config|
   config.templates = File.join(Rails.root, 'app', 'views', 'trifle', 'docs')
   config.register_harvester(Trifle::Docs::Harvester::Markdown)
   config.register_harvester(Trifle::Docs::Harvester::File)
+  config.cache = Rails.env.production?
 end
 ```
 
