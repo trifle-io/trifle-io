@@ -10,7 +10,9 @@ nav_order: 4
 
 Each of these methods accepts optional custom configuration. If no configuration has been passed in, it defaults to global configuration.
 
-## `sitemap(config: nil)`
+## `sitemap(**options)`
+- `options` - hash of optional arguments:
+    - `config` - optional configuration instance of `Trifle::Docs::Configuration`. It defaults to global configuration, otherwise uses passed in configuration.
 
 Returns a full tree structure of your folders. Each item includes metadata for a specific file. You can use this to generate menus or one of those sitemaps that noone uses.
 
@@ -23,7 +25,10 @@ irb(main):002:0> Trifle::Docs.sitemap.slice('blog', '_meta')
 
 - `_meta` - holds the _metadata_ about each part of tree.
 
-## `content(url: String, config: nil)`
+## `content(url: String, **options)`
+- `url` - string representation of the URL.
+- `options` - hash of optional arguments:
+    - `config` - optional configuration instance of `Trifle::Docs::Configuration`. It defaults to global configuration, otherwise uses passed in configuration.
 
 Returns a HTML content of the file that can be used in a template.
 
@@ -34,7 +39,10 @@ irb(main):003:0> Trifle::Docs.content(url: 'blog/2022-07-introduction')
 => "<h1 id=\"welcome-to-trifle-blog\">Welcome to Trifle Blog</h1>\n\n<p>On this place you will find announcements worth announcing and other interesting <em>things</em> that occured. For example major versions, milestones and improvements. I would not hold my breath for regular updates. These are after all super-simple plugins.</p>\n\n<p>Anyways; welcome and come again!</p>\n"
 ```
 
-## `meta(url: String, config: nil)`
+## `meta(url: String, **options)`
+- `url` - string representation of the URL.
+- `options` - hash of optional arguments:
+    - `config` - optional configuration instance of `Trifle::Docs::Configuration`. It defaults to global configuration, otherwise 
 
 Returns a metadata of the file. This may include `title`, `template`, `nav_order` or others.
 
@@ -45,8 +53,11 @@ irb(main):004:0> Trifle::Docs.meta(url: 'blog/2022-07-introduction')
 => {"title"=>"Introduction to Trifle Blog", "date"=>"2022-07-12 18:16:31", "author"=>"Jozef Vaclavik", "template"=>"blog", "url"=>"/blog/2022-07-introduction", "breadcrumbs"=>["blog", "2022-07-introduction"], "toc"=>"<ul>\n<li>\n<a href=\"#welcome-to-trifle-blog\">Welcome to Trifle Blog</a>\n</li>\n</ul>\n"}
 ```
 
-## `collection(url: String, config: nil)`
-
+## `collection(url: String, **options)`
+- `url` - string representation of the URL.
+- `options` - hash of optional arguments:
+    - `config` - optional configuration instance of `Trifle::Docs::Configuration`. It defaults to global configuration, otherwise 
+    
 Returns a single branch of a sitemap tree for specific `url`. This can be useful when redering list of nested items. For example blog posts. Instead of navigating through `.sitemap` to specific branch, you can use `.collection` with `url` to get the list.
 
 Example of collection of blog posts under `blog` url.

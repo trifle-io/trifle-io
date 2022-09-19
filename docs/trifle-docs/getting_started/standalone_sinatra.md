@@ -36,7 +36,7 @@ That was it. It's super simple. Just single `Trifle::Docs.configure` block and t
 
 ## Docs
 
-You're gonna have to write some Markdown files. Thats totally in your area. Please reffer to Harvester::Markdown for additional details. Follow [folder structure](/trifle-docs/folder_structure) documentation.
+You're gonna have to write some Markdown files. Thats totally in your area. Please reffer to `Harvester::Markdown` for additional details. Follow [folder structure](/trifle-docs/folder_structure) documentation.
 
 ## Templates
 

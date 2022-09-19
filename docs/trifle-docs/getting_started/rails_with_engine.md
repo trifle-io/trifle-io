@@ -69,7 +69,7 @@ This way you will end up with `files/blog` being rendered as `/blog` and `files/
 
 ## Docs
 
-You're gonna have to write some Markdown files. Thats totally in your area. Please reffer to Harvester::Markdown for additional details. Follow [folder structure](/trifle-docs/folder_structure) documentation.
+You're gonna have to write some Markdown files. Thats totally in your area. Please reffer to `Harvester::Markdown` for additional details. Follow [folder structure](/trifle-docs/folder_structure) documentation.
 
 ## Templates
 
