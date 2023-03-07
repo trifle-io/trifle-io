@@ -8,7 +8,7 @@ nav_order: 1
 
 Tracking values runs `inc` on the driver. Every time you track a value, it will increment the metrics.
 
-## `Trifle::Stats.track(key: String, at: Time, values: Hash, **options)`
+## `track(key: String, at: Time, values: Hash, **options)`
 - `key` - string identifier for the metrics
 - `at` - timestamp of the sample (in most cases current timestamp)
 - `values` - hash of values. Can contain only nested hashes and numbers (Integer, Float, BigDecimal). Any other objects will cause an error.

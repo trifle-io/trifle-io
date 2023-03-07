@@ -130,7 +130,7 @@
   <body class="bg-white dark:bg-slate-900" x-data="{ isMobileVisible: false }">
     <header class="sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8 dark:bg-transparent">
       <div class="mr-6 lg:hidden">
-        <button type="button" class="relative" x-on:click="isMobileVisible = ! isMobileVisible">
+        <button type="button" class="relative" x-on:click="isMobileVisible = !isMobileVisible">
           <span class="sr-only">Open navigation</span>
           <svg aria-hidden="true" class="h-6 w-6 stroke-slate-500" fill="none" stroke-width="2" stroke-linecap="round">
             <path d="M4 7h16M4 12h16M4 17h16"></path>
@@ -153,13 +153,10 @@
       </div>
     </header>
 
-    <div class="relative mx-auto flex max-w-8xl justify-center sm:px-2 lg:px-8 xl:px-12">
-      <div class="lg:block lg:flex-none" x-bind:class="isMobileVisible ? 'relative' : 'hidden lg:relative'">
-        <div class="absolute inset-y-0 right-0 w-[50vw] bg-slate-50 dark:hidden"></div>
+    <div class="relative mx-auto flex max-w-8xl justify-center px-2 lg:px-8 xl:px-12">
+      <div class="lg:flex-none w-64" x-bind:class="isMobileVisible ? 'block' : 'hidden lg:block'">
         <div class="sticky top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto py-16 pl-0.5">
-          <div class="absolute top-16 bottom-0 right-0 hidden h-12 w-px bg-gradient-to-t from-slate-800 dark:block"></div>
-          <div class="absolute top-28 bottom-0 right-0 hidden w-px bg-slate-800 dark:block"></div>
-          <nav class="text-base lg:text-sm w-64 pr-8 xl:w-72 xl:pr-16">
+          <nav class="text-base lg:text-sm w-128 pr-8 xl:w-72 xl:pr-16 min-w-64">
             <ul class="space-y-4">
               <li>
                 <% if meta.dig('url') == "/" %>

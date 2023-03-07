@@ -6,7 +6,13 @@ nav_order: 100
 
 # Changelog
 
-### **1.0.0** - *September 17, 2022*
+### **1.0.2** - *November 21, 2022*
+  - Feature: Sidekiq 7 middleware support.
+
+### **1.0.1** - *November 16, 2022*
+  - Fix: No refactoring ends up without a typo. Am I right? 1.0.0 has been yanked.
+
+### **1.0.0** - *November 16, 2022*
   - Feature: Rename from Trifle::Logger to Trifle::Traces and release as stable.
 
 ### **0.4.1** - *March 28, 2022*

@@ -6,7 +6,7 @@ nav_order: 2
 
 # Configuration
 
-You don't need to use it with Rails, but you still need to run `Trifle::Stats.configure`.
+You don't need to use it with Rails, but you still need to run `Trifle::Logs.configure`.
 
 Configuration allows you to specify:
 

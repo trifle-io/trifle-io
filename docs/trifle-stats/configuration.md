@@ -50,7 +50,9 @@ mongo_configuration.driver = Trifle::Stats::Driver::MongoDB.new
 mongo_configuration.time_zone = 'Asia/Dubai'
 ```
 
+
 You can then pass it into module methods.
+
 ```ruby
 Trifle::Stats.track(key: 'event#checkout', at: Time.now, values: {count: 1}, config: configuration)
 

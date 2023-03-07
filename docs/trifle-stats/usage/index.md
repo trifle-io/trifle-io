@@ -1,7 +1,7 @@
 ---
 title: Usage
 description: Learn how to use Trifle::Stats DSL.
-nav_order: 3
+nav_order: 4
 ---
 
 # Usage

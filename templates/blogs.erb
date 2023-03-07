@@ -1,7 +1,7 @@
 <%= content %>
 <br/>
 <div class="grid grid-cols-1">
-  <% collection.to_a.reverse.each do |(key, post)| %>
+  <% collection.to_a.sort_by{|(key, post)| Time.parse(post.dig('_meta', 'date')).to_i rescue 0}.reverse.each do |(key, post)| %>
     <% next if key == '_meta' %>
     <div class="flex">
       <div class="grow text-lg">

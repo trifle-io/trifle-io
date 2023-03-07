@@ -8,7 +8,7 @@ nav_order: 100
 
 Getting values runs `get` on the driver.
 
-## `Trifle::Stats.values(key: String, from: Time, to: Time, range: Symbol, **options)`
+## `values(key: String, from: Time, to: Time, range: Symbol, **options)`
 - `key` - string identifier for the metrics
 - `from` - timestamp you want to get values from
 - `to` - timestamp you want to get values to

@@ -1,7 +1,7 @@
 ---
 title: State
 description: Learn how to trace state of a log.
-nav_order: 4
+nav_order: 5
 ---
 
 # State

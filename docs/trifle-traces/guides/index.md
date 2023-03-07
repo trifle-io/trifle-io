@@ -1,0 +1,9 @@
+---
+title: How to Guides
+description: Learn practical tips and tricks integrating Trifle::Traces.
+nav_order: 90 
+---
+
+# How to Guides
+
+List of resources how to achieve common tasks with `Trifle::Traces`

@@ -1,7 +1,7 @@
 ---
 title: Middleware
 description: Learn how to integrate Trifle::Traces into your application automatically.
-nav_order: 6
+nav_order: 7
 ---
 
 # Middleware
