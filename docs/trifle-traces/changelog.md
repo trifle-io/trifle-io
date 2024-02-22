@@ -6,6 +6,15 @@ nav_order: 100
 
 # Changelog
 
+### **1.1.2** - *August 13, 2023*
+  - Feature: Fallback to `inspect` serializer if cerrent serializer crashes serialization.
+
+### **1.1.1** - *August 13, 2023*
+  - Fix: Do not ignore default configuration when picking serializer. (Sorry bout that.)
+
+### **1.1.0** - *August 13, 2023*
+  - Feature: Introduce payload serializers.
+
 ### **1.0.2** - *November 21, 2022*
   - Feature: Sidekiq 7 middleware support.
 

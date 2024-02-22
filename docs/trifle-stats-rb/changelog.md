@@ -6,6 +6,12 @@ nav_order: 100
 
 # Changelog
 
+### **1.4.0** - *February 20, 2024*
+  - Feat: Introduce Aggregators
+  - Feat: Introduce Formatters
+  - Feat: Introduce Transponders
+  - Feat: Unpack/Pack can transform value through block
+
 ### **1.3.1** - *August 29, 2022*
   - Fix: Do not require database gems by default.
 

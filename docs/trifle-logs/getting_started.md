@@ -6,7 +6,9 @@ nav_order: 3
 
 # Getting Started
 
-Start by adding `Trifle::Logs` into your `Gemfile` as `gem 'trifle-logs'` and then run `bundle install`. Once you are done with that, create a global configuration. If you're doing this as a part of Rails App, add an initializer `trifle.rb`; otherwise place it somewhere into your ruby code that gets called when launch your app.
+Start by adding `Trifle::Logs` into your `Gemfile` as `gem 'trifle-logs'` and then run `bundle install`.
+
+Once you're done with that, create a global configuration. If you are doing this as a part of a Rails App, add an initializer `config/initializers/trifle.rb`; otherwise place the configuration __somewhere_ in your ruby code that gets called once your app gets launched.
 
 ```ruby
 Trifle::Logs.configure do |config|

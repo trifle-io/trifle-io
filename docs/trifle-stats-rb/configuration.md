@@ -35,7 +35,7 @@ end
 
 ## Custom configuration
 
-Custom configuration can be passed as a keyword argument to `Resource` objects and all module methods (`track`, `values`). This way you can pass different driver or ranges for different type of data youre storing - ie set different ranges or set expiration date on your data.
+Custom configuration can be passed as a keyword argument to main `Trifle::Stats` module methods (`track`, `values`, etc). This way you can pass different driver or ranges for different type of data youre storing - ie set different ranges or set expiration date on your data.
 
 ```ruby
 configuration = Trifle::Stats::Configuration.new

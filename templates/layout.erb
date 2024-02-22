@@ -88,9 +88,9 @@
                   theme = 'light'
                   document.documentElement.classList.remove('dark')
               } else if (mediaQuery.matches) {
-                  document.documentElement.classList.add('dark')
-              } else {
                   document.documentElement.classList.remove('dark')
+              } else {
+                  document.documentElement.classList.add('dark')
               }
           } catch {
               theme = 'light'
@@ -178,12 +178,15 @@
               <% sitemap.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |(key, option)| %>
                 <% next if key == '_meta' %>
                 <li>
-                  <% if option.dig('_meta', 'url') == "/#{url}" %>
-                    <a href="<%= option.dig('_meta', 'url') %>" class="font-display text-base font-bold text-slate-900 dark:text-white">
+                  <% if "/#{url}".start_with?(option.dig('_meta', 'url')) %>
+                    <a href="<%= option.dig('_meta', 'url') %>" class="font-display text-base font-bold text-teal-600">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="<%= option.dig('_meta', 'svg') %>" />
                       </svg>
                       <%= option.dig('_meta', 'title') %>
+                      <svg viewBox="0 0 128 128" class="w-5 h-5 inline float-right" fill="currentColor">
+                        <%= option.dig('_meta', 'lang') %>
+                      </svg>
                     </a>
                   <% else %>
                     <a href="<%= option.dig('_meta', 'url') %>" class="font-display text-base font-bold text-slate-600 dark:text-white">
@@ -191,6 +194,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="<%= option.dig('_meta', 'svg') %>" />
                       </svg>
                       <%= option.dig('_meta', 'title') %>
+                      <svg viewBox="0 0 128 128" class="w-5 h-5 inline float-right" fill="currentColor">
+                        <%= option.dig('_meta', 'lang') %>
+                      </svg>
                     </a>
                   <% end %>
                   <% next if option.dig('_meta', 'url') == '/blog' %>
@@ -201,7 +207,7 @@
                       <% next if key == '_meta' %>
                       <li class="relative">
                         <% if option.dig('_meta', 'url') == "/#{url}" %>
-                          <a href="<%= option.dig('_meta', 'url') %>" class="block w-full pl-3.5 font-semibold text-indigo-500"><%= option.dig('_meta', 'title') %></a>
+                          <a href="<%= option.dig('_meta', 'url') %>" class="block w-full pl-3.5 font-semibold text-teal-500"><%= option.dig('_meta', 'title') %></a>
                         <% else %>
                           <a href="<%= option.dig('_meta', 'url') %>" class="block w-full pl-3.5 text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"><%= option.dig('_meta', 'title') %></a>
                         <% end %>
@@ -211,7 +217,7 @@
                             <% next if key == '_meta' %>
                             <li class="relative">
                               <% if option.dig('_meta', 'url') == "/#{url}" %>
-                                <a href="<%= option.dig('_meta', 'url') %>" class="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:-translate-y-1/2 font-semibold text-indigo-500 before:bg-indigo-500"><%= option.dig('_meta', 'title') %></a>
+                                <a href="<%= option.dig('_meta', 'url') %>" class="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:-translate-y-1/2 font-semibold text-teal-500 before:bg-teal-500"><%= option.dig('_meta', 'title') %></a>
                               <% else %>
                                 <a href="<%= option.dig('_meta', 'url') %>" class="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:-translate-y-1/2 text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"><%= option.dig('_meta', 'title') %></a>
                               <% end %>
@@ -232,12 +238,12 @@
           <header class="mb-9 space-y-1">
             <% meta['breadcrumbs'].count.times do |i| %>
               <% page = sitemap.dig(*meta['breadcrumbs'].take(i+1)) %>
-              <a href="<%= page.dig('_meta', 'url') %>" class="font-display text-sm font-medium text-indigo-500"><%= page.dig('_meta', 'title') %></a>
+              <a href="<%= page.dig('_meta', 'url') %>" class="font-display text-sm font-medium text-teal-500"><%= page.dig('_meta', 'title') %></a>
               <% next if i+1 == meta['breadcrumbs'].count %>
               <span class="text-slate-400 dark:text-slate-400">/</span>
             <% end %>
           </header>
-          <div id="content" class="prose prose-slate max-w-none dark:prose-invert dark:text-slate-400 prose-headings:scroll-mt-28 prose-headings:font-display prose-headings:font-normal lg:prose-headings:scroll-mt-[8.5rem] prose-lead:text-slate-500 dark:prose-lead:text-slate-400 prose-a:font-semibold dark:prose-a:text-indigo-400 prose-a:no-underline prose-a:shadow-[inset_0_-2px_0_0_var(--tw-prose-background,#fff),inset_0_calc(-1*(var(--tw-prose-underline-size,4px)+2px))_0_0_var(--tw-prose-underline,theme(colors.indigo.300))] hover:prose-a:[--tw-prose-underline-size:6px] dark:[--tw-prose-background:theme(colors.slate.900)] dark:prose-a:shadow-[inset_0_calc(-1*var(--tw-prose-underline-size,2px))_0_0_var(--tw-prose-underline,theme(colors.indigo.800))] dark:hover:prose-a:[--tw-prose-underline-size:6px] prose-pre:rounded-xl prose-pre:bg-slate-900 prose-pre:shadow-lg dark:prose-pre:bg-slate-800/60 dark:prose-pre:shadow-none dark:prose-pre:ring-1 dark:prose-pre:ring-slate-300/10 dark:prose-hr:border-slate-800">
+          <div id="content" class="prose prose-slate max-w-none dark:prose-invert dark:text-slate-400 prose-headings:scroll-mt-28 prose-headings:font-display prose-headings:font-normal lg:prose-headings:scroll-mt-[8.5rem] prose-lead:text-slate-500 dark:prose-lead:text-slate-400 prose-a:font-semibold dark:prose-a:text-teal-400 prose-a:no-underline prose-a:shadow-[inset_0_-2px_0_0_var(--tw-prose-background,#fff),inset_0_calc(-1*(var(--tw-prose-underline-size,4px)+2px))_0_0_var(--tw-prose-underline,theme(colors.teal.300))] hover:prose-a:[--tw-prose-underline-size:6px] dark:[--tw-prose-background:theme(colors.slate.900)] dark:prose-a:shadow-[inset_0_calc(-1*var(--tw-prose-underline-size,2px))_0_0_var(--tw-prose-underline,theme(colors.teal.800))] dark:hover:prose-a:[--tw-prose-underline-size:6px] prose-pre:rounded-xl prose-pre:bg-slate-900 prose-pre:shadow-lg dark:prose-pre:bg-slate-800/60 dark:prose-pre:shadow-none dark:prose-pre:ring-1 dark:prose-pre:ring-slate-300/10 dark:prose-hr:border-slate-800">
             <% if meta['description'] %>
               <blockquote id="description-quote" class="text-gray-500 dark:text-gray-100">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -255,10 +261,10 @@
             <% collection.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |key, item| %>
               <% next if key == '_meta' || item.dig('_meta', 'type') == 'file' %>
               <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
-                <div class="flex-1 bg-white p-6 flex flex-col justify-between">
+                <div class="flex-1 bg-white dark:bg-slate-800 p-6 flex flex-col justify-between">
                   <div class="flex-1">
                     <a href="<%= item.dig('_meta', 'url') %>" class="block mt-2">
-                      <p class="text-xl font-semibold text-gray-900"><%= item.dig('_meta', 'title') %> &rarr;</p>
+                      <p class="text-xl font-semibold text-teal-600"><%= item.dig('_meta', 'title') %> &rarr;</p>
                       <p class="mt-3 text-base text-gray-500"><%= item.dig('_meta', 'description') %></p>
                     </a>
                   </div>

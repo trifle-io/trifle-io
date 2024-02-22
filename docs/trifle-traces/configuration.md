@@ -12,15 +12,16 @@ You don't need to use it with Rails, but you still need to run `Trifle::Traces.c
 
 If you're running it with Rails, create `config/initializers/trifle.rb` and configure the gem.
 
-Middleware automatically creates an instance of a tracer for you. To do that automatically, you need to provide `tracer_class` in your configuration. It defaults to `Trifle::Traces::Tracer::Hash`, but you can override it with your own custom tracer.
+Middleware automatically creates an instance of a tracer for you. To do that automatically, you need to provide `tracer_class` in your configuration. It defaults to `Trifle::Traces::Tracer::Hash`, but you can override it with your own custom tracer. You may want to configure custom `serializer_class` that handles block return values serialization. You can use one of pre-defined [serializer](/trifle-traces/serializers) classes or define your own. It defaults to `Trifle::Traces::Serializer::Inspect` serializer.
 
 ```ruby
 Trifle::Traces.configure do |config|
-  config.tracer_klass = Trifle::Traces::Tracer::Hash
+  config.tracer_class = Trifle::Traces::Tracer::Hash
+  config.serializer_class = Trifle::Traces::Serializer::Json
 end
 ```
 
-To persist your trace, you need to implement callback(s). Please read more about [Callbacks](/trifle-traces/callbacks.html).
+To persist your trace, you need to implement callback(s). Please read more about [Callbacks](/trifle-traces/callbacks).
 
 ## Custom configuration
 

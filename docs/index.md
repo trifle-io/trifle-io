@@ -15,14 +15,14 @@ Made by galons of ☕️ and 🍺 by [JozefVaclavik](https://twitter.com/JozefVa
 
 ---
 
-# `Trifle::Docs`
+# `Trifle::Docs` for `ruby`.
 
 [![Gem Version](https://badge.fury.io/rb/trifle-docs.svg)](https://rubygems.org/gems/trifle-docs)
 [![Ruby](https://github.com/trifle-io/trifle-docs/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-docs)
 
 Simple router for your static documentation. Like markdown, or textile, or whatever files.
 
-It maps your docs folder structure into URLs and redners them within the simplest template possible.
+It maps your docs folder structure into URLs and renders them within the simplest template possible.
 
 It turns your `docs/example/snippet.md` file
 
@@ -58,7 +58,7 @@ More [here](/trifle-docs/).
 
 ---
 
-# `Trifle::Logs`
+# `Trifle::Logs` for `ruby`.
 
 [![Gem Version](https://badge.fury.io/rb/trifle-logs.svg)](https://rubygems.org/gems/trifle-logs)
 [![Ruby](https://github.com/trifle-io/trifle-logs/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-logs)
@@ -96,7 +96,7 @@ More [here](/trifle-logs/).
 
 ---
 
-# `Trifle::Stats`
+# `Trifle::Stats` for `ruby`.
 
 [![Gem Version](https://badge.fury.io/rb/trifle-stats.svg)](https://rubygems.org/gems/trifle-stats)
 [![Ruby](https://github.com/trifle-io/trifle-stats/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-stats)
@@ -118,11 +118,11 @@ Trifle::Stats.values(key: 'event::logs', from: Time.now, to: Time.now, range: :d
 => {:at=>[2021-01-25 00:00:00 +0100], :values=>[{"count"=>3, "duration"=>8, "lines"=>658}]}
 ```
 
-More [here](/trifle-stats/).
+More [here](/trifle-stats-rb/).
 
 ---
 
-# `Trifle::Traces`
+# `Trifle::Traces` for `ruby`.
 
 [![Gem Version](https://badge.fury.io/rb/trifle-traces.svg)](https://rubygems.org/gems/trifle-traces)
 [![Ruby](https://github.com/trifle-io/trifle-traces/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-traces)
@@ -149,3 +149,29 @@ To being able to say what happened on 25th January 2021.
 ```
 
 More [here](/trifle-traces/).
+
+---
+
+# `Trifle.Stats` for `elixir`.
+
+[![Gem Version](https://badge.fury.io/rb/trifle-stats.svg)](https://rubygems.org/gems/trifle-stats)
+[![Ruby](https://github.com/trifle-io/trifle-stats/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-stats)
+
+Simple analytics backed by MongoDB (others coming eventually).
+
+It gets you from having bunch of these occuring within few minutes
+
+```elixir
+Trifle.Stats.track('event::logs', DateTime.utc_now(), %{count: 1, duration: 2, lines: 241})
+Trifle.Stats.track('event::logs', DateTime.utc_now(), %{count: 1, duration: 1, lines: 56})
+Trifle.Stats.track('event::logs', DateTime.utc_now(), %{count: 1, duration: 5, lines: 3611})
+```
+
+To being able to say what happened on 19th August 2023.
+
+```elixir
+Trifle.Stats.values('event::logs', DateTime.utc_now, DateTime.utc_now, :day)
+%{at: [#DateTime<2023-08-19 00:00:00+02:00 CEST Europe/Bratislava>], values: [%{"count" => 3, "duration" => 8, "lines" => 658}]}
+```
+
+More [here](/trifle-stats-ex/).
