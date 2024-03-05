@@ -9,8 +9,8 @@ nav_order: 3
 Sometimes you just want to know whats the total sum of values. You can do that by using `Sum` aggregator.
 
 ```ruby
-series = []
-total = Trifle::Stats::Aggregator::Sum.new(series: series, path: 'a.count').aggregate
+series = {at: [...], values: [...]}
+total = Trifle::Stats::Aggregator::Sum.new(series: series).aggregate(path: 'a.count')
 => 12345
 ```
 

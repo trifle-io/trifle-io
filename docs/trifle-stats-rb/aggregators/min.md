@@ -9,8 +9,8 @@ nav_order: 1
 Sometimes you just want to know whats the lowest value in the series. You can do that by using `Min` aggregator.
 
 ```ruby
-series = []
-total = Trifle::Stats::Aggregator::Min.new(series: series, path: 'a.count').aggregate
+series = {at: [...], values: [...]}
+total = Trifle::Stats::Aggregator::Min.new(series: series).aggregate(path: 'a.count')
 => 12
 ```
 

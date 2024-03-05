@@ -9,10 +9,10 @@ nav_order: 1
 Average transponder expands your data with calculated average of `sum` over `count`.
 
 ```ruby
-series = [{a: {sum: 10, count: 2}}, {a: {sum: 21, count: 3}}]
-transponder = Trifle::Stats::Transponder::Average.new(sum: 'sum', count: 'count')
-transponder.transpond(series: series, path: 'a')
-=> [{a: {sum: 10, count: 2, average: 5}}, {a: {sum: 21, count: 3, average: 7}}]
+series = {at: [...], values: [{a: {sum: 10, count: 2}}, {a: {sum: 21, count: 3}}]}
+transponder = Trifle::Stats::Transponder::Average.new(series: series)
+transponder.transpond(path: 'a', sum: 'sum', count: 'count')
+=> {at: [...], values: [{a: {sum: 10, count: 2, average: 5}}, {a: {sum: 21, count: 3, average: 7}}]}
 ```
 
 > Note: `sum` and `count` are default values of the keys. You need to pass only overrides.

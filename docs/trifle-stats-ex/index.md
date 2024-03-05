@@ -20,4 +20,4 @@ There are many ways to do analytics. You can use 3rd party service (Segment, or 
 
 `Trifle.Stats` helps with the in-house analytics. It gives you simple methods for storing and retrieving data and does enough (but not too much) magic on the background for you. This way you don't need to worry where or how your data is being stored or structured. All that matters is to track values that matters and fetch its timeline data. Plotting is all in your hands.
 
-[^1]: TBH only database drivers for now 💔.
+[^1]: TBH only database drivers for now </3.

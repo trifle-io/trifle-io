@@ -9,8 +9,8 @@ nav_order: 2
 Sometimes you just want to know whats the biggest value in the series. You can do that by using `Max` aggregator.
 
 ```ruby
-series = []
-total = Trifle::Stats::Aggregator::Max.new(series: series, path: 'a.count').aggregate
+series = {at: [...], values: [...]}
+total = Trifle::Stats::Aggregator::Max.new(series: series).aggregate(path: 'a.count')
 => 3313
 ```
 

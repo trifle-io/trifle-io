@@ -76,3 +76,7 @@ p99 = average + sd * 2.58
 ```
 
 And voila. Now you have average, 95th percentile as well as 99th percentile. Which are the holy grail of performance monitoring.
+
+## Transponders
+
+Alternatively you can calculate percentiles by using [Standard Deviation Transponder](../transponders/standard_deviation) and then calculating appropriate percentile in [Timeline Formatter](../formatters/timeline) and avoid doing all the manual calculation yourself!

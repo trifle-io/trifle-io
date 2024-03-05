@@ -6,6 +6,9 @@ nav_order: 100
 
 # Changelog
 
+### **0.3.1** - *February 26, 2024*
+  - Fix: Markdown Harvester avoids crashing while parsing broken markdown file.
+
 ### **0.3.0** - *September 18, 2022*
   - Feature: Harvester with configurable cache.
 

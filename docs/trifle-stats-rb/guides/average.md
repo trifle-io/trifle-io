@@ -72,3 +72,7 @@ irb(main):013:0> Trifle::Stats.values(key: 'event::average::test_2', from: Time.
 ```
 
 And from this point, all you need to do is to divide `duration` by `count` to get the average value.
+
+## Transponders
+
+Alternatively you can calculate average by using [Average Transponder](../transponders/average) that does this for you automatically!

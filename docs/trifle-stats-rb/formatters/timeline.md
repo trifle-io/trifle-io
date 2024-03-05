@@ -12,18 +12,18 @@ Timeline formatter will help you to prepare data for (pretty much) any (reasonab
 
 ```ruby
 series = {at: [...], values: [...]}
-formatter = Trifle::Stats::Formatter::Timeline.new(series: series, path: 'a.count')
-simple_data = formatter.format do |at, value|
+formatter = Trifle::Stats::Formatter::Timeline.new(series: series)
+simple_data = formatter.format(path: 'a.count') do |at, value|
   value.to_i
 end
 => [1, 2, 3, 4, 5, ...]
 
-array_data = formatter.format do |at, value|
+array_data = formatter.format(path: 'a.count') do |at, value|
   [at.to_i, value.to_i]
 end
 => [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], ...]
 
-hash_data = formatter.format do |at, value|
+hash_data = formatter.format(path: 'a.count') do |at, value|
   {x: at.to_i, y: value.to_i}
 end
 => [{x: 1, y: 1}, {x: 2, y: 2}, {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5}, ...]
@@ -34,14 +34,14 @@ If your value comes from transponder like Standard Deviation, you may wanna mult
 ```ruby
 series = {at: [...], values: [...]}
 
-transponder = Trifle::Stats::Transponder::StandardDeviation.new(count: 'count', sum: 'sum', square: 'square')
-series = transponder.transpond(series: series, path: 'a')
+transponder = Trifle::Stats::Transponder::StandardDeviation.new(series: series)
+series = transponder.transpond(path: 'a')
 
-formatter = Trifle::Stats::Formatter::Timeline.new(series: series, path: 'a.sd')
-p95 = formatter.format do |at, value|
+formatter = Trifle::Stats::Formatter::Timeline.new(series: series)
+p95 = formatter.format(path: 'a.sd') do |at, value|
   {x: at.to_i, y: value * 1.98}
 end
-p99 = formatter.format do |at, value|
+p99 = formatter.format(path: 'a.sd') do |at, value|
   {x: at.to_i, y: value * 2.58}
 end
 ```

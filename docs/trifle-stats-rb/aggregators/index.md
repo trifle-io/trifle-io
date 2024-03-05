@@ -12,8 +12,8 @@ For example you want to know the number of events that happened during the speci
 
 ```ruby
 series = [at: [...], values: [{a: {count: 42}}, {a: {count: 33}}]]
-aggregator = Trifle::Stats::Aggregator::Sum.new(series: series, path: 'a.count')
-aggregator.aggregate
+aggregator = Trifle::Stats::Aggregator::Sum.new(series: series)
+aggregator.aggregate(path: 'a.count')
 => 75
 ```
 
