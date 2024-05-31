@@ -20,11 +20,15 @@ end
 
 These will make sure your sums are incremented correctly and you can use them to calculate Standard Deviation.
 
+> Note: `count`, `sum` and `square` are default values of the keys. You need to pass only overrides.
+
 ```ruby
-series = {at: [...], values: [{a: {count: 2, sum: 10, square: 50}}, {count: 3, sum: 21, square: 147}]}
-transponder = Trifle::Stats::Transponder::StandardDeviation.new(series: series)
-transponder.transpond(path: 'a', count: 'count', sum: 'sum', square: 'square')
-=> {at: [...], values: [{a: {count: 2, sum: 10, square: 50, sd: 5}}, {count: 3, sum: 21, square: 147, sd: 7}]}
+series = Trifle::Stats.series(...)
+=> #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={:at=>[2024-03-22 19:38:00 +0000, 2024-03-22 19:39:00 +0000], :values=>[{events: {count: 42, sum: 2184}}, {events: {count: 33, sum: 1553}}]}>
+series.transpond.standard_deviation(path: 'events')
+=> #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={:at=>[2024-03-22 19:38:00 +0000, 2024-03-22 19:39:00 +0000], :values=>[{events: {count: 42, sum: 2184, sd: 123}}, {events: {count: 33, sum: 1553, sd: 456}}]}>
 ```
 
-> Note: `count`, `sum` and `square` are default values of the keys. You need to pass only overrides.
+> Note: `path` is a list of keys joined by dot. Ie `orders.shipped.count` would represent value at `{orders: { shipped: { count: ... } } }`.
+
+

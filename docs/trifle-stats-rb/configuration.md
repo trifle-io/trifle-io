@@ -12,7 +12,6 @@ Configuration allows you to specify:
 
 - `driver` - backend driver used to store and retrieve data.
 - `track_ranges` - list of timeline ranges you would like to track. Value must be list of symbols, defaults to `[:minute, :hour, :day, :week, :month, :quarter, :year]`.
-- `separator` - keys can get serialized in backend, separator is used to join these values. Value must be string, defaults to `::`.
 - `time_zone` - `TZInfo` zone to properly generate range for timeline values. Value must be valid TZ string identifier, otherwise it defaults and fallbacks to `'GMT'`.
 - `beginning_of_week` - first day of week. Value must be string, defaults to `:monday`.
 - `designator` - instance of Designator class used to categorize values for a Histogram. No default. Trying to `assort` without `designator` will raise an exception.
@@ -42,7 +41,6 @@ configuration = Trifle::Stats::Configuration.new
 configuration.driver = Trifle::Stats::Driver::Redis.new
 configuration.track_ranges = [:day]
 configuration.time_zone = 'GMT'
-configuration.separator = '#'
 
 # or use different driver
 mongo_configuration = Trifle::Stats::Configuration.new

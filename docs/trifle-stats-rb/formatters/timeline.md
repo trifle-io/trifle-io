@@ -11,39 +11,45 @@ Timeline formatter will help you to prepare data for (pretty much) any (reasonab
 `format` method accepts a block where `at` and `value` variables are available. You can use this to format `at` timestamp into desired version, or return only `value`, or return hash or multi-dimensional array. The choice is yours!
 
 ```ruby
-series = {at: [...], values: [...]}
-formatter = Trifle::Stats::Formatter::Timeline.new(series: series)
-simple_data = formatter.format(path: 'a.count') do |at, value|
+series = Trifle::Stats.series(...)
+=> #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={:at=>[2024-03-22 19:38:00 +0000, 2024-03-22 19:39:00 +0000], :values=>[{events: {count: 42, sum: 2184}}, {events: {count: 33, sum: 1553}}]}>
+sample_data = series.format.timeline(path: 'events.count') do |at, value|
   value.to_i
 end
-=> [1, 2, 3, 4, 5, ...]
+=> [42, 33]
 
-array_data = formatter.format(path: 'a.count') do |at, value|
+array_data = series.format.timeline(path: 'events.count') do |at, value|
   [at.to_i, value.to_i]
 end
-=> [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], ...]
+=> [[1711136280, 42], [1711136340, 33]]
 
-hash_data = formatter.format(path: 'a.count') do |at, value|
-  {x: at.to_i, y: value.to_i}
+hash_data = series.format.timeline(path: 'events.count') do |at, value|
+  { x: at.to_i, y: value.to_i }
 end
-=> [{x: 1, y: 1}, {x: 2, y: 2}, {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5}, ...]
-```
+=> [{ x: 1711136280, y: 42 }, { x: 1711136340, y: 33 }]
+ ```
+
+> Note: `path` is a list of keys joined by dot. Ie `orders.shipped.count` would represent value at `{orders: { shipped: { count: ... } } }`.
 
 If your value comes from transponder like Standard Deviation, you may wanna multiply value by a constant that calculate specific percentile.
 
 ```ruby
-series = {at: [...], values: [...]}
+series = Trifle::Stats.series(...)
+=> #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={:at=>[2024-03-22 19:38:00 +0000, 2024-03-22 19:39:00 +0000], :values=>[{events: {count: 42, sum: 2184}}, {events: {count: 33, sum: 1553}}]}>
+series.transpond.standard_deviation(path: 'events')
+=> #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={:at=>[2024-03-22 19:38:00 +0000, 2024-03-22 19:39:00 +0000], :values=>[{events: {count: 42, sum: 2184, sd: 123}}, {events: {count: 33, sum: 1553, sd: 456}}]}>
 
-transponder = Trifle::Stats::Transponder::StandardDeviation.new(series: series)
-series = transponder.transpond(path: 'a')
-
-formatter = Trifle::Stats::Formatter::Timeline.new(series: series)
-p95 = formatter.format(path: 'a.sd') do |at, value|
+p95 = series.format.timeline(path: 'events.sd') do |at, value|
   {x: at.to_i, y: value * 1.98}
 end
-p99 = formatter.format(path: 'a.sd') do |at, value|
+=> [{ x: 1711136280, y: 243.54 }, { x: 1711136340, y: 902.88 }]
+
+p99 = formatter.format(path: 'events.sd') do |at, value|
   {x: at.to_i, y: value * 2.58}
 end
+=> [{ x: 1711136280, y: 317.34 }, { x: 1711136340, y: 1176.48 }
 ```
+
+> Note: The above example of standard deviation transponder is not valid as its missing necessary keys inside of the `events` hash. The goal was to illustrate how to use formatter to further perform calculation before ploting.
 
 And thats it. Now you prepared series for plotting your percentiles.

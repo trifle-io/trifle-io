@@ -1,16 +1,14 @@
 ---
-title: Get values
-description: Learn how to retrieve values.
-nav_order: 4
+title: Get series
+description: Learn how to work with series of values.
+nav_order: 5
 ---
 
-# Get values
+# Get series
 
-Getting values runs `get` on the driver.
+Getting series behaves same as getting values. The twist comes that series is values wrapped into an object that allows you to work further with [transponders](../transponders), [aggregators](../aggregators) and [formatters](../formatters).
 
-> NOTE: You can work with values by using [Series](./series) method as well which allows you to perform additional actions on a series of data easily.
-
-## `values(key: String, from: Time, to: Time, range: Symbol, **options)`
+## `series(key: String, from: Time, to: Time, range: Symbol, **options)`
 - `key` - string identifier for the metrics
 - `from` - timestamp you want to get values from
 - `to` - timestamp you want to get values to
@@ -28,15 +26,20 @@ The more data you're fetching, the slower the response time. Thats a trade-off y
 Here is an example how to get today values for specific key.
 
 ```ruby
-Trifle::Stats.values(key: 'event::logs', from: Time.now, to: Time.now, range: :day)
-=> {:at=>[2021-01-25 00:00:00 +0200], :values=>[{"count"=>3, "duration"=>8, "lines"=>658}]}
+series = Trifle::Stats.series(key: 'event::logs', from: Time.now, to: Time.now, range: :day)
+=> #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={:at=>[2021-01-25 00:00:00 +0200], :values=>[{"count"=>3, "duration"=>8, "lines"=>658}]}>
+series.aggregate.sum(path: 'count')
+=> 3
+
 ```
 
 And here is another how to get daily values for a last 30 days for specific key.
 
 ```ruby
-Trifle::Stats.values(key: 'event::logs', from: Time.now - 60 * 60 * 24 * 30, to: Time.now, range: :day)
-=> {:at=>[2021-01-25 00:00:00 +0200, 2021-01-24 00:00:00 +0200, ...], values: [{"count"=>3, "duration"=>8, "lines"=>658}, {"count"=>1, "duration"=>3, "lines"=>311}, ...]}
+series = Trifle::Stats.series(key: 'event::logs', from: Time.now - 60 * 60 * 24 * 30, to: Time.now, range: :day)
+=> #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={:at=>[2021-01-25 00:00:00 +0200, 2021-01-24 00:00:00 +0200, ...], values: [{"count"=>3, "duration"=>8, "lines"=>658}, {"count"=>1, "duration"=>3, "lines"=>311}, ...]}>
+series.aggregate.sum(path: 'count')
+=> 432
 ```
 
 > If you're integrating with Rails, don't forget you can use _things_ like `1.month.ago` or `Time.zone.now - 30.days`.
@@ -46,8 +49,8 @@ Trifle::Stats.values(key: 'event::logs', from: Time.now - 60 * 60 * 24 * 30, to:
 Sometimes you may not have event occurence every hour or every day. Whenever you pull longer period of data, you may end up with timestamps and values where no values has been tracked. `Trifle::Stats` drivers by default return empty hash in these so you can perform continuous calculations (ie slicing in aggregators, etc). The disadvantage of this is that it may create lots of _empty_ data. For example lets say you track something ~4 times a day and you wanna pull data per minute for last 30 days. By default `Trifle::Stats` would give you 30 (days) * 24 (hours) * 60 (minutes) ~43k of points. Good luck plotting that. But if you know you have lots of empty values in between, you may decide to skip those and then you would get back 30 (days) * 4 (times a day) ~= 120 points. Theres a big difference.
 
 ```ruby
-Trifle::Stats.values(key: 'events::logs', from: Time.now - 60 * 60 * 24 * 30, to: Time.now, range: :day)
-=> {
+Trifle::Stats.series(key: 'events::logs', from: Time.now - 60 * 60 * 24 * 30, to: Time.now, range: :day)
+=> #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={
   :at => [
     2021-01-20 00:00:00 +0200,
     2021-01-21 00:00:00 +0200,
@@ -70,14 +73,14 @@ Trifle::Stats.values(key: 'events::logs', from: Time.now - 60 * 60 * 24 * 30, to
     {},
     ...
   ]
-}
+}>
 ```
 
 And heres how that looks with `skip_blanks: true` enabled.
 
 ```ruby
-Trifle::Stats.values(key: 'events::logs', from: Time.now - 60 * 60 * 24 * 30, to: Time.now, range: :day, skip_blanks: true)
-=> {
+Trifle::Stats.series(key: 'events::logs', from: Time.now - 60 * 60 * 24 * 30, to: Time.now, range: :day, skip_blanks: true)
+=> #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={
   :at => [
     2021-01-20 00:00:00 +0200,
     2021-01-22 00:00:00 +0200,
@@ -90,6 +93,6 @@ Trifle::Stats.values(key: 'events::logs', from: Time.now - 60 * 60 * 24 * 30, to
     {"count"=>2, "duration"=>4, "lines"=>541},
     ...
   ]
-}
+}>
 ```
 

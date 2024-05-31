@@ -198,7 +198,7 @@ You may feel like by now we've already invested too much time into this. Trust m
 
 By now you've either run the quick snippet or you let the background job be executed couple times. That means you should have some numbers stored in.
 
-`Trifle::Stats` allows you to retrieve values for a tracked `range` and specified period between `from` and `to`.
+`Trifle::Stats` allows you to retrieve values for a tracked `range` and specified period between `from` and `to`. You can do this by using either [`.values`](./usage/values) or [`.series`](./usage/series) methods.
 
 ```ruby
 irb(main):001:0> stats = Trifle::Stats.values(key: 'event::uploads', from: 1.day.ago, to: Time.zone.now, range: :hour)
@@ -265,6 +265,15 @@ You may recall that in `configure` we specified that we want to track `hour` and
 ```ruby
 irb(main):001:0> stats = Trifle::Stats.values(key: 'event::uploads', from: 1.day.ago, to: Time.zone.now, range: :day)
 => {:at=>[2023-03-04 00:00:00 +0100, 2023-03-05 00:00:00 +0100], :values=>[{"count"=>41, "duration"=>409, "products"=>21422}, {"count"=>59, "duration"=>548, "products"=>34193}]}
+```
+
+Working with values is great as that gives you full controll over what you want to do with them. Sometimes you don't wanna get that dirty and staying on higher level is completely fine. In that case you can use [`series`](./usage/series) to get same values and work with the data using [transponders](./transponders), [aggregators](./aggregators) and [formatters](./formatters).
+
+```ruby
+irb(main):001:0> series = Trifle::Stats.values(key: 'event::uploads', from: 1.day.ago, to: Time.zone.now, range: :day)
+{=> #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={:at=>[2023-03-04 00:00:00 +0100, 2023-03-05 00:00:00 +0100], :values=>[{"count"=>41, "duration"=>409, "products"=>21422}, {"count"=>59, "duration"=>548, "products"=>34193}]}>
+irb(main):002:1> series.aggregate.sum(path: 'count')
+=> 0.1e3
 ```
 
 And thats it. Now you've successfully stored bunch of metrics in Redis and retrieved the hourly stats for last day. I know it's simple. It's crazy simple. And you can do quite a lot with it. Check out [Case Studies](./case_studies) for some real world examples.
