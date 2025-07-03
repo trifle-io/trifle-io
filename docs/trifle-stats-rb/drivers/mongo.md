@@ -32,9 +32,23 @@ Trifle::Stats.configure do |config|
 end
 ```
 
+Mongo driver supports `key` as a joined value of `key`, `range` and `at` but also supports these attributes separately. You can specivy it via `joined_identifier: false` keyword argument. It defaults to joined configuration as its more performant. Separating these into its attributes opens you to access data directly and use other tools to visualize the content.
+
+It also supports custom collection name as `collection_name: 'trifle_stats'` keyword argument.
+
+```ruby
+Trifle::Stats.configure do |config|
+  config.driver = Trifle::Stats::Driver::Mongo.new(
+    Mongo::Client.new('mongodb://mongo:27017/stats'),
+    collection_name: 'my_stats',
+    joined_identifier: false
+  )
+end
+```
+
 ## Setup
 
-Mongo driver requires `trifle_stats` collection to be present. You can override `collection_name` when creating an instance of a driver.
+Mongo driver requires `trifle_stats` collection to be present. You can override `collection_name` when creating an instance of a driver. If you wish to modify joined identifier you need to pass the same argument in setup as well. For joined identifiers it creates index only for `key` and for separated identifiers it creates combined index for `key`, `range` and `at`. The downside of having keys separately is slightly (~5%-10%) slower performance due to combined index. Keep that in mind.
 
 You can create collection and index on your own or simply call `setup!` class method that does this for you. It creates a collection and adds an unique index on a `key` attribute.
 
@@ -44,13 +58,15 @@ Below is a setup and configuration for a custom database and a collection name.
 client = Mongo::Client.new('mongodb://mongo:27017/stats')
 Trifle::Stats::Driver::Mongo.setup!(
   Mongo::Client.new('mongodb://mongo:27017/stats'),
-  collection_name: 'my_stats'
+  collection_name: 'my_stats',
+  joined_identifiers: false
 )
 
 Trifle::Stats.configure do |config|
   config.driver = Trifle::Stats::Driver::Mongo.new(
     Mongo::Client.new('mongodb://mongo:27017/stats'),
-    collection_name: 'my_stats'
+    collection_name: 'my_stats',
+    joined_identifiers: false
   )
 end
 ```

@@ -9,7 +9,7 @@ template: blog
 
 It's easy to get excited when seeing performance comparison provided by someone. Numbers looks exiting, solid, valid, and what not. But what does it mean? How does it apply to your usecase?
 
-`Trifle::Stats` includes section about drivers [performance](../trifle-stats/drivers/performance). It includes build in script for running test through multiple drivers and priting summary of that. This test has two short-comings:
+`Trifle::Stats` includes section about drivers [performance](../trifle-stats-rb/drivers/performance). It includes build in script for running test through multiple drivers and priting summary of that. This test has two short-comings:
 
 1. Data is _static_ and doesnt change between writes.
 2. Data gets updated for single timestamp and reading it always return one record no matter the desired range.
@@ -180,7 +180,7 @@ As you can see, this is very _simple_ single-threaded testing.
 
 ### 100x for a single value
 
-Lets go and `./run 100 '{"a":1}'` to see whats gonna happen. Once I run it multiple times, all runs show quite similar output.
+Lets go and `ruby run.rb 100 '{"a":1}'` to see whats gonna happen. Once I run it multiple times, all runs show quite similar output.
 
 ```sh
 Testing 100x {"a"=>1} increments

@@ -40,7 +40,7 @@ Below is a comparison of tests running on AWS EC2 `t2.medium` instance running a
 The simplest tracking you can do is to track 1 value. Lets see how drivers perform writing/reading these 100 and 1000 times.
 
 ```sh
-root@3b5545595714:~/trifle-stats/spec/performance# ./run 100 '{"a":1}'
+root@3b5545595714:~/trifle-stats/spec/performance# ruby run.rb 100 '{"a":1}'
 Testing 100x {"a"=>1} increments
 DRIVER                                  WRITE           READ
 Trifle::Stats::Driver::Redis            0.1234s         0.0268s
@@ -48,7 +48,7 @@ Trifle::Stats::Driver::Postgres         0.2557s         0.0325s
 Trifle::Stats::Driver::Mongo            0.1964s         0.11s
 Trifle::Stats::Driver::Process          0.0134s         0.0097s
 Trifle::Stats::Driver::Sqlite           0.4358s         0.0215s
-root@3b5545595714:~/trifle-stats/spec/performance# ./run 1000 '{"a":1}'
+root@3b5545595714:~/trifle-stats/spec/performance# ruby run.rb 1000 '{"a":1}'
 Testing 1000x {"a"=>1} increments
 DRIVER                                  WRITE           READ
 Trifle::Stats::Driver::Redis            1.0422s         0.2596s
@@ -67,7 +67,7 @@ Now lets compare what happens if we track 5 values. Either stored on top level o
 First lets start with top level values.
 
 ```sh
-root@3b5545595714:~/trifle-stats/spec/performance# ./run 100 '{"a":1,"b":2,"c":3,"d":4,"e":5}'
+root@3b5545595714:~/trifle-stats/spec/performance# ruby run.rb 100 '{"a":1,"b":2,"c":3,"d":4,"e":5}'
 Testing 100x {"a"=>1, "b"=>2, "c"=>3, "d"=>4, "e"=>5} increments
 DRIVER                                  WRITE           READ
 Trifle::Stats::Driver::Redis            0.4891s         0.0332s
@@ -75,7 +75,7 @@ Trifle::Stats::Driver::Postgres         0.3005s         0.0364s
 Trifle::Stats::Driver::Mongo            0.208s          0.1087s
 Trifle::Stats::Driver::Process          0.0274s         0.0102s
 Trifle::Stats::Driver::Sqlite           0.4468s         0.0196s
-root@3b5545595714:~/trifle-stats/spec/performance# ./run 1000 '{"a":1,"b":2,"c":3,"d":4,"e":5}'
+root@3b5545595714:~/trifle-stats/spec/performance# ruby run.rb 1000 '{"a":1,"b":2,"c":3,"d":4,"e":5}'
 Testing 1000x {"a"=>1, "b"=>2, "c"=>3, "d"=>4, "e"=>5} increments
 DRIVER                                  WRITE           READ
 Trifle::Stats::Driver::Redis            4.1344s         0.3248s
@@ -88,7 +88,7 @@ Trifle::Stats::Driver::Sqlite           4.4097s         0.2078s
 And next with nested values.
 
 ```sh
-root@3b5545595714:~/trifle-stats/spec/performance# ./run 100 '{"a":1,"b":2,"c":{"d":3,"e":{"f":4,"g":5}}}'
+root@3b5545595714:~/trifle-stats/spec/performance# ruby run.rb 100 '{"a":1,"b":2,"c":{"d":3,"e":{"f":4,"g":5}}}'
 Testing 100x {"a"=>1, "b"=>2, "c"=>{"d"=>3, "e"=>{"f"=>4, "g"=>5}}} increments
 DRIVER                                  WRITE           READ
 Trifle::Stats::Driver::Redis            0.4797s         0.0347s
@@ -96,7 +96,7 @@ Trifle::Stats::Driver::Postgres         0.3153s         0.0355s
 Trifle::Stats::Driver::Mongo            0.2127s         0.1055s
 Trifle::Stats::Driver::Process          0.029s          0.0106s
 Trifle::Stats::Driver::Sqlite           0.4594s         0.02s
-root@3b5545595714:~/trifle-stats/spec/performance# ./run 1000 '{"a":1,"b":2,"c":{"d":3,"e":{"f":4,"g":5}}}'
+root@3b5545595714:~/trifle-stats/spec/performance# ruby run.rb 1000 '{"a":1,"b":2,"c":{"d":3,"e":{"f":4,"g":5}}}'
 Testing 1000x {"a"=>1, "b"=>2, "c"=>{"d"=>3, "e"=>{"f"=>4, "g"=>5}}} increments
 DRIVER                                  WRITE           READ
 Trifle::Stats::Driver::Redis            4.192s          0.3268s
@@ -113,7 +113,7 @@ Trifle::Stats::Driver::Sqlite           4.3669s         0.193s
 Lets see what happens when we increase the number of keys to 23.
 
 ```sh
-root@3b5545595714:~/trifle-stats/spec/performance# ./run 100 '{"a":1,"b":2,"c":1,"d":2,"e":1,"f":2,"g":1,"h":2,"i":1,"j":2,"k":1,"l":2,"m":1,"n":2,"o":1,"p":2,"q":1,"r":2,"s":1,"t":2,"u":1,"v":2,"w":1}'
+root@3b5545595714:~/trifle-stats/spec/performance# ruby run.rb 100 '{"a":1,"b":2,"c":1,"d":2,"e":1,"f":2,"g":1,"h":2,"i":1,"j":2,"k":1,"l":2,"m":1,"n":2,"o":1,"p":2,"q":1,"r":2,"s":1,"t":2,"u":1,"v":2,"w":1}'
 Testing 100x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1, "f"=>2, "g"=>1, "h"=>2, "i"=>1, "j"=>2, "k"=>1, "l"=>2, "m"=>1, "n"=>2, "o"=>1, "p"=>2, "q"=>1, "r"=>2, "s"=>1, "t"=>2, "u"=>1, "v"=>2, "w"=>1} increments
 DRIVER                                  WRITE           READ
 Trifle::Stats::Driver::Redis            1.9144s         0.0637s
@@ -121,7 +121,7 @@ Trifle::Stats::Driver::Postgres         0.6995s         0.0428s
 Trifle::Stats::Driver::Mongo            0.2399s         0.1069s
 Trifle::Stats::Driver::Process          0.0886s         0.017s
 Trifle::Stats::Driver::Sqlite           0.6593s         0.0225s
-root@3b5545595714:~/trifle-stats/spec/performance# ./run 1000 '{"a":1,"b":2,"c":1,"d":2,"e":1,"f":2,"g":1,"h":2,"i":1,"j":2,"k":1,"l":2,"m":1,"n":2,"o":1,"p":2,"q":1,"r":2,"s":1,"t":2,"u":1,"v":2,"w":1}'
+root@3b5545595714:~/trifle-stats/spec/performance# ruby run.rb 1000 '{"a":1,"b":2,"c":1,"d":2,"e":1,"f":2,"g":1,"h":2,"i":1,"j":2,"k":1,"l":2,"m":1,"n":2,"o":1,"p":2,"q":1,"r":2,"s":1,"t":2,"u":1,"v":2,"w":1}'
 Testing 1000x {"a"=>1, "b"=>2, "c"=>1, "d"=>2, "e"=>1, "f"=>2, "g"=>1, "h"=>2, "i"=>1, "j"=>2, "k"=>1, "l"=>2, "m"=>1, "n"=>2, "o"=>1, "p"=>2, "q"=>1, "r"=>2, "s"=>1, "t"=>2, "u"=>1, "v"=>2, "w"=>1} increments
 DRIVER                                  WRITE           READ
 Trifle::Stats::Driver::Redis            17.8836s        0.5667s
