@@ -177,6 +177,7 @@
               </li>
               <% sitemap.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |(key, option)| %>
                 <% next if key == '_meta' %>
+                <% next if option.dig('_meta', 'url').nil? %>
                 <li>
                   <% if "/#{url}".start_with?(option.dig('_meta', 'url')) %>
                     <a href="<%= option.dig('_meta', 'url') %>" class="font-display text-base font-bold text-teal-600">

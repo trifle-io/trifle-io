@@ -3,8 +3,8 @@
 <div class="grid grid-cols-1">
   <% collection.to_a.sort_by{|(key, post)| Time.parse(post.dig('_meta', 'date')).to_i rescue 0}.reverse.each do |(key, post)| %>
     <% next if key == '_meta' %>
-    <div class="flex">
-      <div class="grow text-lg">
+    <div class="flex mt-4">
+      <div class="grow text-2xl">
         <a href="<%= post.dig('_meta', 'url') %>"><%= post.dig('_meta', 'title') %></a>
       </div>
       <div class="flex-none text-gray-500 font-mono text-sm">by <%= post.dig('_meta', 'author') %> on <%= post.dig('_meta', 'date') %></div>

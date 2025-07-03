@@ -7,7 +7,7 @@ template: blog
 
 # Trifle as Application Performance Monitoring
 
-> NOTE: This is a re-post of a personal blog post from 2017.
+> NOTE: This is a re-post of a personal blog post from 2017. It talks about origins of `Trifle::Stats`.
 
 ![Beta version of Trifle build with Ember tracking one slow app.](./2022-11-performance/trifle-01.png)
 

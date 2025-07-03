@@ -15,12 +15,12 @@ series = Trifle::Stats.series(...)
 => #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={:at=>[2024-03-22 19:38:00 +0000, 2024-03-22 19:39:00 +0000], :values=>[{events: {count: 42, sum: 2184}}, {events: {count: 33, sum: 1553}}]}>
 
 default_data = series.format.category(path: 'events')
-=> {"count" => 0.75e2, "sum" => 0.3737e4}
+=> [{"count" => 0.75e2, "sum" => 0.3737e4}]
 
 formatted_data = series.format.category(path: 'events') do |key, value|
   [key.to_s.upcase, value.to_i]
 end
-=> {"COUNT" => 75, "SUM" => 3737}
+=> [{"COUNT" => 75, "SUM" => 3737}]
 ```
 
 > Note: `path` is a list of keys joined by dot. Ie `orders.shipped.count` would represent value at `{orders: { shipped: { count: ... } } }`.

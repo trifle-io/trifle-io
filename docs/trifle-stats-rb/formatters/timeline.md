@@ -16,17 +16,17 @@ series = Trifle::Stats.series(...)
 sample_data = series.format.timeline(path: 'events.count') do |at, value|
   value.to_i
 end
-=> [42, 33]
+=> [[42, 33]]
 
 array_data = series.format.timeline(path: 'events.count') do |at, value|
   [at.to_i, value.to_i]
 end
-=> [[1711136280, 42], [1711136340, 33]]
+=> [[[1711136280, 42], [1711136340, 33]]]
 
 hash_data = series.format.timeline(path: 'events.count') do |at, value|
   { x: at.to_i, y: value.to_i }
 end
-=> [{ x: 1711136280, y: 42 }, { x: 1711136340, y: 33 }]
+=> [[{ x: 1711136280, y: 42 }, { x: 1711136340, y: 33 }]]
  ```
 
 > Note: `path` is a list of keys joined by dot. Ie `orders.shipped.count` would represent value at `{orders: { shipped: { count: ... } } }`.
@@ -42,12 +42,12 @@ series.transpond.standard_deviation(path: 'events')
 p95 = series.format.timeline(path: 'events.sd') do |at, value|
   {x: at.to_i, y: value * 1.98}
 end
-=> [{ x: 1711136280, y: 243.54 }, { x: 1711136340, y: 902.88 }]
+=> [[{ x: 1711136280, y: 243.54 }, { x: 1711136340, y: 902.88 }]]
 
 p99 = formatter.format(path: 'events.sd') do |at, value|
   {x: at.to_i, y: value * 2.58}
 end
-=> [{ x: 1711136280, y: 317.34 }, { x: 1711136340, y: 1176.48 }
+=> [[{ x: 1711136280, y: 317.34 }, { x: 1711136340, y: 1176.48 }]
 ```
 
 > Note: The above example of standard deviation transponder is not valid as its missing necessary keys inside of the `events` hash. The goal was to illustrate how to use formatter to further perform calculation before ploting.
