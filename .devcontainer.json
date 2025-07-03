@@ -1,6 +1,6 @@
 {
   "dockerComposeFile": ".devops/docker/codespaces/docker-compose.yml",
   "service": "app",
-  "workspaceFolder": "/",
+  "workspaceFolder": "/workspaces/trifle-io",
   "shutdownAction": "stopCompose"
 }
