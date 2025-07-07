@@ -12,7 +12,7 @@ Mongo driver uses `mongo` client gem to talk to database. It uses `bulk_write` a
 
 To be able to use `Trifle::Stats::Driver::Mongo` requires few arguments to be configured correctly.
 
-### `driver`
+### `driver (Mongo)`
 
 First required argument is a `driver`. You can configure driver directly using `mongo` gem;
 

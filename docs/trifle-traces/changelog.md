@@ -6,6 +6,9 @@ nav_order: 100
 
 # Changelog
 
+### **1.2.0** - *July 7, 2025*
+  - Feature: Hash supports nesting of blocks.
+
 ### **1.1.2** - *August 13, 2023*
   - Feature: Fallback to `inspect` serializer if cerrent serializer crashes serialization.
 

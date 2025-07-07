@@ -1,52 +1,63 @@
-GEM
-  remote: https://rubygems.org/
+GIT
+  remote: https://github.com/trifle-io/trifle-docs.git
+  revision: 56255423e22f87539d0e0bbd2770aad97fd49e13
+  branch: main
   specs:
-    base64 (0.2.0)
-    mustermann (3.0.0)
-      ruby2_keywords (~> 0.0.1)
-    nio4r (2.5.8)
-    puma (5.6.4)
-      nio4r (~> 2.0)
-    rack (3.0.9.1)
-    rack-protection (4.0.0)
-      base64 (>= 0.1.0)
-      rack (>= 3.0.0, < 4)
-    rack-session (2.0.0)
-      rack (>= 3.0.0)
-    rackup (2.1.0)
-      rack (>= 3)
-      webrick (~> 1.8)
-    redcarpet (3.6.0)
-    rouge (4.2.0)
-    ruby2_keywords (0.0.5)
-    sinatra (4.0.0)
-      mustermann (~> 3.0)
-      rack (>= 3.0.0, < 4)
-      rack-protection (= 4.0.0)
-      rack-session (>= 2.0.0, < 3)
-      tilt (~> 2.0)
-    tilt (2.3.0)
     trifle-docs (0.3.1)
       redcarpet
       rouge
       sinatra
       yaml
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    base64 (0.3.0)
+    logger (1.7.0)
+    mustermann (3.0.3)
+      ruby2_keywords (~> 0.0.1)
+    nio4r (2.7.4)
+    puma (6.6.0)
+      nio4r (~> 2.0)
+    rack (3.1.16)
+    rack-protection (4.1.1)
+      base64 (>= 0.1.0)
+      logger (>= 1.6.0)
+      rack (>= 3.0.0, < 4)
+    rack-session (2.1.1)
+      base64 (>= 0.1.0)
+      rack (>= 3.0.0)
+    rackup (2.1.0)
+      rack (>= 3)
+      webrick (~> 1.8)
+    redcarpet (3.6.1)
+    rouge (4.5.2)
+    ruby2_keywords (0.0.5)
+    sinatra (4.1.1)
+      logger (>= 1.6.0)
+      mustermann (~> 3.0)
+      rack (>= 3.0.0, < 4)
+      rack-protection (= 4.1.1)
+      rack-session (>= 2.0.0, < 3)
+      tilt (~> 2.0)
+    tilt (2.6.0)
     webrick (1.8.1)
-    yaml (0.3.0)
+    yaml (0.4.0)
 
 PLATFORMS
   arm64-darwin-21
   arm64-darwin-22
   arm64-darwin-23
+  arm64-darwin-24
   x86_64-linux
 
 DEPENDENCIES
   puma
   rackup
-  trifle-docs
+  trifle-docs!
 
 RUBY VERSION
-   ruby 3.2.2p53
+   ruby 3.3.5p100
 
 BUNDLED WITH
    2.3.16

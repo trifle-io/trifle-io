@@ -2,9 +2,9 @@
 
 source 'https://rubygems.org'
 
-ruby '3.2.2'
+ruby '3.3.5'
 
 
 gem 'puma'
-gem 'trifle-docs'
+gem 'trifle-docs', github: 'trifle-io/trifle-docs', branch: :main
 gem 'rackup'

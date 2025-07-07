@@ -6,10 +6,13 @@ nav_order: 100
 
 # Changelog
 
-### **1.4.0** - *March TBA, 2024*
+### **1.4.0** - *July TBA, 2025*
+  - Feat: Beam and Scan for liveness checks
   - Feat: Introduce Aggregators
   - Feat: Introduce Formatters
   - Feat: Introduce Transponders
+  - Feat: MongoDB with expire_after
+  - Feat: MongoDB with joined_identifier
 
 ### **1.3.1** - *August 29, 2022*
   - Fix: Do not require database gems by default.
