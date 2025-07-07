@@ -10,9 +10,26 @@ Driver is a wrapper class that persists and retrieves values from backend. It ne
 
 - `inc(keys:, **values)` method increment values for keys
 - `set(keys:, **values)` method set values for keys
+- `ping(key:, **values)` method that sets values for key and updates timestamp
 - `get(keys:)` method to retrieve values for keys
+- `scan(key:)` method that looks up for last ping received for a key
 
 The keys array to build identifiers for objects that needs to modify or retrieve values for. Driver then decides on the optimal way to implement these actions.
+
+## Feature Parity
+
+Not all databases support same functionality. While it is important to keep these as close as possible, some features are not reasonable to achieve in some databases. Here is matrix of these drivers.
+
+| Driver   | collection_name | joined_identifiers | expire_after |
+|----------|-----------------|--------------------|--------------|
+| Postgres | YES             | YES                | NO           |
+
+
+| Column 1      | Column 2      |
+| ------------- | ------------- |
+| Cell 1, Row 1 | Cell 2, Row 1 |
+| Cell 1, Row 2 | Cell 1, Row 2 |
+
 
 ## Packer Mixin
 

@@ -10,7 +10,11 @@ Mongo driver uses `mongo` client gem to talk to database. It uses `bulk_write` a
 
 ## Configuration
 
-You can configure driver directly using `mongo` gem;
+To be able to use `Trifle::Stats::Driver::Mongo` requires few arguments to be configured correctly.
+
+### `driver`
+
+First required argument is a `driver`. You can configure driver directly using `mongo` gem;
 
 ```ruby
 require 'mongo'
@@ -32,16 +36,46 @@ Trifle::Stats.configure do |config|
 end
 ```
 
-Mongo driver supports `key` as a joined value of `key`, `range` and `at` but also supports these attributes separately. You can specivy it via `joined_identifier: false` keyword argument. It defaults to joined configuration as its more performant. Separating these into its attributes opens you to access data directly and use other tools to visualize the content.
+### `collection_name: 'trifle_stats' (String)`
 
-It also supports custom collection name as `collection_name: 'trifle_stats'` keyword argument.
+You can specify collection name used to store `Trifle::Stats` data in MongoDB. You can pass `collection_name: 'my_stats'` keyword argument.
 
 ```ruby
 Trifle::Stats.configure do |config|
   config.driver = Trifle::Stats::Driver::Mongo.new(
     Mongo::Client.new('mongodb://mongo:27017/stats'),
-    collection_name: 'my_stats',
+    collection_name: 'my_stats'
+  )
+end
+```
+
+### `joined_identfier: true (Bool)`
+
+Mongo driver supports `key` as a joined value of `key`, `range` and `at` but also supports these attributes separately. You can specify it via optional `joined_identifier: false` keyword argument. It defaults to joined configuration as it performs better. Separating these into its attributes opens you to access data directly and use other tools to visualize the content.
+
+```ruby
+Trifle::Stats.configure do |config|
+  config.driver = Trifle::Stats::Driver::Mongo.new(
+    Mongo::Client.new('mongodb://mongo:27017/stats'),
     joined_identifier: false
+  )
+end
+```
+
+### `expire_after: nil (Integer)`
+
+As MongoDB supports expiring indexes, it is possible to pass a `expire_after: 60` keyword argument that will set `expire_at` attribute on each upserted document 60 seconds after `at` timestamp. As of now the expiration is basic - a simple number of seconds from the tracked timestamp.
+
+Here are some usecases where it comes handy:
+
+- Using `beam` and `scan` where beamed metrics automatically expire after 15 seconds. `expire_after: 15`
+- Tracking only past 60 minutes of a performance metrics and discarding automatically everything that is older than that. `expire_after: 60 * 60`
+
+```ruby
+Trifle::Stats.configure do |config|
+  config.driver = Trifle::Stats::Driver::Mongo.new(
+    Mongo::Client.new('mongodb://mongo:27017/stats'),
+    expire_after: 60
   )
 end
 ```
