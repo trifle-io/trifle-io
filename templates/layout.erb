@@ -3,8 +3,8 @@
   <head>
     <meta name="viewport" content="width=device-width"/>
     <meta charSet="utf-8"/>
-    <title><%= meta['breadcrumbs'].count.times.map {|i| sitemap.dig(*meta['breadcrumbs'].take(i+1)).dig('_meta', 'title') }.join(' > ') || 'Trifle' rescue 'Trifle'%></title>
-    <meta name="description" content="<%= meta['breadcrumbs'].count.times.map {|i| sitemap.dig(*meta['breadcrumbs'].take(i+1)).dig('_meta', 'title') }.join('/') || Trifle rescue 'Trifle: Suite of little big tools.' %>"/>
+    <title><%= meta['breadcrumbs'] ? meta['breadcrumbs'].count.times.map {|i| sitemap.dig(*meta['breadcrumbs'].take(i+1)).dig('_meta', 'title') }.join(' > ') : 'Trifle' rescue 'Trifle'%></title>
+    <meta name="description" content="<%= meta['breadcrumbs'] ? meta['breadcrumbs'].count.times.map {|i| sitemap.dig(*meta['breadcrumbs'].take(i+1)).dig('_meta', 'title') }.join('/') : 'Trifle: Suite of little big tools.' rescue 'Trifle: Suite of little big tools.' %>"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
 
@@ -129,32 +129,169 @@
   </head>
   <body class="bg-white dark:bg-slate-900" x-data="{ isMobileVisible: false }">
     <header class="sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8 dark:bg-transparent">
-      <div class="mr-6 lg:hidden">
-        <button type="button" class="relative" x-on:click="isMobileVisible = !isMobileVisible">
-          <span class="sr-only">Open navigation</span>
-          <svg aria-hidden="true" class="h-6 w-6 stroke-slate-500" fill="none" stroke-width="2" stroke-linecap="round">
-            <path d="M4 7h16M4 12h16M4 17h16"></path>
-          </svg>
-        </button>
-        <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border-width:0;display:none"></div>
-      </div>
       <div class="relative flex flex-grow basis-0 items-center">
         <a class="block w-48 overflow-hidden lg:w-auto" href="/">
           <span class="font-mono text-slate-900 dark:text-white">Trifle</span>
         </a>
       </div>
-      <div class="relative flex basis-0 justify-end space-x-6 sm:space-x-8 md:flex-grow">
-        <a class="group" href="https://github.com/trifle-io">
+      <div class="relative flex basis-0 justify-end items-center space-x-4 md:flex-grow">
+        <form action="/search" method="get" class="relative hidden sm:block">
+          <input type="text" 
+                 name="query" 
+                 placeholder="Search..." 
+                 value="<%= defined?(params) && params[:query] ? params[:query] : '' %>"
+                 class="w-48 rounded-md border-slate-200 bg-white px-3 py-1.5 pr-8 text-sm placeholder-slate-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder-slate-400 dark:focus:border-teal-400 dark:focus:ring-teal-400">
+          <button type="submit" class="absolute inset-y-0 right-0 flex items-center pr-2">
+            <svg class="h-4 w-4 text-slate-400 hover:text-slate-500 dark:hover:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </button>
+        </form>
+        
+        <a class="group flex items-center" href="https://github.com/trifle-io">
           <span class="sr-only">GitHub</span>
           <svg aria-hidden="true" viewBox="0 0 16 16" class="h-6 w-6 fill-slate-400 group-hover:fill-slate-500 dark:group-hover:fill-slate-300">
             <path d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"></path>
           </svg>
         </a>
+        
+        <button type="button" class="flex items-center justify-center p-2 text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300 lg:hidden" x-on:click="isMobileVisible = !isMobileVisible">
+          <span class="sr-only">Open navigation</span>
+          <svg aria-hidden="true" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+        </button>
       </div>
     </header>
 
+    <!-- Mobile navigation overlay -->
+    <div x-show="isMobileVisible" 
+         x-transition:enter="transition-opacity ease-linear duration-300" 
+         x-transition:enter-start="opacity-0" 
+         x-transition:enter-end="opacity-100" 
+         x-transition:leave="transition-opacity ease-linear duration-300" 
+         x-transition:leave-start="opacity-100" 
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-50 lg:hidden" 
+         @click="isMobileVisible = false">
+      <div class="fixed inset-0 bg-slate-900/50"></div>
+    </div>
+
+    <!-- Mobile navigation panel -->
+    <div x-show="isMobileVisible"
+         x-transition:enter="transition ease-in-out duration-300 transform"
+         x-transition:enter-start="-translate-x-full"
+         x-transition:enter-end="translate-x-0"
+         x-transition:leave="transition ease-in-out duration-300 transform"
+         x-transition:leave-start="translate-x-0"
+         x-transition:leave-end="-translate-x-full"
+         class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 shadow-xl lg:hidden">
+      <div class="h-full overflow-y-auto py-6 px-4">
+        <div class="flex items-center justify-between mb-6">
+          <span class="font-mono text-lg font-semibold text-slate-900 dark:text-white">Trifle</span>
+          <button @click="isMobileVisible = false" class="text-slate-400 hover:text-slate-500 dark:hover:text-slate-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <nav class="text-base text-slate-700 dark:text-slate-300">
+            <form action="/search" method="get" class="mb-6 sm:hidden">
+              <div class="relative">
+                <input type="text" 
+                       name="query" 
+                       placeholder="Search..." 
+                       value="<%= defined?(params) && params[:query] ? params[:query] : '' %>"
+                       class="block w-full rounded-md border-slate-200 bg-white px-3 py-2 pr-10 text-sm shadow-sm placeholder-slate-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder-slate-400 dark:focus:border-teal-400 dark:focus:ring-teal-400">
+                <button type="submit" class="absolute inset-y-0 right-0 flex items-center pr-3">
+                  <svg class="h-4 w-4 text-slate-400 hover:text-slate-500 dark:hover:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                  </svg>
+                </button>
+              </div>
+            </form>
+            <ul class="space-y-4">
+              <li>
+                <% if meta.dig('url') == "/" %>
+                  <a href="/" class="font-display text-base font-bold text-slate-900 dark:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819" />
+                    </svg>
+                    Home
+                  </a>
+                <% else %>
+                  <a href="/" class="font-display text-base font-bold text-slate-600 dark:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819" />
+                    </svg>
+                    Home
+                  </a>
+                <% end %>
+              </li>
+              <% sitemap.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |(key, option)| %>
+                <% next if key == '_meta' %>
+                <% next if option.dig('_meta', 'url').nil? %>
+                <li>
+                  <% if "/#{url}".start_with?(option.dig('_meta', 'url')) %>
+                    <a href="<%= option.dig('_meta', 'url') %>" class="font-display text-base font-bold text-teal-600">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="<%= option.dig('_meta', 'svg') %>" />
+                      </svg>
+                      <%= option.dig('_meta', 'title') %>
+                      <svg viewBox="0 0 128 128" class="w-5 h-5 inline float-right" fill="currentColor">
+                        <%= option.dig('_meta', 'lang') %>
+                      </svg>
+                    </a>
+                  <% else %>
+                    <a href="<%= option.dig('_meta', 'url') %>" class="font-display text-base font-bold text-slate-600 dark:text-white">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="<%= option.dig('_meta', 'svg') %>" />
+                      </svg>
+                      <%= option.dig('_meta', 'title') %>
+                      <svg viewBox="0 0 128 128" class="w-5 h-5 inline float-right" fill="currentColor">
+                        <%= option.dig('_meta', 'lang') %>
+                      </svg>
+                    </a>
+                  <% end %>
+                  <% next if option.dig('_meta', 'url') == '/blog' %>
+                  <% next unless "/#{url}".start_with?(option.dig('_meta', 'url')) %>
+
+                  <ul class="mt-2 space-y-1 lg:mt-4 lg:space-y-2">
+                    <% option.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |(key, option)| %>
+                      <% next if key == '_meta' %>
+                      <li class="relative">
+                        <% if option.dig('_meta', 'url') == "/#{url}" %>
+                          <a href="<%= option.dig('_meta', 'url') %>" class="block w-full pl-3.5 font-semibold text-teal-500"><%= option.dig('_meta', 'title') %></a>
+                        <% else %>
+                          <a href="<%= option.dig('_meta', 'url') %>" class="block w-full pl-3.5 text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"><%= option.dig('_meta', 'title') %></a>
+                        <% end %>
+
+                        <ul class="ml-4 mt-1 mb-4 space-y-1 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-2 lg:space-y-4 lg:border-slate-200">
+                          <% option.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |(key, option)| %>
+                            <% next if key == '_meta' %>
+                            <li class="relative">
+                              <% if option.dig('_meta', 'url') == "/#{url}" %>
+                                <a href="<%= option.dig('_meta', 'url') %>" class="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:-translate-y-1/2 font-semibold text-teal-500 before:bg-teal-500"><%= option.dig('_meta', 'title') %></a>
+                              <% else %>
+                                <a href="<%= option.dig('_meta', 'url') %>" class="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:-translate-y-1/2 text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"><%= option.dig('_meta', 'title') %></a>
+                              <% end %>
+                            </li>
+                          <% end %>
+                        </ul>
+                      </li>
+                    <% end %>
+                  </ul>
+                </li>
+              <% end %>
+            </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Main content area -->
     <div class="relative mx-auto flex max-w-8xl justify-center px-2 lg:px-8 xl:px-12">
-      <div class="lg:flex-none w-64" x-bind:class="isMobileVisible ? 'block' : 'hidden lg:block'">
+      <!-- Desktop sidebar -->
+      <div class="hidden lg:block lg:flex-none w-64">
         <div class="sticky top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto py-16 pl-0.5">
           <nav class="text-base lg:text-sm w-128 pr-8 xl:w-72 xl:pr-16 min-w-64">
             <ul class="space-y-4">
@@ -234,14 +371,17 @@
           </nav>
         </div>
       </div>
+      
       <div class="min-w-0 max-w-2xl flex-auto px-4 py-16 lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16">
         <article>
           <header class="mb-9 space-y-1">
-            <% meta['breadcrumbs'].count.times do |i| %>
-              <% page = sitemap.dig(*meta['breadcrumbs'].take(i+1)) %>
-              <a href="<%= page.dig('_meta', 'url') %>" class="font-display text-sm font-medium text-teal-500"><%= page.dig('_meta', 'title') %></a>
-              <% next if i+1 == meta['breadcrumbs'].count %>
-              <span class="text-slate-400 dark:text-slate-400">/</span>
+            <% if meta['breadcrumbs'] %>
+              <% meta['breadcrumbs'].count.times do |i| %>
+                <% page = sitemap.dig(*meta['breadcrumbs'].take(i+1)) %>
+                <a href="<%= page.dig('_meta', 'url') %>" class="font-display text-sm font-medium text-teal-500"><%= page.dig('_meta', 'title') %></a>
+                <% next if i+1 == meta['breadcrumbs'].count %>
+                <span class="text-slate-400 dark:text-slate-400">/</span>
+              <% end %>
             <% end %>
           </header>
           <div id="content" class="prose prose-slate max-w-none dark:prose-invert dark:text-slate-400 prose-headings:scroll-mt-28 prose-headings:font-display prose-headings:font-normal lg:prose-headings:scroll-mt-[8.5rem] prose-lead:text-slate-500 dark:prose-lead:text-slate-400 prose-a:font-semibold dark:prose-a:text-teal-400 prose-a:no-underline prose-a:shadow-[inset_0_-2px_0_0_var(--tw-prose-background,#fff),inset_0_calc(-1*(var(--tw-prose-underline-size,4px)+2px))_0_0_var(--tw-prose-underline,theme(colors.teal.300))] hover:prose-a:[--tw-prose-underline-size:6px] dark:[--tw-prose-background:theme(colors.slate.900)] dark:prose-a:shadow-[inset_0_calc(-1*var(--tw-prose-underline-size,2px))_0_0_var(--tw-prose-underline,theme(colors.teal.800))] dark:hover:prose-a:[--tw-prose-underline-size:6px] prose-pre:rounded-xl prose-pre:bg-slate-900 prose-pre:shadow-lg dark:prose-pre:bg-slate-800/60 dark:prose-pre:shadow-none dark:prose-pre:ring-1 dark:prose-pre:ring-slate-300/10 dark:prose-hr:border-slate-800">
@@ -258,8 +398,9 @@
         </article>
 
         <% unless meta['url'] == '/blog' || meta['url'] == '/' %>
-          <div class="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-4 lg:max-w-none">
-            <% collection.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |key, item| %>
+          <% if defined?(collection) && collection %>
+            <div class="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-4 lg:max-w-none">
+              <% collection.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |key, item| %>
               <% next if key == '_meta' || item.dig('_meta', 'type') == 'file' %>
               <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
                 <div class="flex-1 bg-white dark:bg-slate-800 p-6 flex flex-col justify-between">
@@ -271,8 +412,9 @@
                   </div>
                 </div>
               </div>
-            <% end %>
-          </div>
+              <% end %>
+            </div>
+          <% end %>
         <% end %>
       </div>
       <div class="hidden xl:sticky xl:top-[4.5rem] xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto xl:py-16 xl:pr-6">
