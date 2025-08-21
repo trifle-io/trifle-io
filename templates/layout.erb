@@ -136,16 +136,30 @@
       </div>
       <div class="relative flex basis-0 justify-end items-center space-x-4 md:flex-grow">
         <form action="/search" method="get" class="relative hidden sm:block">
-          <input type="text" 
-                 name="query" 
-                 placeholder="Search..." 
-                 value="<%= defined?(params) && params[:query] ? params[:query] : '' %>"
-                 class="w-48 rounded-md border-slate-200 bg-white px-3 py-1.5 pr-8 text-sm placeholder-slate-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder-slate-400 dark:focus:border-teal-400 dark:focus:ring-teal-400">
-          <button type="submit" class="absolute inset-y-0 right-0 flex items-center pr-2">
-            <svg class="h-4 w-4 text-slate-400 hover:text-slate-500 dark:hover:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-          </button>
+          <div class="flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md focus-within:border-teal-500 focus-within:ring-1 focus-within:ring-teal-500 dark:focus-within:border-teal-400 dark:focus-within:ring-teal-400 w-96">
+            <select name="scope" class="flex-shrink-0 border-0 bg-transparent text-sm text-slate-600 dark:text-slate-300 focus:ring-0 focus:outline-none pr-1 w-32">
+              <option value="">All</option>
+              <% sitemap.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |(key, option)| %>
+                <% next if key == '_meta' %>
+                <% next if option.dig('_meta', 'url').nil? %>
+                <% scope_value = option.dig('_meta', 'url').sub(/^\//, '') %>
+                <option value="<%= scope_value %>" <%= defined?(params) && params[:scope] == scope_value ? 'selected' : '' %>>
+                  <%= option.dig('_meta', 'title') %>
+                </option>
+              <% end %>
+            </select>
+            <div class="w-px h-6 bg-slate-200 dark:bg-slate-600 mx-1"></div>
+            <input type="text" 
+                   name="query" 
+                   placeholder="Search..." 
+                   value="<%= defined?(params) && params[:query] ? params[:query] : '' %>"
+                   class="flex-1 border-0 bg-transparent px-2 py-1.5 text-sm placeholder-slate-400 focus:ring-0 focus:outline-none dark:text-slate-100 dark:placeholder-slate-400">
+            <button type="submit" class="flex items-center pr-2">
+              <svg class="h-4 w-4 text-slate-400 hover:text-slate-500 dark:hover:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </button>
+          </div>
         </form>
         
         <a class="group flex items-center" href="https://github.com/trifle-io">
@@ -197,17 +211,30 @@
         </div>
         <nav class="text-base text-slate-700 dark:text-slate-300">
             <form action="/search" method="get" class="mb-6 sm:hidden">
-              <div class="relative">
-                <input type="text" 
-                       name="query" 
-                       placeholder="Search..." 
-                       value="<%= defined?(params) && params[:query] ? params[:query] : '' %>"
-                       class="block w-full rounded-md border-slate-200 bg-white px-3 py-2 pr-10 text-sm shadow-sm placeholder-slate-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder-slate-400 dark:focus:border-teal-400 dark:focus:ring-teal-400">
-                <button type="submit" class="absolute inset-y-0 right-0 flex items-center pr-3">
-                  <svg class="h-4 w-4 text-slate-400 hover:text-slate-500 dark:hover:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                  </svg>
-                </button>
+              <div class="space-y-2">
+                <select name="scope" class="block w-full rounded-md border-slate-200 bg-white px-3 py-2 text-sm shadow-sm text-slate-600 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:focus:border-teal-400 dark:focus:ring-teal-400">
+                  <option value="">Search in: All</option>
+                  <% sitemap.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |(key, option)| %>
+                    <% next if key == '_meta' %>
+                    <% next if option.dig('_meta', 'url').nil? %>
+                    <% scope_value = option.dig('_meta', 'url').sub(/^\//, '') %>
+                    <option value="<%= scope_value %>" <%= defined?(params) && params[:scope] == scope_value ? 'selected' : '' %>>
+                      Search in: <%= option.dig('_meta', 'title') %>
+                    </option>
+                  <% end %>
+                </select>
+                <div class="relative">
+                  <input type="text" 
+                         name="query" 
+                         placeholder="Search..." 
+                         value="<%= defined?(params) && params[:query] ? params[:query] : '' %>"
+                         class="block w-full rounded-md border-slate-200 bg-white px-3 py-2 pr-10 text-sm shadow-sm placeholder-slate-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder-slate-400 dark:focus:border-teal-400 dark:focus:ring-teal-400">
+                  <button type="submit" class="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <svg class="h-4 w-4 text-slate-400 hover:text-slate-500 dark:hover:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </form>
             <ul class="space-y-4">

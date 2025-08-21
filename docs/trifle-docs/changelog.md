@@ -6,6 +6,9 @@ nav_order: 100
 
 # Changelog
 
+### **0.4.0** - *TBA*
+  - Feature: Search functionality using FuzzySearch and scope
+
 ### **0.3.1** - *February 26, 2024*
   - Fix: Markdown Harvester avoids crashing while parsing broken markdown file.
 

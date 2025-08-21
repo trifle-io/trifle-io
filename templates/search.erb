@@ -8,6 +8,12 @@
     </h1>
     <div class="mt-2 ml-9 text-sm text-slate-500 dark:text-slate-400">
       <%= results.length %> result<%= results.length == 1 ? '' : 's' %> found
+      <% if scope && !scope.strip.empty? %>
+        <% scope_title = sitemap.dig(scope, '_meta', 'title') || scope %>
+        in <span class="font-medium text-teal-600 dark:text-teal-400"><%= scope_title %></span>
+      <% else %>
+        across all sections
+      <% end %>
     </div>
   </div>
 <% end %>
