@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/trifle-io/trifle-docs.git
-  revision: 76f5c5dfdd7354014b08faf3bec750ddb19f3255
+  revision: f93ee6cebdace7a060725053746dbcd51e19dc00
   branch: main
   specs:
-    trifle-docs (0.4.0)
+    trifle-docs (0.5.0)
       redcarpet
       rouge
       sinatra
@@ -19,8 +19,8 @@ GEM
     nio4r (2.7.4)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (3.2.0)
-    rack-protection (4.1.1)
+    rack (3.2.4)
+    rack-protection (4.2.1)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
       rack (>= 3.0.0, < 4)
@@ -31,13 +31,13 @@ GEM
       rack (>= 3)
       webrick (~> 1.8)
     redcarpet (3.6.1)
-    rouge (4.6.0)
+    rouge (4.6.1)
     ruby2_keywords (0.0.5)
-    sinatra (4.1.1)
+    sinatra (4.2.1)
       logger (>= 1.6.0)
       mustermann (~> 3.0)
       rack (>= 3.0.0, < 4)
-      rack-protection (= 4.1.1)
+      rack-protection (= 4.2.1)
       rack-session (>= 2.0.0, < 3)
       tilt (~> 2.0)
     tilt (2.6.1)

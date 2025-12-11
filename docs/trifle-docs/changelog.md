@@ -6,8 +6,11 @@ nav_order: 100
 
 # Changelog
 
-### **0.4.0** - *TBA*
-  - Feature: Search functionality using FuzzySearch and scope
+### **0.5.0** - *December 11, 2025*
+  - Feature: Detect AI browsers and render markdown-friendly page instead.
+
+### **0.4.0** - Never got released
+  - Feature: Search functionality using FuzzySearch and scope.
 
 ### **0.3.1** - *February 26, 2024*
   - Fix: Markdown Harvester avoids crashing while parsing broken markdown file.
