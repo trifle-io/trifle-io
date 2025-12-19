@@ -58,7 +58,7 @@ DEPENDENCIES
   trifle-docs!
 
 RUBY VERSION
-   ruby 3.4.8p72
+   ruby 3.3.5p100
 
 BUNDLED WITH
    2.3.16
