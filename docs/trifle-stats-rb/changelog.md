@@ -6,7 +6,9 @@ nav_order: 100
 
 # Changelog
 
-### **1.4.0** - *July TBA, 2025*
+### **1.6.0** - *July 28, 2025*
+  A lot has been introduced in the first half of 2025 but never released. It all finally piled up in this version release.
+
   - Feat: Beam and Scan for liveness checks
   - Feat: Introduce Aggregators
   - Feat: Introduce Formatters

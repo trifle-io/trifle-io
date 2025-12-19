@@ -8,7 +8,7 @@ lang: <path fill-rule="evenodd" clip-rule="evenodd" d="M35.971 111.33l81.958 11.
 # Trifle::Stats
 
 [![Gem Version](https://badge.fury.io/rb/trifle-stats.svg)](https://rubygems.org/gems/trifle-stats)
-[![Ruby](https://github.com/trifle-io/trifle-stats/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-stats)
+[![Ruby](https://github.com/trifle-io/trifle-stats/actions/workflows/ruby.yml/badge.svg?branch=main)](https://github.com/trifle-io/trifle-stats)
 
 Simple analytics backed by Redis, Postgres, MongoDB, Process, Google Analytics, Segment, or whatever. [^1]
 
@@ -19,5 +19,7 @@ Simple analytics backed by Redis, Postgres, MongoDB, Process, Google Analytics, 
 There are many ways to do analytics. You can use 3rd party service (Segment, or whatever), external service (Prometheus, or whatever) or build it inhouse yourself. Use of 3rd party service introduces latency into your app. And while external service is faster, it often adds complexity into your app. You either need you to addapt to its ideology (aka their believes of analytics) or write lots of gluecode because they only offer simple client library. And while doing it yourself is often enough, without previous experience it sets you down the path of explorer. And thats like kitchen remodeling. It will take twice as long and cost twice as much.
 
 `Trifle::Stats` helps with the in-house analytics. It gives you simple methods for storing and retrieving data and does enough (but not too much) magic on the background for you. This way you don't need to worry where or how your data is being stored or structured. All that matters is to track values that matters and fetch its timeline data. Plotting is all in your hands.
+
+Where `Trifle::Stats` is unique is its ability to set multiple tracked values at once at a low cost. It can really shine when used with less than ~200 tracked key-value pairs for a specific metrics; but it is also its achiles heel when used on large number of tracked key-value pairs. The actual number really depends on your Driver/Database setup, but in practice tracking more than 500+ key-value pairs under single metrics key tends to slow things down a notch. I mean, you can always track single key-value pair under unique metrics key, but hey, what are we even doing here?
 
 [^1]: TBH only database drivers for now 💔.

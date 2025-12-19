@@ -3,6 +3,7 @@
 require 'bundler/setup'
 require 'trifle/docs'
 require 'puma'
+require_relative './lib/markdown_shortcodes'
 
 Trifle::Docs.configure do |config|
   config.path = File.join(__dir__, 'docs')

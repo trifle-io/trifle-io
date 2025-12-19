@@ -60,6 +60,10 @@
         order: -1;
       }
 
+      [x-cloak] {
+        display: none !important;
+      }
+
       .prose > h1 :where(code):not(:where([class~="not-prose"] *))::after,
       .prose > h2 :where(code):not(:where([class~="not-prose"] *))::after,
       .prose > h3 :where(code):not(:where([class~="not-prose"] *))::after {
@@ -69,6 +73,196 @@
       .prose > h2 :where(code):not(:where([class~="not-prose"] *))::before,
       .prose > h3 :where(code):not(:where([class~="not-prose"] *))::before {
         content: '';
+      }
+      .prose :where(code):not(:where(pre code, [class~="not-prose"] *))::before,
+      .prose :where(code):not(:where(pre code, [class~="not-prose"] *))::after {
+        content: '';
+      }
+
+      /* Ensure signature/code badges don't pick up auto backticks */
+      .method-card code::before,
+      .method-card code::after {
+        content: '';
+      }
+
+      /* Signature/spec card */
+      .method-card {
+        @apply relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white px-6 py-5 shadow-sm shadow-slate-900/5;
+        @apply dark:border-slate-700 dark:bg-slate-800/60 dark:shadow-none;
+      }
+
+      .method-card::after {
+        content: '';
+        @apply absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-teal-400/60 via-sky-400/40 to-emerald-400/60;
+      }
+
+      .method-card-title {
+        @apply flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500;
+        @apply dark:text-slate-300;
+      }
+
+      .method-card-signature {
+        @apply mt-2 font-mono text-sm text-slate-900;
+        @apply dark:text-white;
+      }
+
+      .method-card-summary {
+        @apply mt-2 text-sm text-slate-600;
+        @apply dark:text-slate-300;
+      }
+
+      /* Badges */
+      .badge {
+        @apply inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold tracking-[0.08em] text-slate-700;
+        @apply dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200;
+      }
+
+      .badge-required {
+        @apply border-transparent bg-teal-100 text-teal-800 uppercase tracking-[0.08em];
+        @apply dark:bg-teal-500/20 dark:text-teal-100;
+      }
+
+      .badge-optional {
+        @apply border-transparent bg-slate-100 text-slate-700 uppercase tracking-[0.08em];
+        @apply dark:bg-slate-700/60 dark:text-slate-200;
+      }
+
+      .badge-type {
+        @apply border-transparent bg-indigo-50 text-indigo-700 normal-case tracking-normal;
+        @apply dark:bg-indigo-500/20 dark:text-indigo-100;
+      }
+
+      .badge-hint {
+        @apply border-transparent bg-amber-50 text-amber-800 uppercase tracking-[0.08em];
+        @apply dark:bg-amber-500/20 dark:text-amber-100;
+      }
+
+      /* Arguments */
+      .arg-list {
+        @apply mt-4 grid gap-3 sm:gap-4;
+      }
+
+      .arg-row {
+        @apply rounded-xl border border-slate-200/90 bg-slate-50/80 px-4 py-3 shadow-sm;
+        @apply dark:border-slate-700 dark:bg-slate-800/60 dark:shadow-none;
+      }
+
+      .arg-row dt {
+        @apply flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-900;
+        @apply dark:text-white;
+      }
+
+      .arg-row dd {
+        @apply mt-1 text-sm leading-relaxed text-slate-600;
+        @apply dark:text-slate-300;
+      }
+
+      /* Callouts */
+      .callout {
+        @apply relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-base text-slate-800 shadow-sm shadow-slate-900/5;
+        @apply dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-100 dark:shadow-none;
+      }
+
+      .callout-note {
+        @apply border-teal-100 bg-teal-50/80;
+        @apply dark:border-teal-500/30 dark:bg-teal-500/10;
+      }
+
+      .callout-warn {
+        @apply border-amber-100 bg-amber-50/80;
+        @apply dark:border-amber-400/30 dark:bg-amber-500/10;
+      }
+
+      .callout::before {
+        content: '';
+        @apply absolute inset-y-0 left-0 w-1 bg-slate-200;
+        @apply dark:bg-slate-700;
+      }
+
+      .callout-note::before {
+        @apply bg-teal-400/80;
+        @apply dark:bg-teal-400/70;
+      }
+
+      .callout-warn::before {
+        @apply bg-amber-400/80;
+        @apply dark:bg-amber-400/70;
+      }
+
+      .callout-title {
+        @apply text-xs font-semibold uppercase tracking-[0.08em] text-slate-500;
+        @apply dark:text-slate-300;
+      }
+
+      .callout-list {
+        @apply mt-2 list-disc pl-5 text-slate-700;
+        @apply dark:text-slate-200;
+      }
+
+      /* Tabs */
+      .tab-group {
+        @apply overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-900/5;
+        @apply dark:border-slate-700 dark:bg-slate-800/60 dark:shadow-none;
+      }
+
+      .tab-select {
+        @apply relative px-4 pt-4 sm:hidden;
+      }
+
+      .tab-select select {
+        @apply w-full appearance-none rounded-md border border-slate-200 bg-white py-2 pr-10 pl-3 text-sm font-semibold text-slate-700 shadow-sm;
+        @apply focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500;
+        @apply dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-teal-400 dark:focus:ring-teal-400;
+      }
+
+      .tab-select svg {
+        @apply pointer-events-none absolute right-6 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400;
+      }
+
+      .tab-nav {
+        @apply hidden border-b border-slate-100 px-4 pt-4 sm:block;
+        @apply dark:border-slate-700;
+      }
+
+      .tab-nav-links {
+        @apply -mb-px flex space-x-6 overflow-x-auto pb-1;
+      }
+
+      .tab-link {
+        @apply border-b-2 border-transparent px-1 pb-3 pt-2 text-sm font-semibold text-slate-500 whitespace-nowrap transition;
+        @apply hover:text-slate-700 dark:text-slate-300 dark:hover:text-white;
+      }
+
+      .tab-link-active {
+        @apply border-teal-500 text-teal-600 dark:text-teal-300;
+      }
+
+      .tab-panel {
+        @apply px-4 pb-4 pt-3 space-y-3;
+      }
+
+      /* Code + copy buttons */
+      .prose pre {
+        @apply relative pr-12;
+      }
+
+      .code-wrapper {
+        @apply relative;
+      }
+
+      .copy-button {
+        @apply absolute right-3 top-3 inline-flex items-center rounded-full border border-white/10 bg-slate-900/80 px-2.5 py-1 text-xs font-semibold text-white opacity-0 transition;
+        @apply hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500;
+        @apply dark:border-slate-600 dark:bg-slate-800/80 dark:hover:bg-slate-800;
+      }
+
+      .code-wrapper:hover .copy-button,
+      .code-wrapper:focus-within .copy-button {
+        opacity: 1;
+      }
+
+      .copy-button.copied {
+        @apply bg-teal-600 text-white dark:bg-teal-500;
       }
     </style>
 
@@ -450,5 +644,47 @@
           <%= meta.dig('toc') %>
         </nav>
     </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const pres = document.querySelectorAll('#content pre');
+        pres.forEach((pre) => {
+          if (pre.dataset.copyBound === 'true') return;
+          const code = pre.querySelector('code');
+          if (!code) return;
+
+          pre.dataset.copyBound = 'true';
+
+          // Wrap pre so the copy button stays fixed while the code can scroll
+          const wrapper = document.createElement('div');
+          wrapper.className = 'code-wrapper';
+          pre.parentNode.insertBefore(wrapper, pre);
+          wrapper.appendChild(pre);
+
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'copy-button';
+          button.innerText = 'Copy';
+          button.addEventListener('click', async (event) => {
+            event.stopPropagation();
+            try {
+              await navigator.clipboard.writeText(code.innerText.trimEnd());
+              button.innerText = 'Copied';
+              button.classList.add('copied');
+              window.setTimeout(() => {
+                button.innerText = 'Copy';
+                button.classList.remove('copied');
+              }, 1500);
+            } catch (e) {
+              button.innerText = 'Error';
+              window.setTimeout(() => {
+                button.innerText = 'Copy';
+              }, 1500);
+            }
+          });
+
+          wrapper.appendChild(button);
+        });
+      });
+    </script>
   </body>
 </html>

@@ -15,16 +15,15 @@ require 'redis'
 
 Trifle::Stats.configure do |config|
   config.driver = Trifle::Stats::Driver::Redis.new(Redis.new)
-  config.track_ranges = [:hour, :day]
+  config.granularities = ['10m', '1h', '1d', '1w', '1mo']
   config.time_zone = 'Europe/Bratislava'
-  config.beginning_of_week = :monday
-  config.designator = Trifle::Stats::Designator::Linear.new(min: 0, max: 100, step: 10)
+  config.beginning_of_week = 'monday'
 end
 ```
 
-This configuration will create a Redis driver that will be used to persist your metrics. It will create metrics for two ranges: per-hour and per-day. These ranges will be localized against `Europe/Bratislava` timezone.
+This configuration will create a Redis driver that will be used to persist your metrics. It will create metrics for these buckets: per-10-minutes, per-hour, per-day, per-week and per-month. These granularities will be localized against `Europe/Bratislava` timezone.
 
-The `beginning_of_week` setting is used if you track weekly metrics (which in above case we don't). The `designator` is used for tracking histogram distribution.
+The `beginning_of_week` setting is used if you track weekly metrics (which in above case we don't).
 
 ## Storing some metrics
 
@@ -105,8 +104,10 @@ The `key` is the identifier of your metrics. You will use this later to retrieve
 
 Here is a decision that you need to make. There are two ways to move forward from here and it really depends on "how many" items you will have in a subcategory.
 
+:::callout note "Some important decision making when designing your data"
 - If you have only fixed and small number of customers, it is better to insert customer into main payload and retrieve all these values at once. This would allow you to display it all in a single dashboard with a single query without users need to filter anything out.
 - If you have unknown number of customers that will (hopefully) grow, you may want to avoid putting everything into single key as these values would grow into huge payloads. In this case it is better to specify another tracking where customer is part of the key. Ie `"event::upload::#{customer.id}"`. And then use this customer-only key to retrieve the data.
+:::
 
 It really depends on the usecase you have. For now, let's pretend that we have small and fixed number of customers.
 
@@ -198,10 +199,10 @@ You may feel like by now we've already invested too much time into this. Trust m
 
 By now you've either run the quick snippet or you let the background job be executed couple times. That means you should have some numbers stored in.
 
-`Trifle::Stats` allows you to retrieve values for a tracked `range` and specified period between `from` and `to`. You can do this by using either [`.values`](./usage/values) or [`.series`](./usage/series) methods.
+`Trifle::Stats` allows you to retrieve values for a tracked `granularity` and specified period between `from` and `to`. You can do this by using either [`.values`](./usage/values) or [`.series`](./usage/series) methods.
 
 ```ruby
-irb(main):001:0> stats = Trifle::Stats.values(key: 'event::uploads', from: 1.day.ago, to: Time.zone.now, range: :hour)
+irb(main):001:0> stats = Trifle::Stats.values(key: 'event::uploads', from: 1.day.ago, to: Time.zone.now, granularity: '1h')
 ```
 
 In above case we're retrieving hourly values for last 24 hours for the `event::uploads` key. The returned data is a hash with two arrays. In first array under key `at` you receive list of timestamps and in second array under key `values` you receive list of values.
@@ -260,17 +261,17 @@ In above case we're retrieving hourly values for last 24 hours for the `event::u
    {"count"=>6, "duration"=>45, "products"=>3572}]}
 ```
 
-You may recall that in `configure` we specified that we want to track `hour` and `day`. All you need to do is to provide a desired `range`.
+You may recall that in `configure` we specified that we want to track `hour` and `day`. All you need to do is to provide a desired `granularity`.
 
 ```ruby
-irb(main):001:0> stats = Trifle::Stats.values(key: 'event::uploads', from: 1.day.ago, to: Time.zone.now, range: :day)
+irb(main):001:0> stats = Trifle::Stats.values(key: 'event::uploads', from: 1.day.ago, to: Time.zone.now, granularity: '1d')
 => {:at=>[2023-03-04 00:00:00 +0100, 2023-03-05 00:00:00 +0100], :values=>[{"count"=>41, "duration"=>409, "products"=>21422}, {"count"=>59, "duration"=>548, "products"=>34193}]}
 ```
 
 Working with values is great as that gives you full controll over what you want to do with them. Sometimes you don't wanna get that dirty and staying on higher level is completely fine. In that case you can use [`series`](./usage/series) to get same values and work with the data using [transponders](./transponders), [aggregators](./aggregators) and [formatters](./formatters).
 
 ```ruby
-irb(main):001:0> series = Trifle::Stats.series(key: 'event::uploads', from: 1.day.ago, to: Time.zone.now, range: :day)
+irb(main):001:0> series = Trifle::Stats.series(key: 'event::uploads', from: 1.day.ago, to: Time.zone.now, granularity: '1d')
 {=> #<Trifle::Stats::Series:0x0000ffffa14256e8 @series={:at=>[2023-03-04 00:00:00 +0100, 2023-03-05 00:00:00 +0100], :values=>[{"count"=>41, "duration"=>409, "products"=>21422}, {"count"=>59, "duration"=>548, "products"=>34193}]}>
 irb(main):002:1> series.aggregate.sum(path: 'count')
 => 0.1e3
