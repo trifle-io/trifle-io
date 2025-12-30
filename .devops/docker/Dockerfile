@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 
 # Minimal image for running the trifle-io docs site
-FROM ruby:3.3-alpine
+ARG RUBY_VERSION=3.3.5
+FROM ruby:${RUBY_VERSION}-alpine
 
 ENV APP_HOME=/app \
     BUNDLER_VERSION=2.3.16 \
