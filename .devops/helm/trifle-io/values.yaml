@@ -3,7 +3,7 @@
 replicaCount: 2
 
 image:
-  repository: trifle/trifle-io
+  repository: trifle/docs
   tag: latest
   pullPolicy: IfNotPresent
 
