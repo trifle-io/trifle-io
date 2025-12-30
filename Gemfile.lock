@@ -50,6 +50,8 @@ PLATFORMS
   arm64-darwin-23
   arm64-darwin-24
   arm64-darwin-25
+  aarch64-linux-musl
+  x86_64-linux-musl
   x86_64-linux
 
 DEPENDENCIES
