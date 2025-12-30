@@ -1,0 +1,6 @@
+apiVersion: v2
+name: trifle-io
+description: trifle-io docs site powered by the trifle-docs gem
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

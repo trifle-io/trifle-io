@@ -1,0 +1,11 @@
+.git
+log
+tmp
+node_modules
+vendor
+coverage
+*.swp
+*.swo
+*.log
+.bundle
+Dockerfile.production
