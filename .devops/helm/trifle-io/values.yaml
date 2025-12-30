@@ -7,7 +7,8 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-imagePullSecrets: []
+imagePullSecrets:
+  - name: trifle-dockerhub
 nameOverride: ""
 fullnameOverride: ""
 
@@ -27,14 +28,18 @@ service:
 
 ingress:
   enabled: true
-  className: ""
-  annotations: {}
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
     - host: docs.trifle.io
       paths:
         - path: /
           pathType: Prefix
-  tls: []
+  tls:
+    - secretName: docs-trifle-io-tls
+      hosts:
+        - docs.trifle.io
 
 resources:
   limits:
