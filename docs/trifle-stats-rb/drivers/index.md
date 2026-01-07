@@ -29,7 +29,7 @@ Not all databases support same functionality. While it is important to keep thes
 | Process  | NO     | NO              | NO                 | NO           |
 | Dummy    | WTF    | WTF             | WTF                | WTF          |
 
-Features like [`Beam`](./usage/beam) and [`Scan`](./usage/scan) require `joined_identifiers: false` configuration and while it is not required, you want to expire this data otherwise it will polute your database quickly.
+Features like [`Beam`](./usage/beam) and [`Scan`](./usage/scan) require `joined_identifiers: nil` configuration and while it is not required, you want to expire this data otherwise it will polute your database quickly.
 
 ## Performance
 

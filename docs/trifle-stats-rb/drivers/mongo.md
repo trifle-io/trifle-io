@@ -49,15 +49,15 @@ Trifle::Stats.configure do |config|
 end
 ```
 
-### `joined_identfier: true (Bool)`
+### `joined_identifier: "full" | "partial" | nil`
 
-Mongo driver supports `key` as a joined value of `key`, `range` and `at` but also supports these attributes separately. You can specify it via optional `joined_identifier: false` keyword argument. It defaults to joined configuration as it performs better. Separating these into its attributes opens you to access data directly and use other tools to visualize the content.
+Mongo driver supports `key` as a joined value of `key`, `range` and `at` but also supports these attributes separately. Use `joined_identifier: nil` for separated identifiers, `:full` (or `"full"`) for full join, or `:partial` (or `"partial"`) to join only `key` and `range` while keeping `at` separate. It defaults to full join as it performs better. Separating these into its attributes opens you to access data directly and use other tools to visualize the content.
 
 ```ruby
 Trifle::Stats.configure do |config|
   config.driver = Trifle::Stats::Driver::Mongo.new(
     Mongo::Client.new('mongodb://mongo:27017/stats'),
-    joined_identifier: false
+    joined_identifier: nil
   )
 end
 ```
@@ -93,14 +93,14 @@ client = Mongo::Client.new('mongodb://mongo:27017/stats')
 Trifle::Stats::Driver::Mongo.setup!(
   Mongo::Client.new('mongodb://mongo:27017/stats'),
   collection_name: 'my_stats',
-  joined_identifiers: false
+  joined_identifiers: nil
 )
 
 Trifle::Stats.configure do |config|
   config.driver = Trifle::Stats::Driver::Mongo.new(
     Mongo::Client.new('mongodb://mongo:27017/stats'),
     collection_name: 'my_stats',
-    joined_identifiers: false
+    joined_identifiers: nil
   )
 end
 ```
