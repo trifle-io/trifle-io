@@ -1,7 +1,7 @@
 ---
 title: Getting Started
 description: From zero to metrics in one pass.
-nav_order: 3
+nav_order: 1
 ---
 
 # Getting Started

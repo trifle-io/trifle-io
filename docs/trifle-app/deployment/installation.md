@@ -1,10 +1,10 @@
 ---
-title: Installation (Helm)
+title: Installation
 description: Deploy Trifle App on Kubernetes using Helm.
 nav_order: 1
 ---
 
-# Installation (Helm)
+# Installation
 
 Trifle App ships with a Helm chart inside the main Trifle repo at `.devops/kubernetes/helm/trifle`.
 
@@ -27,13 +27,13 @@ mix phx.gen.secret
 ```yaml
 app:
   secretKeyBase: "<your-64-char-secret>"
-  host: "app.trifle.io"
+  host: "trifle.example.com"
   registration:
     enabled: false
 
 initialUser:
   enabled: true
-  email: "admin@app.trifle.io"
+  email: "admin@trifle.example.com"
   password: "change-me"
   admin: true
 
@@ -41,7 +41,7 @@ ingress:
   enabled: true
   className: "nginx"
   hosts:
-    - host: app.trifle.io
+    - host: trifle.example.com
       paths:
         - path: /
           pathType: Prefix

@@ -7,22 +7,18 @@ svg: M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257
 
 # Trifle App
 
-Trifle App is the full UI + API for Trifle analytics. It gives you dashboards, monitors, alerting, and a clean ingestion API to push metrics into your own stack.
+Trifle App is visual layer for Trifle Stats. It allows you to create Dashboards, Monitors with Alerts or Reports and expose your analytics to your AI agent of choice.
+
+## Why?
+
+Any developer can build dashboards and widgets with charts. Especially nowadays with all the AI Agents and tools. All you need is a bit of thinking. It's not a rocket science. For everyone else its miles better to build the dashboard themselves than ask someone else to build it for them. Thats why Trifle App was born. It gives non-technical people ability to explore the data and build dashboards as they need it. All that while keeping the data internally within your own infrastructure.
 
 ## What you get
 
-- Metrics ingestion over HTTP
+- The Metrics API
 - Dashboards and monitors
-- Slack, Discord, and Google SSO integrations
-- Self-hosted deployment with Helm
-
-## Start here
-
-- [Installation](/trifle-app/installation)
-- [Getting Started](/trifle-app/getting_started)
-- [Configuration](/trifle-app/configuration)
-- [API Endpoints](/trifle-app/api)
-- [How-to Guides](/trifle-app/guides)
+- Integrations with Slack, Discord, Google SSO and others
+- Self-hosted deployment with Helm or SaaS at [app.trifle.io](https://app.trifle.io)
 
 ## Core concepts
 
