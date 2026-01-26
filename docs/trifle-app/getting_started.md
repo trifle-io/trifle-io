@@ -8,9 +8,9 @@ nav_order: 1
 
 This is the shortest path from "no app" to "I can see a chart".
 
-## 0. Install the app
+## 0. Self-hosted Installation
 
-Use the Helm chart in the Trifle repo and apply a minimal values file. (See [Installation](/trifle-app/installation)).
+Use the Helm chart in the Trifle repo and apply a minimal values file. (See [Installation](/trifle-app/deployment/installation)).
 
 Expected outcome: Trifle App is running and reachable.
 

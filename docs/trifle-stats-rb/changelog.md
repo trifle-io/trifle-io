@@ -6,6 +6,18 @@ nav_order: 100
 
 # Changelog
 
+### **2.3.0** - *Jan 23, 2025*
+  Another bulk of changes released all at once.
+  - Feat: Buffering.
+  - Feat: System Tracking.
+  - Feat: Postgres and SQLite support for Joined identifiers.
+  - Feat: Move from Range to Granularity.
+  - Feat: Changes to Transponders and Formatters.
+  - Feat: Joined Identifiers with multiple modes.
+  - Feat: Deprecate Assort in favor of inline designators.
+  - Feat: Mongo Driver option to disable bulk-writes.
+  Yea, its a big one.
+
 ### **1.6.0** - *July 28, 2025*
   A lot has been introduced in the first half of 2025 but never released. It all finally piled up in this version release.
 
