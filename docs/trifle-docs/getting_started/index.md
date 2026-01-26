@@ -6,10 +6,34 @@ nav_order: 3
 
 # Getting Started
 
-The idea of `Trifle::Docs` is to map folder structure and make it _routable_. This way files inside of the folder becomes URLs. Kinda like good ol'days when you simply pointed Apache or Nginx to your folder with HTML files and let it do its thing. Except these are markdown files that _needs to be rendered_.
+`Trifle::Docs` maps a folder of static files to URLs and renders them through your templates. Your job is to:
 
-`Trifle::Docs` wont do much for you if you don't work on your content. You need to prepare your documentation or blog files and structure them by yourself.
+1. Create a folder structure (`docs/`, `blog/`, etc.).
+2. Add frontmatter (`title`, `nav_order`, `template`, ...).
+3. Choose how you want to serve the content.
 
-`Trifle::Docs` also does very little when it comes to layout and template. It really is just a simple routing for your files. You are in charge of building your own website, so its in your best interest to build template for your documentation yourself. This way you can integrate it directly into your application. You get couple variables that are available when building your views.
+## Pick an integration style
 
-There are many ways how you can use `Trifle::Docs`.
+- [Standalone Sinatra App](/trifle-docs/getting_started/standalone_sinatra) — quickest path for a single docs site.
+- [Rails with Sinatra](/trifle-docs/getting_started/rails_with_sinatra) — mount the Sinatra app inside Rails.
+- [Rails with Engine](/trifle-docs/getting_started/rails_with_engine) — Rails-native templates and multiple mounts.
+- [Raw Hardcore Mode](/trifle-docs/getting_started/raw_with_hardcore) — call the APIs directly and render yourself.
+
+## Minimal folder structure
+
+```
+docs/
+├── index.md
+├── getting-started/
+│   ├── index.md
+│   └── installation.md
+└── api/
+    ├── index.md
+    └── reference.md
+```
+
+## Next steps
+
+- Learn how folder structures become URLs: [Folder Structure](/trifle-docs/folder_structure)
+- Set up templates: [Templates](/trifle-docs/templates)
+- Explore harvesters: [Harvesters](/trifle-docs/harvesters)

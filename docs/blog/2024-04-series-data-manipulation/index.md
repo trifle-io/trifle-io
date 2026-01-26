@@ -1,5 +1,6 @@
 ---
 title: 'Series data manipulation in Trifle::Stats'
+description: 'Working with the Series API for aggregates, categories, and chart-ready data.'
 date: '2024-04-31 15:32:33'
 author: 'Jozef Vaclavik'
 template: blog

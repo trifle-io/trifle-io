@@ -1,5 +1,6 @@
 ---
 title: 'Running performance test for Trifle::Stats on your own'
+description: 'How to run the built-in driver benchmark locally and interpret the results.'
 date: '2022-08-23 12:32:51'
 author: 'Jozef Vaclavik'
 template: blog

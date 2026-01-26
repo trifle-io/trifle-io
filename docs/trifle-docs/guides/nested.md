@@ -6,17 +6,22 @@ nav_order: 3
 
 # Nested Documents
 
-Displaying nested documents is very similar to rendering menu. While in Menu you are recommended to use `sitemap`, for nested documents its best to use `collection` that includes only the current part of a sitemap tree.
+For "related pages" or child lists, use `collection` instead of the full `sitemap`. `collection` returns only the current branch.
 
-As you're again dealing with sitemap tree, you need to account for `_meta` of current page. Additionally, you may wanna exclude any files (images, videos, etc) as well.
+## Example
 
 ```erb
-<ul>
-  <% collection.sort_by {|(key, option)| option.dig('_meta', 'nav_order') || 0 }.each do |key, item| %>
-    <% next if key == '_meta' || item.dig('_meta', 'type') == 'file' %>
-    <li><a href="<%= item.dig('_meta', 'url') %>"><%= item.dig('_meta', 'title') %></a></li>
-  <% end %>
-</ul>
+<section class="related">
+  <h3>More in this section</h3>
+  <ul>
+    <% collection.sort_by { |(_, node)| node.dig('_meta', 'nav_order') || 999 }.each do |key, node| %>
+      <% next if key == '_meta' || node.dig('_meta', 'type') == 'file' %>
+      <li>
+        <a href="<%= node.dig('_meta', 'url') %>"><%= node.dig('_meta', 'title') %></a>
+      </li>
+    <% end %>
+  </ul>
+</section>
 ```
 
-Style them as you need them.
+If you want deeper nesting, reuse the recursive approach from [Render Menu](/trifle-docs/guides/menu).

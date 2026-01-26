@@ -10,16 +10,42 @@ lang: <path fill-rule="evenodd" clip-rule="evenodd" d="M35.971 111.33l81.958 11.
 [![Gem Version](https://badge.fury.io/rb/trifle-stats.svg)](https://rubygems.org/gems/trifle-stats)
 [![Ruby](https://github.com/trifle-io/trifle-stats/actions/workflows/ruby.yml/badge.svg?branch=main)](https://github.com/trifle-io/trifle-stats)
 
-Simple analytics backed by Redis, Postgres, MongoDB, Process, Google Analytics, Segment, or whatever. [^1]
+`Trifle::Stats` is a Ruby library for tracking time-series metrics with pluggable drivers.
 
-`Trifle::Stats` is a _way too_ simple timeline analytics that helps you track custom metrics. Automatically increments counters for each enabled range. It supports timezones and different week beginning.
+## What it does
 
-## Why?
+- Tracks counters and numeric payloads per key.
+- Reads back series by timeframe and granularity.
+- Supports drivers like Redis, Postgres, Mongo, and Process.
 
-There are many ways to do analytics. You can use 3rd party service (Segment, or whatever), external service (Prometheus, or whatever) or build it inhouse yourself. Use of 3rd party service introduces latency into your app. And while external service is faster, it often adds complexity into your app. You either need you to addapt to its ideology (aka their believes of analytics) or write lots of gluecode because they only offer simple client library. And while doing it yourself is often enough, without previous experience it sets you down the path of explorer. And thats like kitchen remodeling. It will take twice as long and cost twice as much.
+## Quick example
 
-`Trifle::Stats` helps with the in-house analytics. It gives you simple methods for storing and retrieving data and does enough (but not too much) magic on the background for you. This way you don't need to worry where or how your data is being stored or structured. All that matters is to track values that matters and fetch its timeline data. Plotting is all in your hands.
+```ruby
+require 'redis'
 
-Where `Trifle::Stats` is unique is its ability to set multiple tracked values at once at a low cost. It can really shine when used with less than ~200 tracked key-value pairs for a specific metrics; but it is also its achiles heel when used on large number of tracked key-value pairs. The actual number really depends on your Driver/Database setup, but in practice tracking more than 500+ key-value pairs under single metrics key tends to slow things down a notch. I mean, you can always track single key-value pair under unique metrics key, but hey, what are we even doing here?
+Trifle::Stats.configure do |config|
+  config.driver = Trifle::Stats::Driver::Redis.new(Redis.new)
+  config.granularities = ['1h', '1d']
+  config.time_zone = 'UTC'
+  config.beginning_of_week = 'monday'
+end
 
-[^1]: TBH only database drivers for now 💔.
+Trifle::Stats.track(key: 'event::uploads', at: Time.now.utc, values: { count: 1, duration: 3.2 })
+
+from = Time.now.utc - 24 * 3600
+stats = Trifle::Stats.values(key: 'event::uploads', from: from, to: Time.now.utc, granularity: '1h')
+```
+
+## What to expect
+
+- `values` returns `{ at: [...], values: [...] }` for the bucketed series.
+- All leaf values must be numeric.
+- Driver choice controls persistence and performance.
+
+## Next steps
+
+- [Installation](/trifle-stats-rb/installation)
+- [Configuration](/trifle-stats-rb/configuration)
+- [Getting Started](/trifle-stats-rb/getting_started)
+- [Usage](/trifle-stats-rb/usage)
+- [Drivers](/trifle-stats-rb/drivers)

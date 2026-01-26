@@ -1,5 +1,6 @@
 ---
 title: 'Introduction to Trifle Blog'
+description: 'What to expect from the Trifle blog: announcements, milestones, and occasional deep dives.'
 date: '2022-07-12 18:16:31'
 author: 'Jozef Vaclavik'
 template: blog

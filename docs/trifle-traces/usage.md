@@ -6,88 +6,76 @@ nav_order: 4
 
 # Usage
 
-`Trifle::Traces` comes with a couple module level methods that are shorthands for operations.
+`Trifle::Traces` exposes module-level helpers that delegate to the current tracer stored in `Thread.current`.
 
-## `tracer = Tracer`
-
-To start tracking you must initialize Tracer first. There are two tracers included, Hash and Null. They store data in structure as their name says so. Duh.
+## 1) Create a tracer
 
 ```ruby
-Trifle::Traces.tracer = Trifle::Traces::Tracer::Hash.new(key: 'my_trace', meta: {count: 1})
+Trifle::Traces.tracer = Trifle::Traces::Tracer::Hash.new(
+  key: 'jobs/invoice_charge',
+  meta: { job_id: 42 }
+)
 ```
 
-Tracer is stored on `Thread.current`. Be aware when multithreading.
+:::callout note "Thread-local storage"
+`Trifle::Traces.tracer` lives in `Thread.current`, so each thread must set its own tracer.
+:::
 
-## `trace(String, head: Bool, state: String, &block)`
+## 2) Trace lines
 
-Once you initialize Tracer, manually or through middleware, you can start tracing your code.
-
-### Simple
-
-The easiest way to use tracer is to replace all your `puts` or `Rails.logger.info` outputs with `Trifle::Traces.trace` method. This will do what you would expect, store the text with a timestamp.
+### Simple line
 
 ```ruby
-Trifle::Traces.trace('This is sample log message')
-Trifle::Traces.trace("This is interpolated time #{Time.now} message")
+Trifle::Traces.trace('Started processing')
 ```
 
-### Head
+### Head line
 
-Sometimes you need to mark a line of a new section in your log. Use `head: true` attribute to mark the line.
+Use `head: true` to mark a header line (`type: :head`).
 
 ```ruby
-Trifle::Traces.trace('Initializing connection', head: true)
-params = { a: 1 }
-Trifle::Traces.trace("Passing params: #{params}")
-Rest::Client.post('https://example.com', params)
-Trifle::Traces.trace('Done')
+Trifle::Traces.trace('Charging invoice', head: true)
 ```
 
-### State
-
-Other times you may wanna point out that something caused an error. Pass `state: :error` argument to `trace` method. You can pass any state you like and then use this to enhance visualisation in your UI. I mean, make the text red when its error.
+### Line with custom state
 
 ```ruby
-Trifle::Traces.trace('Connection failed', state: :error)
+Trifle::Traces.trace('Gateway timeout', state: :error)
 ```
 
-### Block
+### Trace a block
 
-You can see how the above example of using params looks, well, bad. For this you can use `Trifle::Traces.trace` with block and assing result of a block to a variable. Tracer will automatically include result of a block in your logs. Result is evaluated through `Object.inspect` method.
+When you pass a block, Trifle::Traces records the block result on its own line.
 
 ```ruby
-params = Trifle::Traces.trace('Passing params') do
-  { a: 1 }
+response = Trifle::Traces.trace('Calling gateway') do
+  { status: 'ok', took_ms: 123 }
 end
 ```
 
-# Example
-
-Here is an example of manual tracing in your ruby code. Callback just prints the lines.
+## 3) Tags and artifacts
 
 ```ruby
-Trifle::Traces.configure do |config|
-  config.on(:wrapup) do |tracer|
-    tracer.data.each do |line|
-      puts line
-    end
-  end
-end
+Trifle::Traces.tag('invoice:42')
+Trifle::Traces.artifact('screenshot.png', '/tmp/screenshot.png')
 ```
 
-You can read more about persisting and callbacks in, well, [Callbacks](/trifle-traces/callbacks.html) doc.
-
-Then using examples from above you can get combined out
+## 4) Finish the trace
 
 ```ruby
 Trifle::Traces.tracer.wrapup
-{:at=>1612686322, :message=>"Trifle::Trace has been initialized for sample", :state=>:success, :head=>false, :meta=>false}
-{:at=>1612686343, :message=>"This is sample log message", :state=>:success, :head=>false, :meta=>false}
-{:at=>1612686347, :message=>"This is interpolated time 2021-02-07 09:25:47 +0100 message", :state=>:success, :head=>false, :meta=>false}
-{:at=>1612686351, :message=>"Initializing connection", :state=>:success, :head=>true, :meta=>false}
-{:at=>1612686359, :message=>"Passing params", :state=>:success, :head=>false, :meta=>false}
-{:at=>1612686359, :message=>"=> {:a=>1}", :state=>:success, :head=>false, :meta=>true}
-{:at=>1612686363, :message=>"Done", :state=>:success, :head=>false, :meta=>false}
-{:at=>1612686441, :message=>"Connection failed", :state=>:error, :head=>false, :meta=>false}
-=> nil
+```
+
+## Example output shape
+
+Each line in `tracer.data` looks like:
+
+```ruby
+{
+  at: 1700000000,
+  message: "Charging invoice",
+  state: :success,
+  type: :text,
+  level: 0
+}
 ```

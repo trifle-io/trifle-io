@@ -6,15 +6,17 @@ nav_order: 1
 
 # Installation
 
-`Trifle.Stats` can be installed by adding `trifle_stats` to your list of dependencies in `mix.exs`
+Add `trifle_stats` to your dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:trifle_stats, "~> 0.1.0"}]
+  [
+    {:trifle_stats, "~> 1.1"}
+  ]
 end
 ```
 
-And then execute:
+Then run:
 
 ```sh
 $ mix deps.get
@@ -22,6 +24,12 @@ $ mix deps.get
 
 ## Dependencies
 
-`Trifle.Stats` can be used independently of phoenix. Yay!
+`Trifle.Stats` can be used without Phoenix.
 
-Different driver requries different client package. If you want to use Redis, you will need `redis` package included. `Trifle.Stats` does not bundle any of driver packages with it. Please read through drivers documentation for details.
+Driver dependencies are included in the package:
+- `mongodb_driver`
+- `postgrex`
+- `redix`
+- `exqlite`
+
+If you only use the Process driver, you don’t need any external services running.

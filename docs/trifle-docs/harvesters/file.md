@@ -6,10 +6,15 @@ nav_order: 10
 
 # File Harvester
 
-`File` harvester is best for serving static files. If you plan to serve any images, videos or other files directly, File harvester is what you are looking for. It will serve you well even if you are simply including images inside of your markdown files.
+The File harvester serves static assets (images, PDFs, downloads). It matches **any** file, so register it **last**.
 
-Files still come up as a part of `sitemap` as they are part of your folder tree. If you're integrating with Rails, you can always serve static files from your `public` folder to avoid use of `File` harvester.
+## Metadata
 
-The gist of `File` harvester is to matching any file. That's why it's important to register `File` harvester as last. It's catch-all type of harvester.
+File entries are still included in the sitemap and collection trees, but their metadata includes `type: "file"` and `path` so your renderer can serve them directly.
 
-As `content` it serves files content directly. Both Rails controller and Sinatra router has condition for `type: 'file'` to serve it as a file instead of rendering it as a part of template.
+```ruby
+meta = Trifle::Docs.meta(url: 'assets/logo.png')
+# => { "type" => "file", "path" => "/.../docs/assets/logo.png", ... }
+```
+
+If `meta['type'] == 'file'`, serve the file directly instead of rendering HTML.

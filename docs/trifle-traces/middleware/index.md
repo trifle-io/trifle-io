@@ -6,28 +6,24 @@ nav_order: 7
 
 # Middleware
 
-While you don't need to include middleware, it gives you automatic tracing and callbacks on every rack call or sidekiq execution. You don't need to initialize tracer every time you want to trace something. Middleware does it automatically for you based on a key/meta you set.
+Middleware creates tracers for you and wraps execution so you don’t have to manually set `Trifle::Traces.tracer` each time.
 
-You can read more about each middleware configuration in its own section.
+Available integrations:
+- [Sidekiq](/trifle-traces/middleware/sidekiq)
+- [Rails controllers](/trifle-traces/middleware/rails)
+- [Rack (WIP)](/trifle-traces/middleware/rack)
 
-## Example
-
-All middlewares implement _fairly standard way to wrap execution_ in a block. Think of it as:
-
-1. Yo, lets create new tracer coz we're about to start.
-2. Lets yield this _thing_.
-3. Dang it! We just crashed!
-4. Alrite, thats all folks.
+## What middleware does (conceptually)
 
 ```ruby
 def traced(&block)
-  Trifle::Traces.tracer = Trifle::Traces::Tracer::Hash.new(key: trace_key)
-  yield block
+  Trifle::Traces.tracer = Trifle::Traces.default.tracer_class.new(key: trace_key)
+  yield
 rescue => e
-  Trifle::Traces.tracer.trace("Exception: #{e}", state: :error)
-  Trifle::Traces.tracer.fail!
+  Trifle::Traces.tracer&.trace("Exception: #{e}", state: :error)
+  Trifle::Traces.tracer&.fail!
   raise e
 ensure
-  Trifle::Traces.tracer.wrapup
+  Trifle::Traces.tracer&.wrapup
 end
 ```

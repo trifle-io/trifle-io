@@ -6,8 +6,12 @@ nav_order: 1
 
 # Timestamp Formatter
 
-Dumping timestamp into logs is not necessary, but it is a nice to have. If you don't want to have log lines prefixed with timestamp, simply define a custom formatter that returns empty string instead of formatted timestamp. Duh.
+`Trifle::Logs::Formatter::Timestamp` formats timestamps using `strftime('%Y-%m-%dT%H:%M:%S.%6N')`.
 
-## Format
+## Example
 
-Build in `Trifle::Logs::Formatter::Timestamp` formatter formats timestamp using `strftime('%Y-%m-%dT%H:%M:%S.%6N')` and thats it.
+```ruby
+formatter = Trifle::Logs::Formatter::Timestamp.new
+formatter.format(Time.utc(2025, 1, 2, 3, 4, 5.123456))
+# => "2025-01-02T03:04:05.123456"
+```

@@ -6,10 +6,24 @@ nav_order: 1
 
 # Walker
 
-`Trifle::Docs::Harvester::Walker` that is responsible for iterating through every folder and file recursively for the path you've provided in your config.
+`Trifle::Docs::Harvester::Walker` crawls your `config.path`, finds files, and hands each file to your registered harvesters in order.
 
-It passes every file through a list of Harvesters to find the matching one. This matching works like a series of Sieves. If the file is not matched by the first harvesters sieve, it tries to be matched by the next one, and so on. Once matching harvester has been found, it creates a mapping (aka routing) between the URL and its `Conveyor` that handles rendering. More about that in [Conveyor](/trifle-docs/harvesters#conveyor) documentation.
+### Key behaviors
 
-This way you can mix up your files with different formats and register multiple Harvesters. For example Markdown, Textile, or anything else. The important part is that you need to be able to render this content to HTML.
+- Every file is tested against each harvester's `Sieve`.
+- The first matching harvester wins.
+- The resulting `Conveyor` is stored in the router.
 
-If you're planning to render images or files in your documentation, you should register `Trifle::Docs::Harvestger::File` as a last Harvester. This is catch & serve as raw type of harvester.
+That means **ordering matters**. Always register `Trifle::Docs::Harvester::File` last because it matches everything.
+
+## Example
+
+```ruby
+Trifle::Docs.configure do |config|
+  config.path = Rails.root.join('docs')
+  config.register_harvester(Trifle::Docs::Harvester::Markdown)
+  config.register_harvester(Trifle::Docs::Harvester::File)
+end
+```
+
+Markdown files will be rendered; everything else falls back to the File harvester.

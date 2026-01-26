@@ -10,12 +10,40 @@ lang: <path fill-rule="evenodd" clip-rule="evenodd" fill="" d="M35.971 111.33l81
 [![Gem Version](https://badge.fury.io/rb/trifle-logs.svg)](https://rubygems.org/gems/trifle-logs)
 [![Ruby](https://github.com/trifle-io/trifle-logs/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-logs)
 
-Simple logger that stores your data and allows you to search on top of it.
+`Trifle::Logs` is a minimal file-backed logger with a fast searcher.
 
-`Trifle::Logs` is a _way too_ simple logger that helps you persist your logs. It is great for scenarios where you wanna simply dump bunch of output into a file and then search on top of it.
+## What it does
 
-## Why?
+- Writes logs to disk via drivers (File).
+- Supports text and JSON content formatters.
+- Searches logs locally with paging support.
 
-Storing data into logs is nothing new. It is not always super straightforward how to search in your logs. In good ol'days you would simply grep through the logs and call it a day. This interface is missing and your only option is to offload logs to 3rd party services specilising 
+## Quick example
 
-`Trifle::Logs` helps you to read through your logs without them leaving your infrastructure. It allows you to tailor configuration to your specific usecase. Because sometimes it is still OK to use `puts` in 2022.
+```ruby
+Trifle::Logs.configure do |config|
+  config.driver = Trifle::Logs::Driver::File.new(path: '/var/logs/trifle', suffix: '%Y/%m/%d')
+  config.timestamp_formatter = Trifle::Logs::Formatter::Timestamp.new
+  config.content_formatter = Trifle::Logs::Formatter::Content::Json.new
+end
+
+Trifle::Logs.dump('billing', { event: 'invoice_charged', id: 42 }, scope: { request_id: 'req-1' })
+
+result = Trifle::Logs.searcher('billing', pattern: 'invoice').perform
+lines = result.data.map { |entry| entry.dig('data', 'lines', 'text') }
+```
+
+## What to expect
+
+- Log files written under the driver path.
+- `searcher.perform` returns a Result with `data` + `meta`.
+- No external log service required.
+
+## Next steps
+
+- [Getting Started](/trifle-logs/getting_started)
+- [Configuration](/trifle-logs/configuration)
+- [Usage](/trifle-logs/usage)
+- [Drivers](/trifle-logs/drivers)
+- [Formatters](/trifle-logs/formatters)
+- [Guides](/trifle-logs/guides)

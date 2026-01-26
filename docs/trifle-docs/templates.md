@@ -6,28 +6,91 @@ nav_order: 7
 
 # Templates
 
-Templates are simple. Trust me. Even if it doesn't look like that in a first place.
+Templates are intentionally simple. You provide a layout and one or more page templates, and Trifle::Docs renders your content into them.
 
-There are two ways to integrate `Trifle::Docs` and therefore there are two ways to manage templates.
+## Template locations
 
-## Sinatra
+:::tabs
+@tab Sinatra App
+If you use `Trifle::Docs::App`, set `config.views` to a folder that contains:
 
-If you're writing a sinatra app, you will have to point configuration to your template folder. This folder will expect `layout.erb` and `page.erb`. For example if you specify `config.views = File.join(__dir__, 'templates')`, it will expect `./templates/layout.erb` layout file as well as `./templates/page.erb` template file. If you change template in metadata, you will need to create page-like file for it. For example if you specify in pages metadata `template: blog`, it will expect `./templates/blog.erb` template file.
+- `layout.erb`
+- `page.erb`
+- `search.erb` (optional, for `/search`)
 
-## Rails
+Example structure:
 
-If you're writing a rails app, you will have to create templates the _Rails Way_. That means place `app/views/layouts/trifle/docs/layout.html.erb` and page templates in `app/views/trifle/docs/page/page.html.erb`.
+```
+templates/
+├── layout.erb
+├── page.erb
+└── search.erb
+```
 
-You can mount `Trifle::Docs` into your app multiple times, and therefore you can specify `layout` on a configuration that points to specific file within `app/views/layouts/trifle/docs/` folder. For example if you specify `config.layout = 'client'`, it will expect `app/views/layouts/trifle/docs/client.html.erb` layout file.
+@tab Rails Engine
+With the Rails engine, use Rails view conventions:
 
-In the same way you can specify template in metadata and it will expect its page-like file under `app/views/trifle/docs/page/` folder. For example if you specify in pages metadata `template: blog`, it will expect `app/views/trifle/docs/page/blog.html.erb` template file.
+- `app/views/layouts/trifle/docs/<layout>.html.erb`
+- `app/views/trifle/docs/page/page.html.erb`
+- `app/views/trifle/docs/page/search.html.erb`
 
-## Variables
+Example structure:
 
-Both layout and template files are these variables accessible:
+```
+app/views/
+├── layouts/trifle/docs/docs.html.erb
+└── trifle/docs/page/
+    ├── page.html.erb
+    └── search.html.erb
+```
+:::
 
-- `sitemap`: complete sitemap (tree of metadatas) of the folder. This is useful when building sidebar navigation or digging details for breadcrumbs.
-- `url`: URL string. Thats it.
-- `meta`: metadata of page for specific `url`. Includes `title` and everything else you place in pages metadata.
-- `content`: content of page for specific `url`. HTML content ready to be rendered.
-- `collection`: sub-sitemap of pages under specific `url`. Useful if you're planning to display list of projects, or blog posts or simply additional details about nested documents.
+## Template variables
+
+Both the layout and page templates receive the same locals:
+
+- `sitemap` — full sitemap tree.
+- `collection` — subtree for the current URL.
+- `content` — rendered HTML for the current page.
+- `meta` — frontmatter + generated metadata (title, url, breadcrumbs, toc, updated_at).
+- `url` — current URL path.
+
+## Example templates
+
+:::tabs
+@tab Sinatra layout.erb
+```erb
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= meta.dig('title') || 'Docs' %></title>
+  </head>
+  <body>
+    <aside>
+      <%= erb :_nav, locals: { sitemap: sitemap } %>
+    </aside>
+    <main>
+      <%= yield %>
+    </main>
+  </body>
+</html>
+```
+
+@tab Sinatra page.erb
+```erb
+<article>
+  <h1><%= meta.dig('title') %></h1>
+  <%= content %>
+</article>
+```
+
+@tab Rails page.html.erb
+```erb
+<article>
+  <h1><%= meta.dig('title') %></h1>
+  <%= content %>
+</article>
+```
+:::
+
+You can add more templates by setting `template:` in frontmatter, for example `template: blog`. Trifle::Docs will then render `blog.erb` (Sinatra) or `trifle/docs/page/blog.html.erb` (Rails).

@@ -6,37 +6,34 @@ nav_order: 2
 
 # Rails with Sinatra App
 
-Integrating `Trifle::Docs` with Rails is where the good stuff comes in. If you wanna keep things simple, you may as well use build in Sinatra App to serve it.
+Use the bundled Sinatra app when you want to keep integration lightweight but still serve docs inside a Rails app.
 
-## Initializer
+## 1) Configure
 
-You're gonna have to write an initializer in `config/initializers/trifle.rb` that configures `Trifle::Docs`.
+Create an initializer at `config/initializers/trifle_docs.rb`:
 
 ```ruby
 Trifle::Docs.configure do |config|
-  config.path = File.join(Rails.root, 'docs')
-  config.views = File.join(Rails.root, 'app', 'views', 'trifle', 'docs')
+  config.path = Rails.root.join('docs')
+  config.views = Rails.root.join('app', 'views', 'trifle', 'docs')
+  config.namespace = 'docs'
   config.register_harvester(Trifle::Docs::Harvester::Markdown)
   config.register_harvester(Trifle::Docs::Harvester::File)
 end
 ```
 
-And you're gonna have to mount the sinatra app in your `config/routes.rb`.
+## 2) Mount the app
 
 ```ruby
-MyRailsApp::Application.routes.draw do
-  # ...
+Rails.application.routes.draw do
   mount Trifle::Docs::App.new => '/docs'
-  # ...
 end
 ```
 
-That will do it.
+## 3) Templates
 
-## Docs
+Add `layout.erb`, `page.erb`, and optionally `search.erb` under `app/views/trifle/docs/`. See [Templates](/trifle-docs/templates) for examples.
 
-You're gonna have to write some Markdown files. Thats totally in your area. Please reffer to `Harvester::Markdown` for additional details. Follow [folder structure](/trifle-docs/folder_structure) documentation.
+## 4) Content
 
-## Templates
-
-As a developer you're gonna need to write (at least) two `ERB` templates. One for the `layout.erb` and one for the `page.erb`. You get couple attributes available inside of these templates that you can use to build up menus, breadcrumbs, content and whatnot. Please refer to [templates/sinatra_app](/trifle-docs/templates/sinatra_app) documentation.
+Write Markdown files under `docs/` (or whatever `config.path` points to). See [Folder Structure](/trifle-docs/folder_structure) and [Markdown Harvester](/trifle-docs/harvesters/markdown).

@@ -1,21 +1,48 @@
 ---
 title: Formatters
-description: Learn how Trifle::Logs::Formatters manipulates output.
+description: Learn how Trifle::Logs::Formatters manipulate output.
 nav_order: 6
 ---
 
 # Formatters
 
-Formatters are used to format your data. You can use some of pre-defined formatters or define your own. There really isn't much to it.
+Formatters control how each log line is rendered.
 
-## Timestamp Formatter
+## Timestamp formatter
 
-Beginning of each line is identified by a timestamp. How this timestamp gets formatted depends on a formatter passed into `config` as a `timestamp_formatter`.
+A timestamp formatter must implement:
 
-Every timestamp formatter needs to implement `format(timestamp)` method and return a string representation in desired format.
+```ruby
+def format(timestamp)
+  "..."
+end
+```
 
-## Content Formatter
+## Content formatter
 
-This formatter defines how your content will be formatted. Anything that will follow the timestamp. How content will get formatted depends on a formatter passed into `config` as a `content_formatter`.
+A content formatter must implement:
 
-Every content formatter needs to implement `format(scope, message)` method and return a string representation in desired format.
+```ruby
+def format(scope, message)
+  "..."
+end
+```
+
+## Custom formatter example
+
+```ruby
+class SimpleJsonFormatter
+  def format(scope, message)
+    { scope: scope, message: message, version: 1 }.to_json
+  end
+end
+
+Trifle::Logs.configure do |config|
+  config.content_formatter = SimpleJsonFormatter.new
+end
+```
+
+See the built-in implementations:
+- [Timestamp](/trifle-logs/formatters/timestamp)
+- [Text](/trifle-logs/formatters/text)
+- [Json](/trifle-logs/formatters/json)

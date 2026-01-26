@@ -6,30 +6,36 @@ nav_order: 4
 
 # Raw Hardcore Mode
 
-At the end of the day, you don't need to use `Trifle::Docs::App` Sinatra App or `Trifle::Docs::Engine` Rails Engine to integrate with `Trifle::Docs`. You can take it one step further and do it all by yourself. After all, `app` and `engine` are really simple and all they do is parse `url` to use `Trifle::Docs` methods.
+You can skip the Sinatra app and Rails engine entirely and call `Trifle::Docs` directly. This is useful for custom frameworks or when you want full control over rendering.
 
 ## Configuration
 
-TODO
-
 ```ruby
-configuration = Trifle::Docs::Configuration.new
-configuration.path = File.join(Rails.root, 'docs')
-configuration.template = 'default'
-configuration.register_harvester(Trifle::Docs::Harvester::Markdown)
-configuration.register_harvester(Trifle::Docs::Harvester::File)
-
-# and to serve blog
-blog_configuration = Trifle::Docs::Configuration.new
-blog_configuration.path = File.join(Rails.root, 'blog')
-blog_configuration.template = 'blog'
-blog_configuration.register_harvester(Trifle::Docs::Harvester::Markdown)
-blog_configuration.register_harvester(Trifle::Docs::Harvester::File)
+docs_config = Trifle::Docs::Configuration.new
+docs_config.path = File.join(__dir__, 'docs')
+docs_config.namespace = 'docs'
+docs_config.register_harvester(Trifle::Docs::Harvester::Markdown)
+docs_config.register_harvester(Trifle::Docs::Harvester::File)
 ```
 
-You can then pass it into module methods.
+You can create multiple configs if you want separate content roots:
 
 ```ruby
-Trifle::Docs.content(url: 'guides/installation', config: configuration)
-Trifle::Docs.content(url: 'blog/2022-06-26_welcome_to_our_blog', config: blog_configuration)
+blog_config = Trifle::Docs::Configuration.new
+blog_config.path = File.join(__dir__, 'blog')
+blog_config.namespace = 'blog'
+blog_config.register_harvester(Trifle::Docs::Harvester::Markdown)
+blog_config.register_harvester(Trifle::Docs::Harvester::File)
 ```
+
+## Rendering manually
+
+```ruby
+url = 'getting_started'
+meta = Trifle::Docs.meta(url: url, config: docs_config)
+content = Trifle::Docs.content(url: url, config: docs_config)
+collection = Trifle::Docs.collection(url: url, config: docs_config)
+sitemap = Trifle::Docs.sitemap(config: docs_config)
+```
+
+Use these values in your own templates or view renderer. If `meta['type'] == 'file'`, serve the file directly instead of rendering HTML.

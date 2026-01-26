@@ -6,39 +6,44 @@ nav_order: 9
 
 # Tags
 
-Simple array where you can add reference to related objects. Then use this in callbacks to reference logger from these objects. Or whatever you decide to do.
+Tags are simple strings stored on the tracer. Use them for indexing and cross-referencing.
 
 ```ruby
-Trifle::Traces.tag("Item:#{item.id}")
-Trifle::Traces.tag('test')
+Trifle::Traces.tag("invoice:42")
+Trifle::Traces.tag('billing')
+```
+
+## Using tags in callbacks
+
+```ruby
+config.on(:wrapup) do |tracer|
+  Entry.create(
+    key: tracer.key,
+    tags: tracer.tags,
+    data: tracer.data
+  )
+end
 ```
 
 # Artifacts
 
-Another simple array that holds list of filenames that you may wanna persist in your callbacks. Or don't, it's up to you!
+Artifacts are file paths you want to attach to a trace. Each call adds a line with `type: :media` and records the file path in `tracer.artifacts`.
 
 ```ruby
-# somewhere in your code
-def screenshot
-  file = recorder.screenshot!
-  Trifle::Traces.artifact(file.split('/').last, file)
-end
+file = '/tmp/screenshot.png'
+Trifle::Traces.artifact(File.basename(file), file)
+```
 
-# later in callback
+## Persist artifacts
+
+```ruby
 config.on(:wrapup) do |tracer|
-  entry = Entry.find_by(id: tracer.reference)
-  next if entry.nil?
+  next if tracer.ignore
 
-  # Upload artifacts
   tracer.artifacts.each do |artifact|
-    path = "#{Rails.root}/public/artifacts/#{entry.namespace}/#{entry.id}"
-    FileUtils.mkdir_p(path)
-    FileUtils.mv(artifact, path)
-  rescue StandardError => e
-    next
+    dest = File.join(Rails.root, 'public', 'artifacts', tracer.key)
+    FileUtils.mkdir_p(dest)
+    FileUtils.mv(artifact, dest)
   end
-
-  # Delete artifacts
-  FileUtils.rm(tracer.artifacts)
 end
 ```

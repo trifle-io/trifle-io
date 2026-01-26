@@ -18,6 +18,7 @@ module Trifle
         module Shortcodes
           def preprocess_markdown(body)
             processed = body.dup
+            processed = process_cards(processed)
             processed = process_tabs(processed)
             processed = process_signature(processed)
             processed = process_callouts(processed)
@@ -31,9 +32,38 @@ module Trifle
               kind = Regexp.last_match(1)
               title = Regexp.last_match(2) || kind.capitalize
               inner_md = Regexp.last_match(3).strip
-              inner_html = render_fragment(inner_md)
+              inner_html = render_fragment(preprocess_inner(inner_md))
 
               %(<div class="callout callout-#{kind}"><p class="callout-title">#{title}</p>#{inner_html}</div>)
+            end
+          end
+
+          def process_cards(text)
+            text.gsub(/:::card\s+"([^"]+)"(?:\s+"([^"]+)")?(?:\s+"([^"]+)")?(?:\s+"([^"]+)")?\s*\n(.*?)\n:::/m) do
+              title = Regexp.last_match(1)&.strip
+              meta = Regexp.last_match(2)&.strip
+              link_text = Regexp.last_match(3)&.strip
+              link_url = Regexp.last_match(4)&.strip
+              inner_md = Regexp.last_match(5).strip
+
+              link_html =
+                if link_url && !link_url.empty?
+                  label = link_text && !link_text.empty? ? link_text : 'Docs'
+                  %(<div class="doc-card-link text-xs text-gray-500"><a href="#{link_url}">#{label}</a></div>)
+                else
+                  ''
+                end
+
+              meta_html =
+                if meta && !meta.empty?
+                  %(<div class="doc-card-meta text-xs text-gray-500 font-mono">#{meta}</div>)
+                else
+                  ''
+                end
+
+              inner_html = render_fragment(preprocess_inner(inner_md))
+
+              %(<div class="doc-card"><div class="doc-card-header"><div><h2 class="doc-card-title">#{title}</h2>#{meta_html}</div>#{link_html}</div><div class="doc-card-body">#{inner_html}</div></div>)
             end
           end
 
@@ -108,6 +138,14 @@ module Trifle
               html = html.sub(/\A<p>/, '').sub(%r{</p>\z}, '')
             end
             html
+          end
+
+          def preprocess_inner(markdown)
+            processed = markdown.dup
+            processed = process_tabs(processed)
+            processed = process_signature(processed)
+            processed = process_callouts(processed)
+            processed
           end
         end
 

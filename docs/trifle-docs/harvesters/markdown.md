@@ -6,23 +6,44 @@ nav_order: 1
 
 # Markdown Harvester
 
-Underneeth `Markdown` harvester uses `redcarpet` to render markdown files. It matches only `*.md` files.
+The Markdown harvester uses `redcarpet` to render `.md` files and `rouge` for syntax highlighting.
 
-`Markdown` harvester is bit opinionated. It includes `rouge` plugin for syntax highlighting and sets few configuration defaults. `fenced_code_blocks: true`, `disable_indented_code_blocks: true` and `footnotes: true`.
+Enabled options:
+- `fenced_code_blocks: true`
+- `disable_indented_code_blocks: true`
+- `footnotes: true`
+- `tables: true`
 
-## Metadata parsing
+## Frontmatter
 
-Jekyll sets a convention of using `YAML` configuration at a top of your markdown file. This way you can pass some extra context that can be used in your templates.
+Frontmatter is YAML between `---` markers at the top of the file. Trifle::Docs merges it with generated metadata.
 
-`Markdown` harvester only requires `title` key to be present. Other key/values are completely under your control.
+```markdown
+---
+title: Getting Started
+nav_order: 1
+tags:
+  - onboarding
+  - setup
+template: page
+---
 
-If you're working on sorting your documentation, you may wanna pass in `nav_order` or something similar and than use it in your views to sort documents based on this value.
+# Getting Started
 
-If you're working on a blog, you may wanna sort your documents based on timestamp. Or you may wanna add `tags`, `category` or `author` and render these in the templates.
+Welcome to the docs!
+```
 
-It provides these keys/values inside of metadata:
+Generated metadata includes:
+- `url` — current URL (prefixed with `namespace` if configured)
+- `breadcrumbs` — URL split into segments
+- `toc` — HTML table of contents generated from headings
+- `updated_at` — file modification time
 
-- `url` - current URL.
-- `breadcrumbs` - URL split into segments.
-- `toc` - Table of Content HTML code.
-- `updated_at` - files modification timestamp.
+## Raw content
+
+You can retrieve markdown without frontmatter via `Trifle::Docs.raw_content`:
+
+```ruby
+Trifle::Docs.raw_content(url: 'getting_started')
+# => "# Getting Started\n\nWelcome to the docs!"
+```

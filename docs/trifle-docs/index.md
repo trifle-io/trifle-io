@@ -11,16 +11,36 @@ langs: <linearGradient id="ruby-original-a" gradientUnits="userSpaceOnUse" x1="1
 [![Gem Version](https://badge.fury.io/rb/trifle-docs.svg)](https://rubygems.org/gems/trifle-docs)
 [![Ruby](https://github.com/trifle-io/trifle-docs/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-docs)
 
-Simple router for your static documentation. Like markdown, or textile, or whatever files. [^1]
+`Trifle::Docs` is a lightweight router and renderer for static documentation inside Ruby apps.
 
-`Trifle::Docs` is a _way too_ simple _router_. It maps your folder full of static files into your URLs and allows you to integrate them with same layout as the rest of your app. It supports rendering markdown, textile and serves other static files directly. You can easily extend it to process your own format with a Harvester. Oh yeah.
+## What it does
 
-## Why?
+- Maps a folder of Markdown/textile/static files to URLs.
+- Generates metadata (TOC, breadcrumbs, updated_at) for navigation and search.
+- Lets you plug in custom harvesters for new formats.
 
-Static Site Generators are awesome at what they do. I know, I've used them for a long time. Unfortunately they are _a bit_ cumberstone when customisation is necessary. On the other end of a spectrum are Content Management Systems. They are great at managing content. Unfortunately they are _a bit_ overkill when all your content is static (and somewhat technical).
+## Quick example
 
-`Trifle::Docs` lies somewhere in between these two, but slightly on the static side of spectrum. It is a _way too_ simple tool for developers who want to integrate documentation or blog into their Ruby/Rails website without storing content in database or learning custom templating language/structure. This allows them to make UI/UX of their website seamless.
+```ruby
+Trifle::Docs.configure do |config|
+  config.path = Rails.root.join('docs')
+  config.register_harvester(Trifle::Docs::Harvester::Markdown)
+end
 
-> Oh, and did you know that this documentation is build on top of `Trifle::Docs`? Yup, you can check it out, this source code is [public](https://github.com/trifle-io/trifle-io).
+html = Trifle::Docs.content(url: 'getting_started')
+meta = Trifle::Docs.meta(url: 'getting_started')
+```
 
-[^1]: TBH only markdown harvester for now 💔.
+## What to expect
+
+- `content` returns rendered HTML.
+- `meta` includes `toc`, `breadcrumbs`, and `updated_at`.
+- URLs follow your folder structure.
+
+## Next steps
+
+- [Getting Started](/trifle-docs/getting_started)
+- [Configuration](/trifle-docs/configuration)
+- [Usage](/trifle-docs/usage)
+- [Harvesters](/trifle-docs/harvesters)
+- [Guides](/trifle-docs/guides)

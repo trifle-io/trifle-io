@@ -1,7 +1,7 @@
 ---
 title: How-to Guides
 description: Configure integrations and SSO.
-nav_order: 5
+nav_order: 6
 ---
 
 # How-to Guides

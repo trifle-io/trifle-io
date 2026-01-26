@@ -6,23 +6,22 @@ nav_order: 1
 
 # Sidekiq
 
-`Trifle::Traces::Middleware::Sidekiq` uses Sidekiq [server middleware](https://github.com/mperham/sidekiq/wiki/Middleware#server-middleware). This way execution of a sidekiq job is wrapped in `Trifle::Traces` middleware and automatically traced.
+`Trifle::Traces::Middleware::Sidekiq` wraps jobs using Sidekiq server middleware.
 
 ## Configuration
 
-The only required attribute is `tracer_key`. Jobs arguments are automatically set as a `meta` on a `tracer`. If `tracer_key` is missing, `tracer` will not be initialized and therefore execution will not be traced.
+A tracer is only created when the job payload includes `tracer_key`.
 
 ```ruby
 class DeleteItemIfOld
   include Sidekiq::Worker
-  sidekiq_options tracer_key: 'test/sidekiq/item/delete_if_old'
+  sidekiq_options tracer_key: 'jobs/item/delete_if_old'
 
   def perform(item_id)
-    @item_id = item_id
     Trifle::Traces.tag("item:#{item_id}")
-    Trifle::Traces.trace('Check this out', head: true)
+    Trifle::Traces.trace('Checking item', head: true)
+
     if item.too_old?
-      Trifle::Traces.trace('Item is too old.')
       Trifle::Traces.trace('Deleting...') { item.destroy! }
     else
       Trifle::Traces.ignore!
@@ -30,9 +29,12 @@ class DeleteItemIfOld
   end
 
   def item
-    @item ||= Item.find(@item_id)
+    @item ||= Item.find(item_id)
   end
 end
 ```
 
-Inside of an callback you will be able to access `tracer.key` with value `'test/sidekiq/item/delete_if_old` and `tracer.meta` with value `[123]`.
+Inside callbacks you can access:
+
+- `tracer.key` → the `tracer_key` value
+- `tracer.meta` → job args (e.g., `[item_id]`)

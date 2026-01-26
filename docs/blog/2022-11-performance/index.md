@@ -1,5 +1,6 @@
 ---
 title: Trifle as an Application Performance Monitoring
+description: 'The origin story: why Trifle started as a DIY APM and the ideas behind it.'
 date: '2022-11-06 21:42:39'
 author: 'Jozef Vaclavik'
 template: blog

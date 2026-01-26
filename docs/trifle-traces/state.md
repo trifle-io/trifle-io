@@ -6,58 +6,42 @@ nav_order: 5
 
 # State
 
-Using `Trifle::Traces.trace('Test', state: :error)` is great way to indicate state of the line. This does not change state of a whole trace. To determine if the execution failed at some point, you would have to go through the each line and evaluate its state. There are better ways to achieve this. `Trifle::Traces` allows you to set state for the whole trace (ie: indicate failed execution).
+Each trace line can have its own `state`, and the tracer itself has a **global** state.
 
-Use of states is completely optional.
+## Line state
 
-## Lifecycle
+```ruby
+Trifle::Traces.trace('Gateway timeout', state: :error)
+```
 
-Below is a lifecycle of a trace.
+## Trace state
 
-### Running
+Use these helpers to set the overall trace state:
 
-When `tracer` has been initialized, the default state is `:running`. This way you can indicate that current execution is still being processed.
+- `Trifle::Traces.fail!` → sets tracer state to `:error`
+- `Trifle::Traces.warn!` → sets tracer state to `:warning`
+- `Trifle::Traces.tracer.success!` → sets tracer state to `:success`
 
-At the end of an execution, you may wanna change to one of these states:
-
-### Error
-
-Use `Trifle::Traces.fail!` to set state to `:error`.
-
-### Warning
-
-Use `Trifle::Traces.warn!` to set state to `:warning`.
-
-### Success
-
-Use `Trifle::Traces.success!` to set state to `:success`. You know, in case that everything goes according to plan.
+```ruby
+Trifle::Traces.tracer = Trifle::Traces::Tracer::Hash.new(key: 'jobs/invoice_charge')
+Trifle::Traces.trace('Started')
+Trifle::Traces.fail!
+Trifle::Traces.tracer.wrapup
+```
 
 ## Ignore
 
-In case that during execution you determine that it is not worth persisting the tracer, you can flag the trace with `Trifle::Traces.ignore!`. In `wrapup` callback you can then evaluate if trace should be ignored or no and act accordingly.
-
-For example you are using `Trifle::Traces` to trace background job that talks to API. You don't care if everything goes according to plan, only about executions when API returns 502 (coz why not).
+If a trace isn’t worth persisting, mark it as ignored.
 
 ```ruby
-Trifle::Traces.tracer = Trifle::Traces::Tracer::Hash.new(key: 'my_trace')
-Trifle::Traces.trace('Testing state output')
+Trifle::Traces.ignore!
+```
 
-begin
-  client = RestClient.get('https://google.com/admin')
-  Trifle::Traces.success!
-rescue RestClient::Unauthorized, RestClient::Forbidden => err
-  Trifle::Traces.trace("Uh oh, I'm unauthorized", error: true) { err.response }
-  Trifle::Traces.fail!
-rescue RestClient::ImATeapot
-  # wut?
-  Trifle::Traces.ignore!
-end
+In your `:wrapup` callback you can drop ignored traces:
 
-unless Trifle::Traces.tracer.ignore
-  if Trifle::Traces.success?
-    # dump your tracer into your favourite storage
-  else
-    # use red line to call Mr. President coz world is about to end
-  end
+```ruby
+config.on(:wrapup) do |tracer|
+  next if tracer.ignore
+  # persist tracer
 end
 ```

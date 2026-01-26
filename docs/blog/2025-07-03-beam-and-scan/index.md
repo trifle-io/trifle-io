@@ -1,5 +1,6 @@
 ---
 title: 'Liveness management in Trifle::Stats'
+description: 'Using beam and scan to track last-seen signals and simple liveness metrics.'
 date: '2025-07-03 21:55:25'
 author: 'Jozef Vaclavik'
 template: blog

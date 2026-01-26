@@ -6,8 +6,15 @@ nav_order: 3
 
 # Json Formatter
 
-Maybe sometimes you think that use of JSON is the best idea ever.
+`Trifle::Logs::Formatter::Content::Json` stores the scope and message as JSON.
 
-## Format
+## Example
 
-Build in `Trifle::Logs::Formatter::Content::Json` formatter creates a hash with `scope` and `message` and simply serializes it to JSON.
+```ruby
+require 'json'
+
+formatter = Trifle::Logs::Formatter::Content::Json.new
+json = formatter.format({ request_id: 'req-1' }, 'Charged invoice #42')
+JSON.parse(json)
+# => { "scope" => { "request_id" => "req-1" }, "message" => "Charged invoice #42" }
+```

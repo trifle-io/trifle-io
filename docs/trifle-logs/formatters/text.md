@@ -6,8 +6,12 @@ nav_order: 2
 
 # Text Formatter
 
-Sometimes you just wanna keep things simple and avoid doing JSON or other serialization.
+`Trifle::Logs::Formatter::Content::Text` serializes scope into `key:value` pairs joined by `;`, then appends the message.
 
-## Format
+## Example
 
-Build in `Trifle::Logs::Formatter::Content::Text` formatter takes `scope` and serializes it by joining key/values with `:` and then all combinations with `;`. Then it adds an extra space and adds `message`.
+```ruby
+formatter = Trifle::Logs::Formatter::Content::Text.new
+formatter.format({ request_id: 'req-1', user_id: 7 }, 'Charged invoice #42')
+# => "request_id:req-1;user_id:7 Charged invoice #42"
+```

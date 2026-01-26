@@ -26,8 +26,18 @@ $ gem install trifle-logs
 
 ## Dependencies
 
-`Trifle::Logs` can be used independently of rails.
+`Trifle::Logs` shells out to a few standard CLI tools:
 
-### Ripgrep
+- `rg` (ripgrep) — used to parse log files and return JSON output
+- `sed` — used to slice file ranges efficiently
+- `wc` — used to count lines for paging
 
-`Trifle::Logs` depends on `head` and `tail` ***nix** commands. It uses `ripgrep` to parse logs and return json-like output. Please follow [`ripgreps installation instruction`](https://github.com/BurntSushi/ripgrep#installation).
+Make sure they’re available on your PATH:
+
+```sh
+command -v rg
+command -v sed
+command -v wc
+```
+
+`Trifle::Logs` works independently of Rails and can be used in any Ruby app.

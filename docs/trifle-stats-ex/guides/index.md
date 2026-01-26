@@ -6,4 +6,9 @@ nav_order: 90
 
 # How to Guides
 
-List of resources how to achieve common tasks with `Trifle.Stats`
+Common tasks:
+
+- Track counters: [Track values](/trifle-stats-ex/usage/track)
+- Set values: [Assert values](/trifle-stats-ex/usage/assert)
+- Retrieve series: [Get values](/trifle-stats-ex/usage/values)
+- Status pings: [Beam](/trifle-stats-ex/usage/beam) and [Scan](/trifle-stats-ex/usage/scan)

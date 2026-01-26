@@ -1,30 +1,36 @@
 ---
 title: Drivers
-description: Learn how driver wraps around regular ruby drivers.
+description: Learn how drivers persist and retrieve values.
 nav_order: 5
 ---
 
-# Driver
+# Drivers
 
-Driver is a wrapper class that persists and retrieves values from backend. It needs to implement:
+A driver persists and retrieves values. It must implement:
 
-- `inc(keys=List, values=Map)` method increment values for keys
-- `set(keys=List, values=Map)` method set values for keys
-- `get(keys=List)` method to retrieve values for keys
+- `inc(keys, values)` — increment
+- `set(keys, values)` — set
+- `get(keys)` — fetch
+- `ping(key, values)` — status ping (for `beam`)
+- `scan(key)` — status lookup (for `scan`)
 
-The keys list is used to build identifiers for objects that needs to modify or retrieve values for. Driver then decides on the optimal way to implement these actions.
+## Available drivers
 
-## Packer Class
+- [Mongo](/trifle-stats-ex/drivers/mongo)
+- PostgreSQL (`Trifle.Stats.Driver.Postgres`)
+- Redis (`Trifle.Stats.Driver.Redis`)
+- SQLite (`Trifle.Stats.Driver.Sqlite`)
+- Process (`Trifle.Stats.Driver.Process`)
 
-Some databases cannot store nested maps/values. Or they cannot perform increment on nested values that does not exist. For this reason you can use Packer class that helps you convert values to dot notation.
+## Packer
+
+Some drivers use dot-notation for nested maps. `Trifle.Stats.Packer` can pack/unpack nested values:
 
 ```elixir
-iex(1)> values = %{ a: 1, b: %{ c: 22, d: 33 } }
-%{a: 1, b: %{c: 22, d: 33}}
-
-iex(2)> packed = Trifle.Stats.Packer.pack(values)
+iex> values = %{ a: 1, b: %{ c: 22, d: 33 } }
+iex> packed = Trifle.Stats.Packer.pack(values)
 %{"a" => 1, "b.c" => 22, "b.d" => 33}
 
-iex(3)> Trifle.Stats.Packer.unpack(packed)
+iex> Trifle.Stats.Packer.unpack(packed)
 %{"a" => 1, "b" => %{"c" => 22, "d" => 33}}
 ```

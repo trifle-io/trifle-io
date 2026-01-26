@@ -26,6 +26,6 @@ $ gem install trifle-traces
 
 ## Dependencies
 
-`Trifle::Traces` can be used independently of rails. Yay!
+`Trifle::Traces` is framework-agnostic. Rails, Sidekiq, and Rack integrations are optional.
 
-In comparison to other Trifle gems, this one does not include drivers for persisting data. During configuration you need to write add a callback method that handles persistance.
+To persist traces you must implement callbacks (see [Callbacks](/trifle-traces/callbacks)).

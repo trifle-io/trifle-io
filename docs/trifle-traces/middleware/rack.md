@@ -6,10 +6,8 @@ nav_order: 2
 
 # Rack
 
-This middleware wraps any request made with a tracer. Key is taken from _NOPE_ and `request.params` are stored as a `tracer.meta`.
+This middleware is **not finished**. It currently does **not** set a tracer key or meta, and it is not recommended for production use.
 
-## Configuration
-
-_This middleware is WIP. Pls don't use it!_
-
-Rack does not have much access to rails controller and therefore interacting with context is kinda impossible. There is [Rails](/trifle-traces/middleware/rails.html) integration that allows you to do what you are trying to do, but better!
+:::callout warn "Work in progress"
+The Rack middleware does not create a tracer yet. Use the Rails or Sidekiq middleware instead.
+:::

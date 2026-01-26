@@ -7,17 +7,45 @@ lang: <path d="M90.1 80c.8-.5 1.7-1 2.5-1.5 5.6-4.8 3.6-13.5-5.9-25.7.2 6.1 1.2 
 
 # Trifle.Stats
 
-[![Gem Version](https://badge.fury.io/rb/trifle-stats.svg)](https://rubygems.org/gems/trifle-stats)
-[![Ruby](https://github.com/trifle-io/trifle-stats/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-stats)
+`Trifle.Stats` is a minimal Elixir library for time-series metrics with pluggable drivers.
 
-Simple analytics backed by Redis, Postgres, MongoDB, Process, Google Analytics, Segment, or whatever. [^1]
+## What it does
 
-`Trifle.Stats` is a _way too_ simple timeline analytics that helps you track custom metrics. Automatically increments counters for each enabled range. It supports timezones and different week beginning.
+- Tracks counters and numeric payloads per key.
+- Reads back series by timeframe and granularity.
+- Supports Process, MongoDB, Postgres, Redis, and SQLite drivers.
 
-## Why?
+## Quick example
 
-There are many ways to do analytics. You can use 3rd party service (Segment, or whatever), external service (Prometheus, or whatever) or build it inhouse yourself. Use of 3rd party service introduces latency into your app. And while external service is faster, it often adds complexity into your app. You either need you to addapt to its ideology (aka their believes of analytics) or write lots of gluecode because they only offer simple client library. And while doing it yourself is often enough, without previous experience it sets you down the path of explorer. And thats like kitchen remodeling. It will take twice as long and cost twice as much.
+```elixir
+{:ok, pid} = Trifle.Stats.Driver.Process.start_link()
+driver = Trifle.Stats.Driver.Process.new(pid)
 
-`Trifle.Stats` helps with the in-house analytics. It gives you simple methods for storing and retrieving data and does enough (but not too much) magic on the background for you. This way you don't need to worry where or how your data is being stored or structured. All that matters is to track values that matters and fetch its timeline data. Plotting is all in your hands.
+Trifle.Stats.configure(
+  driver: driver,
+  time_zone: "UTC",
+  track_granularities: ["1h", "1d"],
+  beginning_of_week: :monday
+)
 
-[^1]: TBH only database drivers for now </3.
+Trifle.Stats.track("event::uploads", DateTime.utc_now(), %{count: 1, duration: 3})
+
+now = DateTime.utc_now()
+from = DateTime.add(now, -24, :hour)
+
+series = Trifle.Stats.values("event::uploads", from, now, "1h")
+```
+
+## What to expect
+
+- `values/5` returns `%{at: [...], values: [...]}` for the bucketed series.
+- Payloads can be nested maps, but every leaf value must be numeric.
+- Use a database driver for persistence and Trifle App dashboards.
+
+## Next steps
+
+- [Installation](/trifle-stats-ex/installation)
+- [Configuration](/trifle-stats-ex/configuration)
+- [Getting Started](/trifle-stats-ex/getting_started)
+- [Usage](/trifle-stats-ex/usage)
+- [Drivers](/trifle-stats-ex/drivers)

@@ -6,30 +6,67 @@ nav_order: 2
 
 # Configuration
 
-You don't need to use it with Rails, but you still need to run `Trifle::Logs.configure`.
+`Trifle::Docs` needs a configuration object so it knows where your files live and how to render them. You can configure it globally or pass a configuration instance into each call.
 
-Configuration allows you to specify:
+:::signature Trifle::Docs.configure
+config | Trifle::Docs::Configuration | required | Global configuration object yielded to the block.
+returns | Trifle::Docs::Configuration | required | The configured global instance.
+:::
 
-- `path` - path to a folder where your static files are located.
-- `views` - path to a views folder used for rendering (Sinatra App).
-- `template` - name of a rails template (Rails Engine).
-- `register_harvester(HARVESTER_KLASS)` - register a Harvester class used for serving files.
-- `cache` - boolean to enable or disable content cache. Defaults to `true`.
+## Core settings
 
-Gem fallbacks to global configuration if custom configuration is not passed to method. You can do this by creating initializer, or calling it on the beginning of your ruby script.
+- `path` - absolute path to your documentation folder. **Required**.
+- `views` - absolute path to your template folder (Sinatra app only).
+- `layout` - layout name used by the Rails engine (`app/views/layouts/trifle/docs/<layout>.html.erb`).
+- `namespace` - optional URL prefix used when building `meta['url']` values.
+- `cache` - cache rendered content and metadata. Defaults to `true`.
+- `register_harvester` - register a harvester (Markdown, File, or custom).
 
-Unfortunately there are three ways to configure `Trifle::Docs`. And that depends on the way you plan to use it. Please refer to [getting started](getting_started) documentation for configuration for your usecase.
+:::callout warn "Register harvesters before first read"
+`Configuration#harvester` is created lazily. If you call `Trifle::Docs.sitemap` / `content` before registering harvesters, those harvesters won't be included. Configure once, then use.
+:::
 
 ## Global configuration
 
+:::tabs
+@tab Sinatra / Global
 ```ruby
 Trifle::Docs.configure do |config|
-  config.path = File.join(Rails.root, 'docs')
-  config.templates = File.join(Rails.root, 'app', 'views', 'trifle', 'docs')
+  config.path = Rails.root.join('docs')
+  config.views = Rails.root.join('app', 'views', 'trifle', 'docs')
+  config.namespace = 'docs'
+  config.cache = Rails.env.production?
   config.register_harvester(Trifle::Docs::Harvester::Markdown)
   config.register_harvester(Trifle::Docs::Harvester::File)
-  config.cache = Rails.env.production?
 end
 ```
 
-You cannot register harvester once you call `harvester` on a configuration. It's gonna raise an exception. You've been warned.
+@tab Rails Engine
+```ruby
+Rails.application.routes.draw do
+  Trifle::Docs::Engine.mount(self, namespace: 'docs') do |config|
+    config.path = Rails.root.join('docs')
+    config.layout = 'docs'
+    config.register_harvester(Trifle::Docs::Harvester::Markdown)
+    config.register_harvester(Trifle::Docs::Harvester::File)
+  end
+
+  Trifle::Docs::Engine.draw
+end
+```
+:::
+
+## Per-call configuration
+
+You can build a configuration object directly and pass it into any API call.
+
+```ruby
+config = Trifle::Docs::Configuration.new
+config.path = File.join(__dir__, 'docs')
+config.register_harvester(Trifle::Docs::Harvester::Markdown)
+config.register_harvester(Trifle::Docs::Harvester::File)
+
+Trifle::Docs.content(url: 'getting_started', config: config)
+```
+
+If you pass a configuration explicitly, it overrides the global one for that call.

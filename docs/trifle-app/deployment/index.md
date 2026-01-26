@@ -1,12 +1,17 @@
 ---
 title: Deployment
 description: Learn how you can deploy Trifle App on your own.
-nav_order: 2
+nav_order: 3
 ---
 
 # Deployment
 
 Trifle App ships as a public Docker image, so you can run it anywhere that speaks containers. The supported path is Kubernetes via the built-in Helm chart.
+
+:::callout note "SaaS vs self-hosted"
+- If you want Trifle-managed hosting, use [app.trifle.io](https://app.trifle.io) and skip this section.
+- Everything below assumes self-hosting.
+:::
 
 ## What you’re deploying
 
@@ -28,15 +33,54 @@ The Helm chart lives in the Trifle repo and is the fastest way to get a stable i
 
 From there, follow the dedicated docs:
 
-- [Installation](/trifle-app/installation)
-- [Configuration](/trifle-app/configuration)
+- [Installation](/trifle-app/deployment/installation)
+- [Configuration](/trifle-app/deployment/configuration)
 
-## Docker deployment (available, undocumented)
+## Docker deployment (Compose example)
 
-You can run the same image with plain Docker or Docker Compose. It works. We just don’t have a blessed guide yet.
+You can run the same image with plain Docker or Docker Compose. The Trifle repo ships a production-grade Compose setup you can start from.
 
-If you go this route, you still need to:
+:::tabs
+@tab docker-compose.yml (excerpt)
+```yaml
+services:
+  postgres:
+    image: postgres:15-alpine
+  mongodb:
+    image: mongo:7-jammy
+  redis:
+    image: redis:7-alpine
+  app:
+    build:
+      context: ../../..
+      dockerfile: .devops/docker/production/Dockerfile
+    environment:
+      DATABASE_URL: "postgresql://trifle:${POSTGRES_PASSWORD:-changeme}@postgres:5432/trifle_prod"
+      MONGODB_URL: "mongodb://trifle:${MONGO_PASSWORD:-changeme}@mongodb:27017/trifle_metrics"
+      REDIS_URL: "redis://redis:6379"
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      PHX_HOST: ${PHX_HOST:-localhost}
+```
 
-- Provide the same env vars as the Helm chart (see Configuration).
-- Run database migrations on boot.
-- Set `PHX_HOST`, `SECRET_KEY_BASE`, and your DB URL.
+@tab .env example
+```sh
+POSTGRES_PASSWORD=your_secure_postgres_password
+MONGO_PASSWORD=your_secure_mongo_password
+SECRET_KEY_BASE=your_64_character_secret_key_base
+PHX_HOST=trifle.example.com
+```
+:::
+
+Quick run (from the repo root):
+
+```sh
+cd trifle/.devops/docker/production
+cp .env.example .env
+docker-compose up -d
+docker-compose exec app ./bin/trifle eval "Trifle.Release.migrate"
+```
+
+:::callout note "Self-hosted defaults"
+- If you leave projects disabled, the UI exposes **Database** sources only.
+- Enable projects (and Mongo) before using API ingestion.
+:::

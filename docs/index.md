@@ -15,163 +15,93 @@ Made by galons of ☕️ and 🍺 by [JozefVaclavik](https://twitter.com/JozefVa
 
 ---
 
-# `Trifle::Docs` for `ruby`.
+# Applications
 
-[![Gem Version](https://badge.fury.io/rb/trifle-docs.svg)](https://rubygems.org/gems/trifle-docs)
-[![Ruby](https://github.com/trifle-io/trifle-docs/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-docs)
+Apps you can run to make your use of below plugins easier.
 
-Simple router for your static documentation. Like markdown, or textile, or whatever files.
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+:::card "Trifle App" "Dashboards + API" "Docs" "/trifle-app/"
+Visual and automation layer for Trifle Stats. Dashboards, monitors, API, CLI, MCP.
 
-It maps your docs folder structure into URLs and renders them within the simplest template possible.
-
-It turns your `docs/example/snippet.md` file
-
-```raw
----
-title: Snippet
----
-
-# Snippet
-
-This is snippet.
+```sh
+trifle metrics push \
+  --key event::signup \
+  --values '{"count":1}'
 ```
-
-And renders it as `example/snippet` with
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Trifle::Docs</title>
-  </head>
-  <body>
-    <h1 id="snippet">Snippet</h1>
-
-    <p>This is snippet.</p>
-  </body>
-</html>
-```
-
-Templates are completely in your control, you just use few provided variables.
-
-More [here](/trifle-docs/).
+:::
+</div>
 
 ---
 
-# `Trifle::Logs` for `ruby`.
+# Plugins
 
-[![Gem Version](https://badge.fury.io/rb/trifle-logs.svg)](https://rubygems.org/gems/trifle-logs)
-[![Ruby](https://github.com/trifle-io/trifle-logs/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-logs)
+These are gems and plugins you can plug into your app to start building.
 
-Simple log storage where you can dump your data. It allows you to search on top of your log files with `ripgrep` for fast regexp queries and utilises `head` and `tail` to paginate through a file.
-
-It dumps your data
-
-```ruby
-Trifle::Logs.dump('test', 'This is test message')
-Trifle::Logs.dump('test', 'Or another message')
-Trifle::Logs.dump('test', 'That noone cares about')
-```
-
-And lets you search on top of it
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+:::card "Trifle::Docs" "Ruby · Static docs router" "Docs" "/trifle-docs/"
+Map a folder of Markdown/textile/static files to URLs and render them in-app.
 
 ```ruby
-search = Trifle::Logs.searcher('test', pattern: 'test')
-search.perform.data
-[
-  {
-    "type"=>"match",
-    "data"=>{
-      "path"=>{"text"=>"<stdin>"},
-      "lines"=>{"text"=>"2022-09-17T08:33:04.843195 {\"scope\":{},\"content\":\"This is test message\"}\n"},
-      "line_number"=>1,
-      "absolute_offset"=>0,
-      "submatches"=>[{"match"=>{"text"=>"test"}, "start"=>58, "end"=>62}]
-    }
-  }
-]
-```
-
-More [here](/trifle-logs/).
-
----
-
-# `Trifle::Stats` for `ruby`.
-
-[![Gem Version](https://badge.fury.io/rb/trifle-stats.svg)](https://rubygems.org/gems/trifle-stats)
-[![Ruby](https://github.com/trifle-io/trifle-stats/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-stats)
-
-Simple analytics backed by Redis, Postgres, MongoDB, Google Analytics, Segment, or whatever.
-
-It gets you from having bunch of these occuring within few minutes
-
-```ruby
-Trifle::Stats.track(key: 'event::logs', at: Time.now, values: { count: 1, duration: 2, lines: 241 })
-Trifle::Stats.track(key: 'event::logs', at: Time.now, values: { count: 1, duration: 1, lines: 56 })
-Trifle::Stats.track(key: 'event::logs', at: Time.now, values: { count: 1, duration: 5, lines: 361 })
-```
-
-To being able to say what happened on 25th January 2021.
-
-```ruby
-Trifle::Stats.values(key: 'event::logs', from: Time.now, to: Time.now, range: :day)
-=> {:at=>[2021-01-25 00:00:00 +0100], :values=>[{"count"=>3, "duration"=>8, "lines"=>658}]}
-```
-
-More [here](/trifle-stats-rb/).
-
----
-
-# `Trifle::Traces` for `ruby`.
-
-[![Gem Version](https://badge.fury.io/rb/trifle-traces.svg)](https://rubygems.org/gems/trifle-traces)
-[![Ruby](https://github.com/trifle-io/trifle-traces/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-traces)
-
-Simple log tracer that collects messages and values from your code and returns Hash (at least for now).
-
-It saves you from reading through your standard logger
-
-```ruby
-Trifle::Traces.trace('This is important output')
-now = Trifle::Traces.trace('And it\'s important to know it happened at') do
-  Time.now
+Trifle::Docs.configure do |c|
+  c.path = Rails.root.join("docs")
+  c.register_harvester(Trifle::Docs::Harvester::Markdown)
 end
-```
 
-To being able to say what happened on 25th January 2021.
+Trifle::Docs.content(url: "getting_started")
+```
+:::
+
+:::card "Trifle::Logs" "Ruby · File-backed logs" "Docs" "/trifle-logs/"
+Dump logs to disk and search them locally with fast paging.
 
 ```ruby
-[
-  {at: 2021-01-25 00:00:00 +0100, message: 'This is important output', state: :success, head: false, meta: false}
-  {at: 2021-01-25 00:00:00 +0100, message: 'And it\'s important to know it happened ', state: :success, head: false, meta: false}
-  {at: 2021-01-25 00:00:00 +0100, message: '=> 2021-01-25 00:00:00 +0100', state: :success, head: false, meta: true}
-]
+Trifle::Logs.configure do |c|
+  c.driver = Trifle::Logs::Driver::File.new(path: "/var/logs/trifle")
+end
+
+Trifle::Logs.dump("billing", { event: "invoice_charged" })
 ```
+:::
 
-More [here](/trifle-traces/).
+:::card "Trifle::Stats" "Ruby · Time-series metrics" "Docs" "/trifle-stats-rb/"
+Track counters and numeric payloads, then read back series by granularity.
 
----
+```ruby
+Trifle::Stats.configure do |c|
+  c.driver = Trifle::Stats::Driver::Redis.new(Redis.new)
+  c.granularities = ["1h"]
+end
 
-# `Trifle.Stats` for `elixir`.
+Trifle::Stats.track(
+  key: "event::signup",
+  at: Time.now.utc,
+  values: { count: 1 }
+)
+```
+:::
 
-[![Gem Version](https://badge.fury.io/rb/trifle-stats.svg)](https://rubygems.org/gems/trifle-stats)
-[![Ruby](https://github.com/trifle-io/trifle-stats/workflows/Ruby/badge.svg?branch=main)](https://github.com/trifle-io/trifle-stats)
-
-Simple analytics backed by MongoDB (others coming eventually).
-
-It gets you from having bunch of these occuring within few minutes
+:::card "Trifle.Stats" "Elixir · Time-series metrics" "Docs" "/trifle-stats-ex/"
+Minimal Elixir API for tracking counters and reading series.
 
 ```elixir
-Trifle.Stats.track('event::logs', DateTime.utc_now(), %{count: 1, duration: 2, lines: 241})
-Trifle.Stats.track('event::logs', DateTime.utc_now(), %{count: 1, duration: 1, lines: 56})
-Trifle.Stats.track('event::logs', DateTime.utc_now(), %{count: 1, duration: 5, lines: 3611})
+{:ok, pid} = Trifle.Stats.Driver.Process.start_link()
+driver = Trifle.Stats.Driver.Process.new(pid)
+
+Trifle.Stats.configure(driver: driver, track_granularities: ["1h"])
+Trifle.Stats.track("event::signup", DateTime.utc_now(), %{count: 1})
 ```
+:::
 
-To being able to say what happened on 19th August 2023.
+:::card "Trifle::Traces" "Ruby · Execution tracing" "Docs" "/trifle-traces/"
+Capture messages, return values, and metadata from code blocks.
 
-```elixir
-Trifle.Stats.values('event::logs', DateTime.utc_now, DateTime.utc_now, :day)
-%{at: [#DateTime<2023-08-19 00:00:00+02:00 CEST Europe/Bratislava>], values: [%{"count" => 3, "duration" => 8, "lines" => 658}]}
+```ruby
+Trifle::Traces.tracer = Trifle::Traces::Tracer::Hash.new(
+  key: "jobs/invoice_charge"
+)
+
+Trifle::Traces.trace("Charge invoice") { charge_invoice(42) }
+Trifle::Traces.tracer.wrapup
 ```
-
-More [here](/trifle-stats-ex/).
+:::
+</div>

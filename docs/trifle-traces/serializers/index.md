@@ -6,28 +6,38 @@ nav_order: 8
 
 # Serializers
 
-You may have noticed that `Trifle::Traces` allows you to include return values of a block in the traces. This is great for including deep low-level insigts into execution. Think of persisting calculated values or returned active record objects that you want to preserve in your trace for a reference.
-
-Serializers allows you to define how you want to preserve this data. You can use one of pre-defined serializers or write your own. Serializer class needs to implement `sanitize` instance method that accepts `payload` as an argument and returns its sanitized version.
+Serializers control how block return values are stored in trace output. A serializer must implement:
 
 ```ruby
-class NumberSerializer
-  def sanitize(payload)
-    rand(1000)
-  end
+def sanitize(payload)
+  payload.to_s
 end
 ```
 
-Here you have example of not-so-smart serializer. In practice predefined serializers are simple and you can see their details below. `Trifle::Traces` defaults to `Inspect` serializer.
+## Configure a serializer
 
-## Inspect
+```ruby
+Trifle::Traces.configure do |config|
+  config.serializer_class = Trifle::Traces::Serializer::Json
+end
+```
 
-Inspect Serializer calls `.inspect` on a `payload`. This is the most low-level serializer and is safest to use whenever you are not sure what type of content you are going to be serializing.
+## Built-in serializers
 
-## String
+- **Inspect** — uses `payload.inspect` (default)
+- **String** — uses `payload.to_s`
+- **Json** — uses `payload.to_json`
 
-String Serializer calls `.to_s` on a `payload`. In comparison to `Inspect`, this serializer handles couple cases differently.
+## Custom serializer example
 
-## Json
+```ruby
+class LengthSerializer
+  def sanitize(payload)
+    payload.to_s.length
+  end
+end
 
-Json Serializer calls `.to_json` on a `payload`. This serializer is best to use when you have good control over the data and would like to present language-independent content.
+Trifle::Traces.configure do |config|
+  config.serializer_class = LengthSerializer
+end
+```

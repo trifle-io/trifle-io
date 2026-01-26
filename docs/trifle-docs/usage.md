@@ -6,68 +6,106 @@ nav_order: 4
 
 # Usage
 
-`Trifle::Docs` comes with a couple module level methods that are shorthands for operations.
+`Trifle::Docs` exposes module-level methods that wrap the internal operations. Each method accepts an optional `config:` argument; if omitted, the global configuration is used.
 
-Each of these methods accepts optional custom configuration. If no configuration has been passed in, it defaults to global configuration.
+## `sitemap(config: nil)`
 
-## `sitemap(**options)`
-- `options` - hash of optional arguments:
-    - `config` - optional configuration instance of `Trifle::Docs::Configuration`. It defaults to global configuration, otherwise uses passed in configuration.
+:::signature Trifle::Docs.sitemap
+config | Trifle::Docs::Configuration | optional | Override the global configuration.
+returns | Hash | required | Full sitemap tree including `_meta` nodes.
+:::
 
-Returns a full tree structure of your folders. Each item includes metadata for a specific file. You can use this to generate menus or one of those sitemaps that noone uses.
-
-Example sitemap for Trifle documentation including only **blog** and **_meta**. To cut down too much content it uses `slice` to cut down unnecessary sitemap branches and include only `blog` branch.
-
-```ruby
-irb(main):002:0> Trifle::Docs.sitemap.slice('blog', '_meta')
-=> {"blog"=>{"2022-07-introduction"=>{"_meta"=>{"title"=>"Introduction to Trifle Blog", "date"=>"2022-07-12 18:16:31", "author"=>"Jozef Vaclavik", "template"=>"blog", "url"=>"/blog/2022-07-introduction", "breadcrumbs"=>["blog", "2022-07-introduction"]}}, "_meta"=>{"title"=>"Blog", "nav_order"=>1, "template"=>"blogs", "url"=>"/blog", "breadcrumbs"=>["blog"]}}, "_meta"=>{"title"=>"Home", "url"=>"/", "breadcrumbs"=>[]}}
-```
-
-- `_meta` - holds the _metadata_ about each part of tree.
-
-## `content(url: String, **options)`
-- `url` - string representation of the URL.
-- `options` - hash of optional arguments:
-    - `config` - optional configuration instance of `Trifle::Docs::Configuration`. It defaults to global configuration, otherwise uses passed in configuration.
-
-Returns a HTML content of the file that can be used in a template.
-
-Example content for first blog post you can find here.
+Use this to render navigation or build search indexes.
 
 ```ruby
-irb(main):003:0> Trifle::Docs.content(url: 'blog/2022-07-introduction')
-=> "<h1 id=\"welcome-to-trifle-blog\">Welcome to Trifle Blog</h1>\n\n<p>On this place you will find announcements worth announcing and other interesting <em>things</em> that occured. For example major versions, milestones and improvements. I would not hold my breath for regular updates. These are after all super-simple plugins.</p>\n\n<p>Anyways; welcome and come again!</p>\n"
+Trifle::Docs.sitemap
+# => {
+#   "guides" => { "_meta" => { "title" => "Guides" }, ... },
+#   "blog" => { "_meta" => { "title" => "Blog" }, ... },
+#   "_meta" => { "title" => "Home" }
+# }
 ```
 
-## `meta(url: String, **options)`
-- `url` - string representation of the URL.
-- `options` - hash of optional arguments:
-    - `config` - optional configuration instance of `Trifle::Docs::Configuration`. It defaults to global configuration, otherwise 
+## `collection(url:, config: nil)`
 
-Returns a metadata of the file. This may include `title`, `template`, `nav_order` or others.
-
-Example metadata for first blog post you can find here.
+:::signature Trifle::Docs.collection
+url | String | required | Path without leading slash (e.g., `"blog"`).
+config | Trifle::Docs::Configuration | optional | Override the global configuration.
+returns | Hash | required | One branch of the sitemap for the given URL.
+:::
 
 ```ruby
-irb(main):004:0> Trifle::Docs.meta(url: 'blog/2022-07-introduction')
-=> {"title"=>"Introduction to Trifle Blog", "date"=>"2022-07-12 18:16:31", "author"=>"Jozef Vaclavik", "template"=>"blog", "url"=>"/blog/2022-07-introduction", "breadcrumbs"=>["blog", "2022-07-introduction"], "toc"=>"<ul>\n<li>\n<a href=\"#welcome-to-trifle-blog\">Welcome to Trifle Blog</a>\n</li>\n</ul>\n"}
+Trifle::Docs.collection(url: 'blog')
+# => { "2025-01-update" => { "_meta" => { ... } }, "_meta" => { ... } }
 ```
 
-## `collection(url: String, **options)`
-- `url` - string representation of the URL.
-- `options` - hash of optional arguments:
-    - `config` - optional configuration instance of `Trifle::Docs::Configuration`. It defaults to global configuration, otherwise 
-    
-Returns a single branch of a sitemap tree for specific `url`. This can be useful when redering list of nested items. For example blog posts. Instead of navigating through `.sitemap` to specific branch, you can use `.collection` with `url` to get the list.
+## `content(url:, config: nil)`
 
-Example of collection of blog posts under `blog` url.
+:::signature Trifle::Docs.content
+url | String | required | Path without leading slash (e.g., `"guides/install"`).
+config | Trifle::Docs::Configuration | optional | Override the global configuration.
+returns | String | required | Rendered HTML content.
+:::
 
 ```ruby
-irb(main):005:0> Trifle::Docs.collection(url: 'blog')
-=> {"2022-07-introduction"=>{"_meta"=>{"title"=>"Introduction to Trifle Blog", "date"=>"2022-07-12 18:16:31", "author"=>"Jozef Vaclavik", "template"=>"blog", "url"=>"/blog/2022-07-introduction", "breadcrumbs"=>["blog", "2022-07-introduction"]}}, "_meta"=>{"title"=>"Blog", "nav_order"=>1, "template"=>"blogs", "url"=>"/blog", "breadcrumbs"=>["blog"]}}
+Trifle::Docs.content(url: 'blog/2025-01-update')
+# => "<h1 id=\"...\">...</h1>..."
 ```
 
-- `_meta` - holds the _metadata_ about each part of tree.
+## `raw_content(url:, config: nil)`
 
----
-Thats really all there is. You can use these methods directly and integrate it in views, or you can use build in Sinatra app.
+:::signature Trifle::Docs.raw_content
+url | String | required | Path without leading slash (e.g., `"guides/install"`).
+config | Trifle::Docs::Configuration | optional | Override the global configuration.
+returns | String | required | Raw markdown without frontmatter.
+:::
+
+```ruby
+Trifle::Docs.raw_content(url: 'blog/2025-01-update')
+# => "# Hello\n\nThis is raw markdown..."
+```
+
+## `meta(url:, config: nil)`
+
+:::signature Trifle::Docs.meta
+url | String | required | Path without leading slash.
+config | Trifle::Docs::Configuration | optional | Override the global configuration.
+returns | Hash | required | Frontmatter merged with generated metadata.
+:::
+
+Metadata always includes:
+- `url` (prefixed with `namespace` when set)
+- `breadcrumbs` (array of path segments)
+- `toc` (HTML list of headings)
+- `updated_at` (file mtime)
+
+```ruby
+Trifle::Docs.meta(url: 'blog/2025-01-update')
+# => {
+#   "title" => "January Update",
+#   "tags" => ["release"],
+#   "url" => "/blog/2025-01-update",
+#   "breadcrumbs" => ["blog", "2025-01-update"],
+#   "toc" => "<ul>...",
+#   "updated_at" => #<Time ...>
+# }
+```
+
+## `search(query:, scope: nil, config: nil)`
+
+:::signature Trifle::Docs.search
+query | String | required | Search query string.
+scope | String | optional | Optional URL prefix to limit search (e.g., `"blog"`).
+config | Trifle::Docs::Configuration | optional | Override the global configuration.
+returns | Array<Hash> | required | Search results ordered by score.
+:::
+
+Search only runs against harvesters that expose content (Markdown). File harvesters are ignored.
+
+```ruby
+Trifle::Docs.search(query: 'traces')
+# => [
+#   { url: "trifle-traces/getting_started", title: "Getting Started", excerpt: "...", tags: [], score: 42 },
+#   ...
+# ]
+```

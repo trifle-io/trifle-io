@@ -6,4 +6,9 @@ nav_order: 90
 
 # How to Guides
 
-List of resources how to achieve common tasks with `Trifle::Traces`
+Common tasks and integrations:
+
+- [Callbacks](/trifle-traces/callbacks)
+- [State handling](/trifle-traces/state)
+- [Tags and Artifacts](/trifle-traces/tags_and_artifacts)
+- [Middleware](/trifle-traces/middleware)

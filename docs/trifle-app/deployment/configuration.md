@@ -8,6 +8,123 @@ nav_order: 2
 
 Everything below maps 1:1 to the Helm chart values in `.devops/kubernetes/helm/trifle/values.yaml`.
 
+:::callout note "Self-hosted only"
+These settings apply to the Helm chart. SaaS users don’t need to configure any of this.
+:::
+
+## Example configurations
+
+:::tabs
+@tab Minimal self-hosted
+```yaml
+app:
+  secretKeyBase: "<your-64-char-secret>"
+  host: "trifle.example.com"
+  registration:
+    enabled: false
+
+initialUser:
+  enabled: true
+  email: "admin@trifle.example.com"
+  password: "change-me"
+  admin: true
+
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: trifle.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+```
+
+@tab External Postgres (secret)
+```yaml
+postgresql:
+  enabled: false
+
+externalPostgresql:
+  host: "postgres.example.com"
+  port: 5432
+  username: "trifle"
+  database: "trifle_prod"
+  existingSecret: "postgres-credentials"
+  existingSecretPasswordKey: "password"
+
+app:
+  secretKeyBase: "<your-64-char-secret>"
+  host: "trifle.example.com"
+```
+
+@tab Projects + external Mongo
+```yaml
+features:
+  projects:
+    enabled: true
+
+app:
+  mongodbUrl: "mongodb://mongo.example.com:27017/trifle"
+
+mongo:
+  sidecar:
+    enabled: false
+```
+
+@tab SMTP mailer
+```yaml
+app:
+  mailer:
+    adapter: "smtp"
+    from:
+      name: "Trifle"
+      email: "no-reply@example.com"
+    smtp:
+      relay: "smtp.example.com"
+      username: "smtp-user"
+      password: "smtp-password"
+      port: 587
+      auth: "if_available"
+      tls: "if_available"
+      ssl: false
+```
+
+@tab Slack + Google SSO
+```yaml
+app:
+  slack:
+    clientId: "<SLACK_CLIENT_ID>"
+    clientSecret: "<SLACK_CLIENT_SECRET>"
+    signingSecret: "<SLACK_SIGNING_SECRET>"
+    redirectUri: "https://trifle.example.com/integrations/slack/oauth/callback"
+  googleOAuth:
+    clientId: "<GOOGLE_OAUTH_CLIENT_ID>"
+    clientSecret: "<GOOGLE_OAUTH_CLIENT_SECRET>"
+    redirectUri: "https://trifle.example.com/auth/google/callback"
+```
+
+@tab Ingress + cert-manager
+```yaml
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: trifle.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: trifle-tls
+      hosts:
+        - trifle.example.com
+
+certManager:
+  enabled: true
+  kind: "Issuer"
+  email: "admin@example.com"
+```
+:::
+
 ## Core
 
 - `replicaCount` (int, default: `2`) Number of app replicas when autoscaling is disabled.
@@ -91,7 +208,7 @@ Everything below maps 1:1 to the Helm chart values in `.devops/kubernetes/helm/t
 - `app.poolSize` (int, default: `10`) Maps to `POOL_SIZE`.
 - `app.timezone` (string, default: `UTC`) Maps to `TZ`.
 - `app.logLevel` (string, default: `info`) Maps to `LOGGER_LEVEL`.
-- `app.mongodbUrl` (string, optional) Maps to `MONGODB_URL`. If empty, Mongo defaults to `mongodb://localhost:27017/trifle`.
+- `app.mongodbUrl` (string, optional) Maps to `MONGODB_URL`. If empty, Mongo defaults to `mongodb://localhost:27017/trifle` (useful with the sidecar).
 
 ### Environment overrides
 
@@ -174,6 +291,11 @@ Sendinblue/Brevo:
 ## Features
 
 - `features.projects.enabled` (bool, default: `false`) Maps to `TRIFLE_PROJECTS_ENABLED`. Enables project-level metrics and Mongo support.
+
+:::callout note "Project sources require Mongo"
+- Enable `features.projects.enabled` **and** provide Mongo (sidecar or `app.mongodbUrl`).
+- Without this, the UI hides Projects and API ingestion is disabled.
+:::
 
 ## Initial User
 

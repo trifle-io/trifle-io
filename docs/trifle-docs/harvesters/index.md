@@ -6,48 +6,42 @@ nav_order: 6
 
 # Harvesters
 
-It's the class that harvests your file! You can use pre-defined harvesters, or define one of your own. There isn't that much into it.
+Harvesters decide **what files match** and **how to render them**. You can use the built-in Markdown and File harvesters, or define your own.
 
-The order of registered harvesters matters. As the `Trifle::Docs::Harvester::Walker` iterates through files, it then iterates through registered harvesters and tries find matching one through a sieve.
-
-Every harvester needs to define two classes.
+The order you register harvesters matters. The walker tries them in order and picks the first one whose `Sieve#match?` returns `true`.
 
 ## Sieve
 
-Purpose of a `Sieve` is to catch matching files and generate mapping URL for the file.
+A `Sieve` selects files and maps them to URLs.
 
-This class needs to implement two methods:
+Required methods:
+- `match?` — return `true` when the file should be handled by this harvester.
+- `to_url` — return the URL path for the file.
 
-- `match?` - returns `true` if the file can be processed by the harvester.
-- `to_url` - returns URL mapping for a router.
-
-You also have couple instance methods available:
-
-- `path` - returns folder for the current file.
+Helpful attributes:
+- `path` — root folder from configuration.
+- `file` — full path to the file.
 
 ## Conveyor
 
-Purpose of a `Conveyor` is to retrieve data from the file. This should have form of HTML, but is not restricted to it.
+A `Conveyor` loads file content and metadata.
 
-This class needs to implement at least two methods:
+Required methods:
+- `content` — return rendered content (usually HTML).
+- `meta` — return a metadata hash.
 
-- `content` - returns content that can be rendered (HTML) or served (file).
-- `meta` - returns hash describing the content.
+Helpful attributes:
+- `file` — full path to the file.
+- `data` — raw file contents.
+- `url` — URL path for this file.
+- `namespace` — optional prefix.
+- `cache` — whether caching is enabled.
 
-You also have couple instance methods available:
-
-- `file` - returns path to the file.
-- `data` - returns string content of the file.
-- `url` - returns current URL for the file.
-- `namespace` - returns namespace if specified in configuration.
-
-## Example
-
-You can get a better look at Markdown Harvester implementation, but for the purpose of illustration, lets write a simple TXT Harvester. To get some 90s nostalgia.
+## Example: TXT harvester
 
 ```ruby
 module Txt
-  class Sieve
+  class Sieve < Trifle::Docs::Harvester::Sieve
     def match?
       file.end_with?('.txt')
     end
@@ -59,9 +53,10 @@ module Txt
     end
   end
 
-  class Conveyor
+  class Conveyor < Trifle::Docs::Harvester::Conveyor
     def content
-      @content ||= data
+      @content = nil unless cache
+      @content ||= "<pre>#{data}</pre>"
     end
 
     def meta
@@ -76,4 +71,6 @@ module Txt
 end
 ```
 
-Alrite, as you can see, the `Sieve` matches any `.txt` file. The `to_url` method cleans up any `index.txt` and removes `.txt` extension to generate URL. `Conveyor` is even simpler. It _just_ passes content of a file as a `content` and prepares some _basic_ metadata for the templates.
+:::callout warn "Register File harvester last"
+`Trifle::Docs::Harvester::File` matches **any** file. Register it last so more specific harvesters (Markdown, TXT, etc.) get first dibs.
+:::

@@ -6,48 +6,46 @@ nav_order: 2
 
 # Configuration
 
-You don't need to use it with Rails, but you still need to run `Trifle::Traces.configure`.
+You can set a global configuration or build a configuration object for a specific tracer.
 
 ## Global configuration
-
-If you're running it with Rails, create `config/initializers/trifle.rb` and configure the gem.
-
-Middleware automatically creates an instance of a tracer for you. To do that automatically, you need to provide `tracer_class` in your configuration. It defaults to `Trifle::Traces::Tracer::Hash`, but you can override it with your own custom tracer. You may want to configure custom `serializer_class` that handles block return values serialization. You can use one of pre-defined [serializer](/trifle-traces/serializers) classes or define your own. It defaults to `Trifle::Traces::Serializer::Inspect` serializer.
 
 ```ruby
 Trifle::Traces.configure do |config|
   config.tracer_class = Trifle::Traces::Tracer::Hash
   config.serializer_class = Trifle::Traces::Serializer::Json
+  config.bump_every = 10
+
+  config.on(:wrapup) do |tracer|
+    Entry.create(key: tracer.key, data: tracer.data, state: tracer.state)
+  end
 end
 ```
 
-To persist your trace, you need to implement callback(s). Please read more about [Callbacks](/trifle-traces/callbacks).
+### Available settings
 
-## Custom configuration
+- `tracer_class` — class used by middleware to instantiate tracers (default: `Trifle::Traces::Tracer::Hash`).
+- `serializer_class` — how block return values are serialized (default: `Trifle::Traces::Serializer::Inspect`).
+- `bump_every` — seconds between `:bump` callbacks (default: `15`).
+- `on(:liftoff|:bump|:wrapup)` — register callbacks.
 
-Sometimes you may wanna run tracer outside of a middleware. When doing that, setting up `tracer_class` is not useful. Instead custom configuration can be passed as a keyword argument to any `Tracer` directly. This configuration will be then used during persistance callbacks.
+## Per-tracer configuration
+
+If you want isolated behavior, pass a configuration object directly to a tracer.
 
 ```ruby
 config = Trifle::Traces::Configuration.new
 config.on(:wrapup) do |tracer|
-  entry = MyModel.find_by(id: tracer.reference)
-  next if entry.nil?
-
-  entry.update(
-    tracer_data: tracer.data,
-    state: tracer.state
-  )
+  Entry.find(tracer.reference)&.update(data: tracer.data, state: tracer.state)
 end
+
+tracer = Trifle::Traces::Tracer::Hash.new(
+  key: 'jobs/invoice_charge',
+  reference: 42,
+  config: config
+)
 ```
 
-Then you can create an instance of your `Tracer` with custom configuration.
+## Serializer choice
 
-```ruby
-entry = MyModel.create
-tracer = Trifle::Traces::Tracer::Hash.new(key: 'my_key', reference: entry.id, config: config)
-
-tracer.trace('My message')
-tracer.wrapup
-```
-
-While you don't need to use callbacks to update your record/entry, I would encourage you to do so. With callbacks you can get live updates with minimal configuration.
+See [Serializers](/trifle-traces/serializers) for built-in options and custom serializers.

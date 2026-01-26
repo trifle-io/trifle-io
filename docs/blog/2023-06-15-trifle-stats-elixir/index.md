@@ -1,5 +1,6 @@
 ---
 title: 'Trifle.Stats for Elixir'
+description: 'Why the Elixir port exists, what is implemented, and what is still missing.'
 date: '2023-06-23 22:11:43'
 author: 'Jozef Vaclavik'
 template: blog

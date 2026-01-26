@@ -6,35 +6,25 @@ nav_order: 2
 
 # Assert values
 
-Asserting values works same way like incrementing, but instead of increment, it sets the value. Asserting values runs `set` on the driver. Every time you assert a value, it will set the metrics.
+`assert/4` sets values instead of incrementing them.
 
-## `assert(key=String, at=DateTime, values=Map, config=Trifle.Stats.Configuration)`
-- `key` - string identifier for the metrics
-- `at` - timestamp of the sample (in most cases current timestamp)
-- `values` - map of values. Can contain only nested maps and numbers (Integer, Float). Any other type will cause an error.
-- `config` - optional configuration variable of `Trifle.Stats.Configuration`. It defaults to global configuration, otherwise uses passed in configuration.
+:::signature Trifle.Stats.assert
+key | String | required | Metric key (e.g., `"event::logs"`).
+at | DateTime | required | Timestamp of the sample.
+values | map | required | Nested maps allowed, all leaf values must be numeric.
+config | Trifle.Stats.Configuration | optional | Overrides global config.
+:::
 
-Assert your first values
+## Examples
 
 ```elixir
-Trifle.Stats.assert('event::logs', DateTime.utc_now(), %{count: 1, duration: 2, lines: 241})
-=> ...
+Trifle.Stats.assert("event::logs", DateTime.utc_now(), %{count: 1, duration: 2})
+Trifle.Stats.assert("event::logs", DateTime.utc_now(), %{count: 2, duration: 9})
 ```
 
-Then do it few more times
+## Verify values
 
 ```elixir
-Trifle.Stats.assert('event::logs', DateTime.utc_now(), %{count: 1, duration: 1, lines: 56})
-=> ...
-Trifle.Stats.assert('event::logs', DateTime.utc_now(), %{count: 1, duration: 5, lines: 361})
-=> ...
-```
-
-## Get values
-
-Retrieve your values for specific `range`. As you just used `assert` above, it will return latest value you've asserted.
-
-```elixir
-Trifle.Stats.values('event::logs', DateTime.utc_now(), DateTime.utc_now(), :day)
-=> ...
+now = DateTime.utc_now()
+Trifle.Stats.values("event::logs", now, now, "1d")
 ```

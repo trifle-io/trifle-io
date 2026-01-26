@@ -6,26 +6,51 @@ nav_order: 2
 
 # Configuration
 
-You don't need to use it with Rails, but you still need to run `Trifle::Logs.configure`.
+You don’t need Rails, but you do need to configure `Trifle::Logs` before using it.
 
-Configuration allows you to specify:
+:::signature Trifle::Logs.configure
+config | Trifle::Logs::Configuration | required | Global configuration object yielded to the block.
+returns | Trifle::Logs::Configuration | required | The configured global instance.
+:::
 
-- `driver` - instance of a driver class that manipulates your log files.
-- `timestamp_formatter` - instance of a formatter class responsible for generating string from timestamp.
-- `content_formatter` - instance of a formatter class responsible for generating string from content.
+## Core settings
 
-Gem fallbacks to global configuration if custom configuration is not passed to method. You can do this by creating initializer, or calling it on the beginning of your ruby script.
+- `driver` — instance of a driver class (currently `Trifle::Logs::Driver::File`).
+- `timestamp_formatter` — formats the timestamp for each log line.
+- `content_formatter` — formats the payload and scope for each log line.
 
-## Global configuration
+If a method call doesn’t receive a custom `config:`, the global configuration is used.
+
+## Example configuration
 
 ```ruby
 Trifle::Logs.configure do |config|
-  config.driver = Trifle::Logs::Driver::File.new(path: '/path/to/my/logs/folder', suffix: '%Y/%m/%d', read_size: 1000)
+  config.driver = Trifle::Logs::Driver::File.new(
+    path: '/var/logs/trifle',
+    suffix: '%Y/%m/%d',
+    read_size: 200
+  )
   config.timestamp_formatter = Trifle::Logs::Formatter::Timestamp.new
   config.content_formatter = Trifle::Logs::Formatter::Content::Json.new
 end
 ```
 
-Formatters are necessary for `Trifle::Logs` to know how to format your output. You can read more about them in [formatters](/trifle-logs/formatters) section.
+:::callout note "About read_size"
+`read_size` controls how many lines are returned per page when searching. Default is `100`.
+:::
 
-Driver is an instance that allows `Trifle::Logs` to manipulate files. Currently only `File` driver is supported. In theory you can extend it by providing your own driver. You can read more about them in [drivers](/trifle-logs/drivers) section.
+## Switching formatters
+
+:::tabs
+@tab Text
+```ruby
+config.content_formatter = Trifle::Logs::Formatter::Content::Text.new
+```
+
+@tab JSON
+```ruby
+config.content_formatter = Trifle::Logs::Formatter::Content::Json.new
+```
+:::
+
+Learn more in [Formatters](/trifle-logs/formatters) and [Drivers](/trifle-logs/drivers).

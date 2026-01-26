@@ -8,6 +8,10 @@ nav_order: 2
 
 Dashboards are JSON payloads that define widgets, layout, and defaults.
 
+:::callout note "Base URL"
+Replace `<TRIFLE_APP_URL>` with `https://app.trifle.io` or your self-hosted URL.
+:::
+
 ## Auth
 
 `Authorization: Bearer <TOKEN>`
@@ -28,6 +32,10 @@ Fields:
 
 Only dashboards with `visibility: true` are listed and fetchable via API.
 
+:::callout note "Sources in self-hosted"
+- If you self-host with projects disabled, only `source_type: "database"` is valid.
+:::
+
 ---
 
 ## GET /dashboards
@@ -39,8 +47,125 @@ List dashboards visible to the organization bound to the token.
 :::tabs
 @tab CURL
 ```sh
-curl -s "https://app.trifle.io/api/v1/dashboards" \
+curl -s "<TRIFLE_APP_URL>/api/v1/dashboards" \
   -H "Authorization: Bearer <TOKEN>"
+```
+
+@tab Ruby
+```ruby
+require "net/http"
+
+base = ENV.fetch("TRIFLE_APP_URL")
+token = ENV.fetch("TRIFLE_TOKEN")
+uri = URI("#{base}/api/v1/dashboards")
+
+req = Net::HTTP::Get.new(uri)
+req["Authorization"] = "Bearer #{token}"
+
+res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+  http.request(req)
+end
+
+puts res.code
+puts res.body
+```
+
+@tab Elixir
+```elixir
+base = System.fetch_env!("TRIFLE_APP_URL")
+token = System.fetch_env!("TRIFLE_TOKEN")
+url = "#{base}/api/v1/dashboards"
+
+headers = [
+  {'authorization', to_charlist("Bearer " <> token)}
+]
+
+:inets.start()
+:ssl.start()
+{:ok, {{_, status, _}, _resp_headers, body}} =
+  :httpc.request(:get, {String.to_charlist(url), headers}, [], [])
+
+IO.puts(status)
+IO.puts(body)
+```
+
+@tab Node.js
+```js
+const base = process.env.TRIFLE_APP_URL;
+const token = process.env.TRIFLE_TOKEN;
+
+const res = await fetch(`${base}/api/v1/dashboards`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
+
+console.log(await res.json());
+```
+
+@tab Python
+```python
+import os
+import requests
+
+base = os.environ["TRIFLE_APP_URL"]
+token = os.environ["TRIFLE_TOKEN"]
+
+resp = requests.get(
+  f"{base}/api/v1/dashboards",
+  headers={"Authorization": f"Bearer {token}"},
+)
+
+print(resp.status_code)
+print(resp.json())
+```
+
+@tab PHP
+```php
+<?php
+$base = getenv("TRIFLE_APP_URL");
+$token = getenv("TRIFLE_TOKEN");
+
+$ch = curl_init("$base/api/v1/dashboards");
+curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $token"]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$body = curl_exec($ch);
+$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+echo $code . PHP_EOL;
+echo $body;
+```
+:::
+
+### Response
+
+:::tabs
+@tab Body
+```json
+{
+  "data": [
+    {
+      "id": "dashboard-uuid",
+      "name": "Signup Overview",
+      "key": "event::signup",
+      "visibility": true,
+      "locked": false,
+      "source_type": "database",
+      "source_id": "db-uuid",
+      "organization_id": "org-uuid",
+      "user_id": "user-uuid",
+      "database_id": "db-uuid",
+      "group_id": null,
+      "position": 1,
+      "default_timeframe": "24h",
+      "default_granularity": "1h",
+      "payload": { "grid": [] },
+      "segments": [],
+      "inserted_at": "2026-01-24T12:00:00Z",
+      "updated_at": "2026-01-24T12:00:00Z"
+    }
+  ]
+}
 ```
 :::
 
@@ -55,10 +180,104 @@ Fetch a dashboard by id (visible dashboards only).
 :::tabs
 @tab CURL
 ```sh
-curl -s "https://app.trifle.io/api/v1/dashboards/DASHBOARD_ID" \
+curl -s "<TRIFLE_APP_URL>/api/v1/dashboards/DASHBOARD_ID" \
   -H "Authorization: Bearer <TOKEN>"
 ```
+
+@tab Ruby
+```ruby
+require "net/http"
+
+base = ENV.fetch("TRIFLE_APP_URL")
+token = ENV.fetch("TRIFLE_TOKEN")
+dashboard_id = "DASHBOARD_ID"
+uri = URI("#{base}/api/v1/dashboards/#{dashboard_id}")
+
+req = Net::HTTP::Get.new(uri)
+req["Authorization"] = "Bearer #{token}"
+
+res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+  http.request(req)
+end
+
+puts res.code
+puts res.body
+```
+
+@tab Elixir
+```elixir
+base = System.fetch_env!("TRIFLE_APP_URL")
+token = System.fetch_env!("TRIFLE_TOKEN")
+dashboard_id = "DASHBOARD_ID"
+url = "#{base}/api/v1/dashboards/#{dashboard_id}"
+
+headers = [
+  {'authorization', to_charlist("Bearer " <> token)}
+]
+
+:inets.start()
+:ssl.start()
+{:ok, {{_, status, _}, _resp_headers, body}} =
+  :httpc.request(:get, {String.to_charlist(url), headers}, [], [])
+
+IO.puts(status)
+IO.puts(body)
+```
+
+@tab Node.js
+```js
+const base = process.env.TRIFLE_APP_URL;
+const token = process.env.TRIFLE_TOKEN;
+const dashboardId = "DASHBOARD_ID";
+
+const res = await fetch(`${base}/api/v1/dashboards/${dashboardId}`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
+
+console.log(await res.json());
+```
+
+@tab Python
+```python
+import os
+import requests
+
+base = os.environ["TRIFLE_APP_URL"]
+token = os.environ["TRIFLE_TOKEN"]
+dashboard_id = "DASHBOARD_ID"
+
+resp = requests.get(
+  f"{base}/api/v1/dashboards/{dashboard_id}",
+  headers={"Authorization": f"Bearer {token}"},
+)
+
+print(resp.status_code)
+print(resp.json())
+```
+
+@tab PHP
+```php
+<?php
+$base = getenv("TRIFLE_APP_URL");
+$token = getenv("TRIFLE_TOKEN");
+$dashboardId = "DASHBOARD_ID";
+
+$ch = curl_init("$base/api/v1/dashboards/$dashboardId");
+curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $token"]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$body = curl_exec($ch);
+$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+echo $code . PHP_EOL;
+echo $body;
+```
 :::
+
+### Response
+
+Returns the same dashboard object as the list endpoint, wrapped in `data`.
 
 ---
 
@@ -83,6 +302,11 @@ database_id | String | optional | Alternate way to set source (database only).
 source | Map | optional | `{ "type": "database", "id": "..." }`.
 :::
 
+:::callout note "Source shortcuts"
+- You can send `source` instead of `source_type`/`source_id`.
+- For database dashboards, `database_id` is accepted and will map to the source.
+:::
+
 ### Widget examples
 
 :::tabs
@@ -91,9 +315,19 @@ source | Map | optional | `{ "type": "database", "id": "..." }`.
 { "id": "kpi-1", "type": "kpi", "title": "Total", "path": "count", "function": "sum", "subtype": "number", "size": "l" }
 ```
 
+@tab KPI Goal
+```json
+{ "id": "kpi-goal", "type": "kpi", "title": "ARR Target", "path": "revenue", "function": "sum", "subtype": "goal", "goal_target": 100000, "goal_progress": true, "goal_invert": false, "size": "l" }
+```
+
 @tab Timeseries
 ```json
 { "id": "ts-1", "type": "timeseries", "title": "Trend", "paths": ["count", "failed"], "chart_type": "area", "stacked": true, "legend": true }
+```
+
+@tab Timeseries Normalized
+```json
+{ "id": "ts-2", "type": "timeseries", "title": "Mix", "paths": ["organic", "paid", "referral"], "chart_type": "line", "normalized": true, "legend": true, "y_label": "%" }
 ```
 
 @tab Category
@@ -118,7 +352,7 @@ source | Map | optional | `{ "type": "database", "id": "..." }`.
 
 @tab Distribution
 ```json
-{ "id": "dist-1", "type": "distribution", "title": "Latency Dist", "paths": ["duration"], "mode": "2d", "designators": { "horizontal": { "type": "linear", "count": 12, "min": 0, "max": 1200 } } }
+{ "id": "dist-1", "type": "distribution", "title": "Latency Dist", "paths": ["duration"], "mode": "2d", "designators": { "horizontal": { "type": "linear", "min": 0, "max": 1200, "step": 100 } } }
 ```
 :::
 
@@ -131,7 +365,7 @@ Full dashboard:
 :::tabs
 @tab CURL
 ```sh
-curl -X POST "https://app.trifle.io/api/v1/dashboards" \
+curl -X POST "<TRIFLE_APP_URL>/api/v1/dashboards" \
   -H "Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -148,6 +382,200 @@ curl -X POST "https://app.trifle.io/api/v1/dashboards" \
       ]
     }
   }'
+```
+
+@tab CURL Minimal
+```sh
+curl -X POST "<TRIFLE_APP_URL>/api/v1/dashboards" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Quick Start",
+    "key": "event::signup",
+    "source": { "type": "database", "id": "db-uuid" }
+  }'
+```
+
+@tab CURL (source map)
+```sh
+curl -X POST "<TRIFLE_APP_URL>/api/v1/dashboards" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Revenue Mix",
+    "key": "billing.revenue",
+    "source": { "type": "database", "id": "db-uuid" },
+    "default_timeframe": "7d",
+    "default_granularity": "1d",
+    "payload": {
+      "grid": [
+        { "id": "kpi-1", "type": "kpi", "title": "Total", "path": "amount", "function": "sum", "x": 0, "y": 0, "w": 3, "h": 2 },
+        { "id": "cat-1", "type": "category", "title": "By Plan", "path": "plan.*", "chart_type": "donut", "x": 3, "y": 0, "w": 3, "h": 2 },
+        { "id": "ts-1", "type": "timeseries", "title": "Trend", "paths": ["amount"], "chart_type": "line", "legend": false, "x": 6, "y": 0, "w": 6, "h": 4 }
+      ]
+    }
+  }'
+```
+:::
+
+### Language examples
+
+:::tabs
+@tab Ruby
+```ruby
+require "net/http"
+require "json"
+
+base = ENV.fetch("TRIFLE_APP_URL")
+token = ENV.fetch("TRIFLE_TOKEN")
+uri = URI("#{base}/api/v1/dashboards")
+
+payload = {
+  name: "Quick Start",
+  key: "event::signup",
+  source: { type: "database", id: "db-uuid" }
+}
+
+req = Net::HTTP::Post.new(uri)
+req["Authorization"] = "Bearer #{token}"
+req["Content-Type"] = "application/json"
+req.body = payload.to_json
+
+res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+  http.request(req)
+end
+
+puts res.code
+puts res.body
+```
+
+@tab Elixir
+```elixir
+base = System.fetch_env!("TRIFLE_APP_URL")
+token = System.fetch_env!("TRIFLE_TOKEN")
+url = "#{base}/api/v1/dashboards"
+
+payload = %{
+  "name" => "Quick Start",
+  "key" => "event::signup",
+  "source" => %{"type" => "database", "id" => "db-uuid"}
+}
+
+headers = [
+  {'authorization', to_charlist("Bearer " <> token)},
+  {'content-type', 'application/json'}
+]
+
+:inets.start()
+:ssl.start()
+{:ok, {{_, status, _}, _resp_headers, body}} =
+  :httpc.request(:post, {String.to_charlist(url), headers, 'application/json', Jason.encode!(payload)}, [], [])
+
+IO.puts(status)
+IO.puts(body)
+```
+
+@tab Node.js
+```js
+const base = process.env.TRIFLE_APP_URL;
+const token = process.env.TRIFLE_TOKEN;
+
+const res = await fetch(`${base}/api/v1/dashboards`, {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    name: "Quick Start",
+    key: "event::signup",
+    source: { type: "database", id: "db-uuid" },
+  }),
+});
+
+console.log(await res.json());
+```
+
+@tab Python
+```python
+import os
+import requests
+
+base = os.environ["TRIFLE_APP_URL"]
+token = os.environ["TRIFLE_TOKEN"]
+
+payload = {
+  "name": "Quick Start",
+  "key": "event::signup",
+  "source": {"type": "database", "id": "db-uuid"},
+}
+
+resp = requests.post(
+  f"{base}/api/v1/dashboards",
+  headers={"Authorization": f"Bearer {token}"},
+  json=payload,
+)
+
+print(resp.status_code)
+print(resp.json())
+```
+
+@tab PHP
+```php
+<?php
+$base = getenv("TRIFLE_APP_URL");
+$token = getenv("TRIFLE_TOKEN");
+
+$payload = [
+  "name" => "Quick Start",
+  "key" => "event::signup",
+  "source" => ["type" => "database", "id" => "db-uuid"],
+];
+
+$ch = curl_init("$base/api/v1/dashboards");
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  "Authorization: Bearer $token",
+  "Content-Type: application/json",
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$body = curl_exec($ch);
+$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+echo $code . PHP_EOL;
+echo $body;
+```
+:::
+
+### Response
+
+:::tabs
+@tab Body
+```json
+{
+  "data": {
+    "id": "dashboard-uuid",
+    "name": "Signup Overview",
+    "key": "event::signup",
+    "visibility": true,
+    "locked": false,
+    "source_type": "database",
+    "source_id": "db-uuid",
+    "organization_id": "org-uuid",
+    "user_id": "user-uuid",
+    "database_id": "db-uuid",
+    "group_id": null,
+    "position": 1,
+    "default_timeframe": "24h",
+    "default_granularity": "1h",
+    "payload": { "grid": [] },
+    "segments": [],
+    "inserted_at": "2026-01-24T12:00:00Z",
+    "updated_at": "2026-01-24T12:00:00Z"
+  }
+}
 ```
 :::
 
@@ -179,13 +607,140 @@ source | Map | optional | `{ "type": "database", "id": "..." }`.
 :::tabs
 @tab CURL
 ```sh
-curl -X PUT "https://app.trifle.io/api/v1/dashboards/DASHBOARD_ID" \
+curl -X PUT "<TRIFLE_APP_URL>/api/v1/dashboards/DASHBOARD_ID" \
   -H "Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
     "visibility": true,
     "default_timeframe": "7d"
   }'
+```
+
+@tab CURL (update grid)
+```sh
+curl -X PUT "<TRIFLE_APP_URL>/api/v1/dashboards/DASHBOARD_ID" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "payload": {
+      "grid": [
+        { "id": "kpi-1", "type": "kpi", "title": "Total", "path": "count", "function": "sum", "x": 0, "y": 0, "w": 4, "h": 3 }
+      ]
+    }
+  }'
+```
+
+@tab Ruby
+```ruby
+require "net/http"
+require "json"
+
+base = ENV.fetch("TRIFLE_APP_URL")
+token = ENV.fetch("TRIFLE_TOKEN")
+dashboard_id = "DASHBOARD_ID"
+uri = URI("#{base}/api/v1/dashboards/#{dashboard_id}")
+
+payload = { visibility: true, default_timeframe: "7d" }
+
+req = Net::HTTP::Put.new(uri)
+req["Authorization"] = "Bearer #{token}"
+req["Content-Type"] = "application/json"
+req.body = payload.to_json
+
+res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+  http.request(req)
+end
+
+puts res.code
+puts res.body
+```
+
+@tab Elixir
+```elixir
+base = System.fetch_env!("TRIFLE_APP_URL")
+token = System.fetch_env!("TRIFLE_TOKEN")
+dashboard_id = "DASHBOARD_ID"
+url = "#{base}/api/v1/dashboards/#{dashboard_id}"
+
+payload = %{"visibility" => true, "default_timeframe" => "7d"}
+
+headers = [
+  {'authorization', to_charlist("Bearer " <> token)},
+  {'content-type', 'application/json'}
+]
+
+:inets.start()
+:ssl.start()
+{:ok, {{_, status, _}, _resp_headers, body}} =
+  :httpc.request(:put, {String.to_charlist(url), headers, 'application/json', Jason.encode!(payload)}, [], [])
+
+IO.puts(status)
+IO.puts(body)
+```
+
+@tab Node.js
+```js
+const base = process.env.TRIFLE_APP_URL;
+const token = process.env.TRIFLE_TOKEN;
+const dashboardId = "DASHBOARD_ID";
+
+const res = await fetch(`${base}/api/v1/dashboards/${dashboardId}`, {
+  method: "PUT",
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ visibility: true, default_timeframe: "7d" }),
+});
+
+console.log(await res.json());
+```
+
+@tab Python
+```python
+import os
+import requests
+
+base = os.environ["TRIFLE_APP_URL"]
+token = os.environ["TRIFLE_TOKEN"]
+dashboard_id = "DASHBOARD_ID"
+
+payload = {"visibility": True, "default_timeframe": "7d"}
+
+resp = requests.put(
+  f"{base}/api/v1/dashboards/{dashboard_id}",
+  headers={"Authorization": f"Bearer {token}"},
+  json=payload,
+)
+
+print(resp.status_code)
+print(resp.json())
+```
+
+@tab PHP
+```php
+<?php
+$base = getenv("TRIFLE_APP_URL");
+$token = getenv("TRIFLE_TOKEN");
+$dashboardId = "DASHBOARD_ID";
+
+$payload = ["visibility" => true, "default_timeframe" => "7d"];
+
+$ch = curl_init("$base/api/v1/dashboards/$dashboardId");
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  "Authorization: Bearer $token",
+  "Content-Type: application/json",
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$body = curl_exec($ch);
+$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+echo $code . PHP_EOL;
+echo $body;
 ```
 :::
 
@@ -200,7 +755,99 @@ Delete a dashboard by id. Returns the deleted dashboard object.
 :::tabs
 @tab CURL
 ```sh
-curl -X DELETE "https://app.trifle.io/api/v1/dashboards/DASHBOARD_ID" \
+curl -X DELETE "<TRIFLE_APP_URL>/api/v1/dashboards/DASHBOARD_ID" \
   -H "Authorization: Bearer <TOKEN>"
+```
+
+@tab Ruby
+```ruby
+require "net/http"
+
+base = ENV.fetch("TRIFLE_APP_URL")
+token = ENV.fetch("TRIFLE_TOKEN")
+dashboard_id = "DASHBOARD_ID"
+uri = URI("#{base}/api/v1/dashboards/#{dashboard_id}")
+
+req = Net::HTTP::Delete.new(uri)
+req["Authorization"] = "Bearer #{token}"
+
+res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+  http.request(req)
+end
+
+puts res.code
+puts res.body
+```
+
+@tab Elixir
+```elixir
+base = System.fetch_env!("TRIFLE_APP_URL")
+token = System.fetch_env!("TRIFLE_TOKEN")
+dashboard_id = "DASHBOARD_ID"
+url = "#{base}/api/v1/dashboards/#{dashboard_id}"
+
+headers = [
+  {'authorization', to_charlist("Bearer " <> token)}
+]
+
+:inets.start()
+:ssl.start()
+{:ok, {{_, status, _}, _resp_headers, body}} =
+  :httpc.request(:delete, {String.to_charlist(url), headers}, [], [])
+
+IO.puts(status)
+IO.puts(body)
+```
+
+@tab Node.js
+```js
+const base = process.env.TRIFLE_APP_URL;
+const token = process.env.TRIFLE_TOKEN;
+const dashboardId = "DASHBOARD_ID";
+
+const res = await fetch(`${base}/api/v1/dashboards/${dashboardId}`, {
+  method: "DELETE",
+  headers: { Authorization: `Bearer ${token}` },
+});
+
+console.log(await res.json());
+```
+
+@tab Python
+```python
+import os
+import requests
+
+base = os.environ["TRIFLE_APP_URL"]
+token = os.environ["TRIFLE_TOKEN"]
+dashboard_id = "DASHBOARD_ID"
+
+resp = requests.delete(
+  f"{base}/api/v1/dashboards/{dashboard_id}",
+  headers={"Authorization": f"Bearer {token}"},
+)
+
+print(resp.status_code)
+print(resp.json())
+```
+
+@tab PHP
+```php
+<?php
+$base = getenv("TRIFLE_APP_URL");
+$token = getenv("TRIFLE_TOKEN");
+$dashboardId = "DASHBOARD_ID";
+
+$ch = curl_init("$base/api/v1/dashboards/$dashboardId");
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $token"]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$body = curl_exec($ch);
+$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+echo $code . PHP_EOL;
+echo $body;
 ```
 :::

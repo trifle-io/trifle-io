@@ -6,4 +6,11 @@ nav_order: 8
 
 # How to Guides
 
-List of resources how to achieve common tasks with `Trifle::Docs`
+Pick a common task and follow the guide:
+
+- [Render Menu](/trifle-docs/guides/menu)
+- [Table of Content](/trifle-docs/guides/toc)
+- [Nested Documents](/trifle-docs/guides/nested)
+- [Next & Previous Documents](/trifle-docs/guides/neighbour)
+
+Each guide assumes you already have `sitemap`, `collection`, and `meta` available in your templates.
