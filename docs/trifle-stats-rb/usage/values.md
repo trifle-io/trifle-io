@@ -17,12 +17,12 @@ You can work with values by using [Series](./series) method as well which allows
 Use to retrieve raw values from driver.
 
 :::signature values(key: String, from: Time, to: Time, granularity: String, **options) -> Hash
-key | String | required | Identifier for metrics.
-from | Time | required | Timestamp identifying beginning of a timerange.
-to | Time | required | Timestamp identifying end of timerange.
-granularity | String | required | Specific granularity you want your values in.
-config | Trifle::Stats::Configuration | optional | Instance of Configuration. Defaults to global configuration.
-skip_blanks | Boolean | optional | Instruct driver not to return empty hash in timeline when no value is being tracked.
+key | String | required |  | Identifier for metrics.
+from | Time | required |  | Timestamp identifying beginning of a timerange.
+to | Time | required |  | Timestamp identifying end of timerange.
+granularity | String | required |  | Specific granularity you want your values in.
+config | Trifle::Stats::Configuration | optional | `nil` | Instance of Configuration. Defaults to global configuration.
+skip_blanks | Boolean | optional | `false` | Instruct driver not to return empty hash in timeline when no value is being tracked.
 :::
 
 Using `from` and `to` gives you flexibility to exactly specify what data you are interested in.

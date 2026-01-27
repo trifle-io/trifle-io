@@ -73,20 +73,57 @@ module Trifle
               args_block = Regexp.last_match(2)
 
               args = args_block.lines.map(&:strip).reject(&:empty?).map do |line|
-                if line =~ /^([^|]+)\|\s*(.+)\s*\|\s*(required|optional)\s*\|\s*(.+)$/
-                  {
-                    name: Regexp.last_match(1).strip,
-                    type: Regexp.last_match(2).strip,
-                    required: Regexp.last_match(3).downcase.start_with?('req'),
-                    desc: Regexp.last_match(4).strip
-                  }
+                parts = line.split('|', 5).map(&:strip)
+                next if parts.length < 4
+
+                name = parts[0]
+                type = parts[1]
+                required_raw = parts[2]
+
+                default = nil
+                desc = nil
+                if parts.length == 4
+                  desc = parts[3]
+                else
+                  default = parts[3]
+                  desc = parts[4]
                 end
+
+                required =
+                  case required_raw.to_s.strip.downcase
+                  when 'required', 'req'
+                    true
+                  when 'optional', 'opt'
+                    false
+                  else
+                    nil
+                  end
+
+                default = default&.strip
+                default = nil if default&.empty?
+
+                {
+                  name: name,
+                  type: type,
+                  required: required,
+                  default: default,
+                  desc: desc
+                }
               end.compact
 
               arg_rows = args.map do |arg|
-                required_badge = arg[:required] ? '<span class="badge badge-required">Required</span>' : '<span class="badge badge-optional">Optional</span>'
-                desc_html = render_fragment(arg[:desc])
-                %(<div class="arg-row"><dt><code>#{arg[:name]}</code> <span class="badge badge-type">#{arg[:type]}</span> #{required_badge}</dt><dd>#{desc_html}</dd></div>)
+                badges = []
+                badges << %(<span class="badge badge-type">#{arg[:type]}</span>) if arg[:type] && !arg[:type].empty?
+                if arg[:required] == true
+                  badges << '<span class="badge badge-required">Required</span>'
+                elsif arg[:required] == false
+                  badges << '<span class="badge badge-optional">Optional</span>'
+                end
+                if arg[:default]
+                  badges << %(<span class="badge badge-default">Default: #{arg[:default]}</span>)
+                end
+                desc_html = render_fragment(arg[:desc].to_s)
+                %(<div class="arg-row"><dt><code>#{arg[:name]}</code> #{badges.join(' ')}</dt><dd>#{desc_html}</dd></div>)
               end.join
 
               %(<div class="method-card"><div class="method-card-title">Signature</div><div class="method-card-signature">`#{signature}`</div><dl class="arg-list">#{arg_rows}</dl></div>)

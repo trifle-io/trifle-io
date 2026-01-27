@@ -9,8 +9,8 @@ nav_order: 2
 You don’t need Rails, but you do need to configure `Trifle::Logs` before using it.
 
 :::signature Trifle::Logs.configure
-config | Trifle::Logs::Configuration | required | Global configuration object yielded to the block.
-returns | Trifle::Logs::Configuration | required | The configured global instance.
+config | Trifle::Logs::Configuration | required |  | Global configuration object yielded to the block.
+returns | Trifle::Logs::Configuration | required |  | The configured global instance.
 :::
 
 ## Core settings

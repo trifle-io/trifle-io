@@ -11,8 +11,8 @@ nav_order: 4
 ## `sitemap(config: nil)`
 
 :::signature Trifle::Docs.sitemap
-config | Trifle::Docs::Configuration | optional | Override the global configuration.
-returns | Hash | required | Full sitemap tree including `_meta` nodes.
+config | Trifle::Docs::Configuration | optional | `nil` | Override the global configuration.
+returns | Hash | required |  | Full sitemap tree including `_meta` nodes.
 :::
 
 Use this to render navigation or build search indexes.
@@ -29,9 +29,9 @@ Trifle::Docs.sitemap
 ## `collection(url:, config: nil)`
 
 :::signature Trifle::Docs.collection
-url | String | required | Path without leading slash (e.g., `"blog"`).
-config | Trifle::Docs::Configuration | optional | Override the global configuration.
-returns | Hash | required | One branch of the sitemap for the given URL.
+url | String | required |  | Path without leading slash (e.g., `"blog"`).
+config | Trifle::Docs::Configuration | optional | `nil` | Override the global configuration.
+returns | Hash | required |  | One branch of the sitemap for the given URL.
 :::
 
 ```ruby
@@ -42,9 +42,9 @@ Trifle::Docs.collection(url: 'blog')
 ## `content(url:, config: nil)`
 
 :::signature Trifle::Docs.content
-url | String | required | Path without leading slash (e.g., `"guides/install"`).
-config | Trifle::Docs::Configuration | optional | Override the global configuration.
-returns | String | required | Rendered HTML content.
+url | String | required |  | Path without leading slash (e.g., `"guides/install"`).
+config | Trifle::Docs::Configuration | optional | `nil` | Override the global configuration.
+returns | String | required |  | Rendered HTML content.
 :::
 
 ```ruby
@@ -55,9 +55,9 @@ Trifle::Docs.content(url: 'blog/2025-01-update')
 ## `raw_content(url:, config: nil)`
 
 :::signature Trifle::Docs.raw_content
-url | String | required | Path without leading slash (e.g., `"guides/install"`).
-config | Trifle::Docs::Configuration | optional | Override the global configuration.
-returns | String | required | Raw markdown without frontmatter.
+url | String | required |  | Path without leading slash (e.g., `"guides/install"`).
+config | Trifle::Docs::Configuration | optional | `nil` | Override the global configuration.
+returns | String | required |  | Raw markdown without frontmatter.
 :::
 
 ```ruby
@@ -68,9 +68,9 @@ Trifle::Docs.raw_content(url: 'blog/2025-01-update')
 ## `meta(url:, config: nil)`
 
 :::signature Trifle::Docs.meta
-url | String | required | Path without leading slash.
-config | Trifle::Docs::Configuration | optional | Override the global configuration.
-returns | Hash | required | Frontmatter merged with generated metadata.
+url | String | required |  | Path without leading slash.
+config | Trifle::Docs::Configuration | optional | `nil` | Override the global configuration.
+returns | Hash | required |  | Frontmatter merged with generated metadata.
 :::
 
 Metadata always includes:
@@ -94,10 +94,10 @@ Trifle::Docs.meta(url: 'blog/2025-01-update')
 ## `search(query:, scope: nil, config: nil)`
 
 :::signature Trifle::Docs.search
-query | String | required | Search query string.
-scope | String | optional | Optional URL prefix to limit search (e.g., `"blog"`).
-config | Trifle::Docs::Configuration | optional | Override the global configuration.
-returns | Array<Hash> | required | Search results ordered by score.
+query | String | required |  | Search query string.
+scope | String | optional | `nil` | Optional URL prefix to limit search (e.g., `"blog"`).
+config | Trifle::Docs::Configuration | optional | `nil` | Override the global configuration.
+returns | Array<Hash> | required |  | Search results ordered by score.
 :::
 
 Search only runs against harvesters that expose content (Markdown). File harvesters are ignored.

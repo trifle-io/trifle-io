@@ -41,10 +41,29 @@ TRIFLE_URL=https://<your-host> TRIFLE_TOKEN=<TOKEN> trifle mcp
 MCP uses the same configuration as the CLI:
 
 :::signature Common flags
---url | String | optional | Trifle base URL (fallback: `TRIFLE_URL`).
---token | String | optional | API token (fallback: `TRIFLE_TOKEN`).
---timeout | Duration | optional | HTTP timeout (default: `30s`).
+--url | String | optional |  | Trifle base URL (fallback: `TRIFLE_URL`).
+--token | String | optional |  | API token (fallback: `TRIFLE_TOKEN`).
+--timeout | Duration | optional | `30s` | HTTP timeout.
 :::
+
+## MCP Server Configuration
+
+### Claude Desktop Setup
+
+```json
+{
+  "mcpServers": {
+    "trifle": {
+      "command": "trifle",
+      "args": ["mcp"],
+      "env": {
+        "TRIFLE_URL": "http://localhost:3000",
+        "TRIFLE_TOKEN": "<TOKEN>"
+      }
+    }
+  }
+}
+```
 
 ## Agent MCP config snippets
 
@@ -134,15 +153,38 @@ File: `.continue/mcpServers/mcp.json` in your workspace.
 - On Windows, use `trifle.exe` or a full path like `C:\\path\\to\\trifle.exe`.
 :::
 
+## Available MCP Tools
+
+| Tool | Description | Parameters |
+|------|-------------|------------|
+| `list_metrics` | List metric keys from the system series | `from`, `to`, `granularity` |
+| `fetch_series` | Fetch raw series for a metric key | `key`, `from`, `to`, `granularity` |
+| `aggregate_series` | Aggregate a metric path | `key`, `value_path`, `aggregator`, `from`, `to`, `granularity`, `slices` |
+| `format_timeline` | Timeline format for a metric path | `key`, `value_path`, `from`, `to`, `granularity`, `slices` |
+| `format_category` | Category format for a metric path | `key`, `value_path`, `from`, `to`, `granularity`, `slices` |
+| `write_metric` | Track a metric event | `key`, `values`, `at` |
+| `list_transponders` | List transponders | - |
+| `delete_transponder` | Delete a transponder | `id` |
+
+:::callout note "Scope"
+- Dashboards and monitors are not exposed via MCP yet. Use the API or UI for those.
+:::
+
+## Example Prompts for AI Agents
+
+- "Track a signup event in Trifle."
+- "Show me the API latency timeline for the last 24 hours."
+- "What were yesterday's error rates by category?"
+
 ## Resources
 
 The MCP server exposes these read-only resources:
 
 :::signature Resource URIs
-trifle://source | JSON | Source configuration, defaults, granularities.
-trifle://metrics?from&to&granularity | JSON | Available metric keys (system series).
-trifle://metrics/{key}?from&to&granularity | JSON | Raw series for a specific key.
-trifle://transponders | JSON | Transponders for the active source.
+trifle://source | JSON |  |  | Source configuration, defaults, granularities.
+trifle://metrics?from&to&granularity | JSON |  |  | Available metric keys (system series).
+trifle://metrics/{key}?from&to&granularity | JSON |  |  | Raw series for a specific key.
+trifle://transponders | JSON |  |  | Transponders for the active source.
 :::
 
 Example URIs:
@@ -159,14 +201,14 @@ trifle://transponders
 The MCP server exposes the following tools:
 
 :::signature Tools
-list_metrics | list available metric keys (system series).
-fetch_series | fetch raw series for a metric key.
-aggregate_series | aggregate series (sum, mean, min, max).
-format_timeline | timeline formatting for a metric path.
-format_category | category formatting for a metric path.
-write_metric | write a metric event (project tokens only).
-list_transponders | list transponders for the active source.
-delete_transponder | delete a transponder by id.
+list_metrics | Tool |  |  | List available metric keys (system series).
+fetch_series | Tool |  |  | Fetch raw series for a metric key.
+aggregate_series | Tool |  |  | Aggregate series (sum, mean, min, max).
+format_timeline | Tool |  |  | Timeline formatting for a metric path.
+format_category | Tool |  |  | Category formatting for a metric path.
+write_metric | Tool |  |  | Write a metric event (project tokens only).
+list_transponders | Tool |  |  | List transponders for the active source.
+delete_transponder | Tool |  |  | Delete a transponder by id.
 :::
 
 ### Tool arguments

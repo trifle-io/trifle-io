@@ -13,8 +13,8 @@ Scanning works only with Beamed values. The purpose is not to find matching valu
 Use to retrieve last recived beam signal.
 
 :::signature scan(key: String, **options) -> Hash
-key | String | required | Identifier for metrics.
-config | Trifle::Stats::Configuration | optional | Instance of Configuration. Defaults to global configuration.
+key | String | required |  | Identifier for metrics.
+config | Trifle::Stats::Configuration | optional | `nil` | Instance of Configuration. Defaults to global configuration.
 :::
 
 ## Example

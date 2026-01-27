@@ -12,6 +12,32 @@ Everything below maps 1:1 to the Helm chart values in `.devops/kubernetes/helm/t
 These settings apply to the Helm chart. SaaS users don’t need to configure any of this.
 :::
 
+## High-impact values
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `app.secretKeyBase` | String | `""` | **Required**. 64+ char secret for Phoenix. |
+| `app.host` | String | `"trifle.local"` | Public host name for links and redirects. |
+| `app.deploymentMode` | String | `"self_hosted"` | `self_hosted` or `saas`. |
+| `features.projects.enabled` | Boolean | `false` | Enable project sources (requires Mongo). |
+| `app.mongodbUrl` | String | `""` | External Mongo URL (required if projects enabled). |
+| `postgresql.enabled` | Boolean | `true` | Use bundled Postgres. Disable when using external. |
+| `externalPostgresql.host` | String | `""` | External Postgres host (used when bundled DB disabled). |
+| `ingress.enabled` | Boolean | `false` | Expose via ingress. |
+| `initialUser.enabled` | Boolean | `true` | Create initial admin user at install. |
+| `initialUser.email` | String | `""` | Email for initial admin user (set this). |
+| `initialUser.password` | String | `"password"` | Initial admin password (change immediately). |
+| `app.registration.enabled` | Boolean | `true` | Allow new user signups. |
+| `app.timezone` | String | `"UTC"` | Default time zone for UI and exports. |
+| `app.logLevel` | String | `"info"` | Log verbosity. |
+| `healthCheck.enabled` | Boolean | `true` | Enable readiness/liveness probes. |
+| `persistence.enabled` | Boolean | `true` | Persist uploads on a PVC. |
+
+:::callout warn "Required secrets"
+- Set `app.secretKeyBase` in production.
+- If `features.projects.enabled: true`, configure Mongo (`app.mongodbUrl` or the Mongo sidecar).
+:::
+
 ## Example configurations
 
 :::tabs

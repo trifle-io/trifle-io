@@ -11,11 +11,11 @@ nav_order: 4
 ## `dump(namespace, payload, scope: {}, config: nil)`
 
 :::signature Trifle::Logs.dump
-namespace | String | required | Identifier for the log namespace (folder name).
-payload | Object | required | Data to store (string, hash, etc.).
-scope | Hash | optional | Key-value pairs included in the formatted log line.
-config | Trifle::Logs::Configuration | optional | Override global configuration.
-returns | String | required | The formatted log line that was stored.
+namespace | String | required |  | Identifier for the log namespace (folder name).
+payload | Object | required |  | Data to store (string, hash, etc.).
+scope | Hash | optional | `{}` | Key-value pairs included in the formatted log line.
+config | Trifle::Logs::Configuration | optional | `nil` | Override global configuration.
+returns | String | required |  | The formatted log line that was stored.
 :::
 
 ```ruby
@@ -26,12 +26,12 @@ Trifle::Logs.dump('billing', 'Charge failed', scope: { request_id: 'req-1', user
 ## `searcher(namespace, pattern: nil, min_loc: nil, max_loc: nil, config: nil)`
 
 :::signature Trifle::Logs.searcher
-namespace | String | required | Namespace to search.
-pattern | String | optional | Regex pattern (string) for ripgrep.
-min_loc | String | optional | Location marker for previous page (`"/path/file.log#100"`).
-max_loc | String | optional | Location marker for next page (`"/path/file.log#200"`).
-config | Trifle::Logs::Configuration | optional | Override global configuration.
-returns | Trifle::Logs::Operations::Searcher | required | Searcher instance with `perform`, `prev`, `next`.
+namespace | String | required |  | Namespace to search.
+pattern | String | optional | `nil` | Regex pattern (string) for ripgrep.
+min_loc | String | optional | `nil` | Location marker for previous page (`"/path/file.log#100"`).
+max_loc | String | optional | `nil` | Location marker for next page (`"/path/file.log#200"`).
+config | Trifle::Logs::Configuration | optional | `nil` | Override global configuration.
+returns | Trifle::Logs::Operations::Searcher | required |  | Searcher instance with `perform`, `prev`, `next`.
 :::
 
 ```ruby

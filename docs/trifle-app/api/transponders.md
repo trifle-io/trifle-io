@@ -157,12 +157,12 @@ echo $body;
 Create a new expression transponder.
 
 :::signature POST /api/v1/transponders
-name | String | required | Display name.
-key | String | required | Metric key to transform.
-type | String | optional | Only `Trifle.Stats.Transponder.Expression` is supported. Defaults to expression.
-config | Map | optional | Transponder config (see below). If omitted, you can send `paths`, `expression`, and `response_path` at the top level.
-enabled | Boolean | optional | Defaults to `true`.
-order | Integer | optional | Display order. Defaults to next available.
+name | String | required |  | Display name.
+key | String | required |  | Metric key to transform.
+type | String | optional | `Trifle.Stats.Transponder.Expression` | Only expression transponders are supported.
+config | Map | optional |  | Transponder config (see below). If omitted, you can send `paths`, `expression`, and `response_path` at the top level.
+enabled | Boolean | optional | `true` | Toggle on/off.
+order | Integer | optional | next | Display order.
 :::
 
 :::callout note "Config shortcuts"
@@ -172,9 +172,9 @@ order | Integer | optional | Display order. Defaults to next available.
 ### Expression config
 
 :::signature config
-paths | Array<String> | required | Metric paths (assigned to a, b, c...).
-expression | String | required | Math expression using variables a, b, c.
-response_path | String | required | Where to store the computed result.
+paths | Array<String> | required |  | Metric paths (assigned to a, b, c...).
+expression | String | required |  | Math expression using variables a, b, c.
+response_path | String | required |  | Where to store the computed result.
 :::
 
 ### Request
@@ -384,11 +384,11 @@ echo $body;
 Update an existing transponder by id.
 
 :::signature PUT /api/v1/transponders/:id
-name | String | optional | Display name.
-key | String | optional | Metric key to transform.
-config | Map | optional | Transponder config (paths/expression/response_path).
-enabled | Boolean | optional | Toggle on/off.
-order | Integer | optional | Sort order.
+name | String | optional |  | Display name.
+key | String | optional |  | Metric key to transform.
+config | Map | optional |  | Transponder config (paths/expression/response_path).
+enabled | Boolean | optional |  | Toggle on/off.
+order | Integer | optional |  | Sort order.
 :::
 
 ### Request

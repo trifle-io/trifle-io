@@ -9,10 +9,10 @@ nav_order: 1
 `track/4` increments counters for all configured granularities.
 
 :::signature Trifle.Stats.track
-key | String | required | Metric key (e.g., `"event::logs"`).
-at | DateTime | required | Timestamp of the sample.
-values | map | required | Nested maps allowed, all leaf values must be numeric.
-config | Trifle.Stats.Configuration | optional | Overrides global config.
+key | String | required |  | Metric key (e.g., `"event::logs"`).
+at | DateTime | required |  | Timestamp of the sample.
+values | map | required |  | Nested maps allowed, all leaf values must be numeric.
+config | Trifle.Stats.Configuration | optional | `nil` | Overrides global config.
 :::
 
 ## Examples

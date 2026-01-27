@@ -9,11 +9,11 @@ nav_order: 100
 `values/5` retrieves time-series values for a given granularity.
 
 :::signature Trifle.Stats.values
-key | String | required | Metric key.
-from | DateTime | required | Start timestamp.
-to | DateTime | required | End timestamp.
-granularity | String | required | Granularity string (e.g., `"1h"`, `"1d"`).
-config | Trifle.Stats.Configuration | optional | Overrides global config.
+key | String | required |  | Metric key.
+from | DateTime | required |  | Start timestamp.
+to | DateTime | required |  | End timestamp.
+granularity | String | required |  | Granularity string (e.g., `"1h"`, `"1d"`).
+config | Trifle.Stats.Configuration | optional | `nil` | Overrides global config.
 :::
 
 ## Examples

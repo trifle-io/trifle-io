@@ -9,8 +9,8 @@ nav_order: 2
 `Trifle::Docs` needs a configuration object so it knows where your files live and how to render them. You can configure it globally or pass a configuration instance into each call.
 
 :::signature Trifle::Docs.configure
-config | Trifle::Docs::Configuration | required | Global configuration object yielded to the block.
-returns | Trifle::Docs::Configuration | required | The configured global instance.
+config | Trifle::Docs::Configuration | required |  | Global configuration object yielded to the block.
+returns | Trifle::Docs::Configuration | required |  | The configured global instance.
 :::
 
 ## Core settings

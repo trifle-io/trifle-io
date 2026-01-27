@@ -286,20 +286,20 @@ Returns the same dashboard object as the list endpoint, wrapped in `data`.
 Create a new dashboard. Body can be sent at the top level or under a `dashboard` key.
 
 :::signature POST /api/v1/dashboards
-name | String | required | Dashboard name.
-key | String | required | Metric key used for widgets.
-source_type | String | required | `database` or `project`.
-source_id | String | required | Source UUID.
-visibility | Boolean | optional | Defaults to `true` for API creates.
-locked | Boolean | optional | Defaults to `false`.
-payload | Map | optional | Widget layout (default `{}`).
-segments | Array | optional | Segment definitions (default `[]`).
-position | Integer | optional | Ordering value.
-default_timeframe | String | optional | Default timeframe (e.g. `24h`).
-default_granularity | String | optional | Default granularity (e.g. `1h`).
-group_id | String | optional | Dashboard group id.
-database_id | String | optional | Alternate way to set source (database only).
-source | Map | optional | `{ "type": "database", "id": "..." }`.
+name | String | required |  | Dashboard name.
+key | String | required |  | Metric key used for widgets.
+source_type | String | required |  | `database` or `project`.
+source_id | String | required |  | Source UUID.
+visibility | Boolean | optional | `true` | Defaults to `true` for API creates.
+locked | Boolean | optional | `false` | Defaults to `false`.
+payload | Map | optional | `{}` | Widget layout.
+segments | Array | optional | `[]` | Segment definitions.
+position | Integer | optional |  | Ordering value.
+default_timeframe | String | optional |  | Default timeframe (e.g. `24h`).
+default_granularity | String | optional |  | Default granularity (e.g. `1h`).
+group_id | String | optional |  | Dashboard group id.
+database_id | String | optional |  | Alternate way to set source (database only).
+source | Map | optional |  | `{ "type": "database", "id": "..." }`.
 :::
 
 :::callout note "Source shortcuts"
@@ -586,20 +586,20 @@ echo $body;
 Update a dashboard. Body can be sent at the top level or under a `dashboard` key.
 
 :::signature PUT /api/v1/dashboards/:id
-name | String | optional | Dashboard name.
-key | String | optional | Metric key used for widgets.
-source_type | String | optional | `database` or `project`.
-source_id | String | optional | Source UUID.
-visibility | Boolean | optional | Toggle visibility.
-locked | Boolean | optional | Toggle lock.
-payload | Map | optional | Widget layout.
-segments | Array | optional | Segment definitions.
-position | Integer | optional | Ordering value.
-default_timeframe | String | optional | Default timeframe (e.g. `24h`).
-default_granularity | String | optional | Default granularity (e.g. `1h`).
-group_id | String | optional | Dashboard group id.
-database_id | String | optional | Alternate way to set source (database only).
-source | Map | optional | `{ "type": "database", "id": "..." }`.
+name | String | optional |  | Dashboard name.
+key | String | optional |  | Metric key used for widgets.
+source_type | String | optional |  | `database` or `project`.
+source_id | String | optional |  | Source UUID.
+visibility | Boolean | optional |  | Toggle visibility.
+locked | Boolean | optional |  | Toggle lock.
+payload | Map | optional |  | Widget layout.
+segments | Array | optional |  | Segment definitions.
+position | Integer | optional |  | Ordering value.
+default_timeframe | String | optional |  | Default timeframe (e.g. `24h`).
+default_granularity | String | optional |  | Default granularity (e.g. `1h`).
+group_id | String | optional |  | Dashboard group id.
+database_id | String | optional |  | Alternate way to set source (database only).
+source | Map | optional |  | `{ "type": "database", "id": "..." }`.
 :::
 
 ### Request

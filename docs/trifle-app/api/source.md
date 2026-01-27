@@ -114,15 +114,15 @@ echo $body;
 ## Response
 
 :::signature 200 OK -> JSON
-api_version | String | required | API version string.
-server_version | String | required | App version string.
-id | String | required | Source id (UUID as string).
-type | String | required | `"project"` or `"database"`.
-display_name | String | required | Human name for the source.
-default_timeframe | String | required | Default timeframe label.
-default_granularity | String | required | Default granularity (e.g. `1h`).
-available_granularities | Array<String> | required | Allowed granularities.
-time_zone | String | required | Time zone (e.g. `UTC`).
+api_version | String | required |  | API version string.
+server_version | String | required |  | App version string.
+id | String | required |  | Source id (UUID as string).
+type | String | required |  | `"project"` or `"database"`.
+display_name | String | required |  | Human name for the source.
+default_timeframe | String | required |  | Default timeframe label.
+default_granularity | String | required |  | Default granularity (e.g. `1h`).
+available_granularities | Array<String> | required |  | Allowed granularities.
+time_zone | String | required |  | Time zone (e.g. `UTC`).
 :::
 
 :::tabs

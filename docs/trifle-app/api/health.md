@@ -86,10 +86,10 @@ echo $body;
 ## Response
 
 :::signature 200 OK -> JSON
-status | String | required | Always `"ok"`.
-timestamp | ISO8601 | required | Server time in UTC.
-api_version | String | required | API version.
-server_version | String | required | Trifle app version.
+status | String | required |  | Always `"ok"`.
+timestamp | ISO8601 | required |  | Server time in UTC.
+api_version | String | required |  | API version.
+server_version | String | required |  | Trifle app version.
 :::
 
 :::tabs

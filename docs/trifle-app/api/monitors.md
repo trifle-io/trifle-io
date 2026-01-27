@@ -427,25 +427,25 @@ Returns the same monitor object as the list endpoint, wrapped in `data`.
 Create a monitor. Body can be sent at the top level or under a `monitor` key.
 
 :::signature POST /api/v1/monitors
-name | String | required | Monitor name.
-type | String | required | `report` or `alert`.
-status | String | required | `active` or `paused`.
-source_type | String | required | `database` or `project`.
-source_id | String | required | Source UUID.
-description | String | optional | Human description.
-locked | Boolean | optional | Lock the monitor.
-target | Map | optional | Target settings (alert-specific).
-segment_values | Map | optional | Segment overrides.
-dashboard_id | String | optional | Dashboard UUID (report).
-report_settings | Map | optional | Report settings.
-delivery_channels | Array | optional | Delivery channels.
-delivery_media | Array | optional | Delivery media.
-alert_metric_key | String | optional | Metric key (alert).
-alert_metric_path | String | optional | Metric path (alert).
-alert_timeframe | String | optional | Timeframe (alert).
-alert_granularity | String | optional | Granularity (alert).
-alert_notify_every | Integer | optional | Notify every N evaluations.
-alerts | Array | optional | Alert rules (replace-on-write).
+name | String | required |  | Monitor name.
+type | String | required |  | `report` or `alert`.
+status | String | required |  | `active` or `paused`.
+source_type | String | required |  | `database` or `project`.
+source_id | String | required |  | Source UUID.
+description | String | optional |  | Human description.
+locked | Boolean | optional |  | Lock the monitor.
+target | Map | optional |  | Target settings (alert-specific).
+segment_values | Map | optional |  | Segment overrides.
+dashboard_id | String | optional |  | Dashboard UUID (report).
+report_settings | Map | optional |  | Report settings.
+delivery_channels | Array | optional |  | Delivery channels.
+delivery_media | Array | optional |  | Delivery media.
+alert_metric_key | String | optional |  | Metric key (alert).
+alert_metric_path | String | optional |  | Metric path (alert).
+alert_timeframe | String | optional |  | Timeframe (alert).
+alert_granularity | String | optional |  | Granularity (alert).
+alert_notify_every | Integer | optional | `1` | Notify every N evaluations.
+alerts | Array | optional |  | Alert rules (replace-on-write).
 :::
 
 ### Request
@@ -753,25 +753,25 @@ echo $body;
 Update a monitor. Body can be sent at the top level or under a `monitor` key.
 
 :::signature PUT /api/v1/monitors/:id
-name | String | optional | Monitor name.
-type | String | optional | `report` or `alert`.
-status | String | optional | `active` or `paused`.
-source_type | String | optional | `database` or `project`.
-source_id | String | optional | Source UUID.
-description | String | optional | Human description.
-locked | Boolean | optional | Lock the monitor.
-target | Map | optional | Target settings (alert-specific).
-segment_values | Map | optional | Segment overrides.
-dashboard_id | String | optional | Dashboard UUID (report).
-report_settings | Map | optional | Report settings.
-delivery_channels | Array | optional | Delivery channels.
-delivery_media | Array | optional | Delivery media.
-alert_metric_key | String | optional | Metric key (alert).
-alert_metric_path | String | optional | Metric path (alert).
-alert_timeframe | String | optional | Timeframe (alert).
-alert_granularity | String | optional | Granularity (alert).
-alert_notify_every | Integer | optional | Notify every N evaluations.
-alerts | Array | optional | Alert rules (replace-on-write).
+name | String | optional |  | Monitor name.
+type | String | optional |  | `report` or `alert`.
+status | String | optional |  | `active` or `paused`.
+source_type | String | optional |  | `database` or `project`.
+source_id | String | optional |  | Source UUID.
+description | String | optional |  | Human description.
+locked | Boolean | optional |  | Lock the monitor.
+target | Map | optional |  | Target settings (alert-specific).
+segment_values | Map | optional |  | Segment overrides.
+dashboard_id | String | optional |  | Dashboard UUID (report).
+report_settings | Map | optional |  | Report settings.
+delivery_channels | Array | optional |  | Delivery channels.
+delivery_media | Array | optional |  | Delivery media.
+alert_metric_key | String | optional |  | Metric key (alert).
+alert_metric_path | String | optional |  | Metric path (alert).
+alert_timeframe | String | optional |  | Timeframe (alert).
+alert_granularity | String | optional |  | Granularity (alert).
+alert_notify_every | Integer | optional |  | Notify every N evaluations.
+alerts | Array | optional |  | Alert rules (replace-on-write).
 :::
 
 ### Request

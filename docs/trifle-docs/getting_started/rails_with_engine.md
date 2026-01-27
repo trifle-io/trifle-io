@@ -26,13 +26,13 @@ end
 ```
 
 :::signature Trifle::Docs::Engine.mount
-router | ActionDispatch::Routing::Mapper | required | The Rails router instance (usually `self` inside `routes.draw`).
-namespace | String | required | URL prefix (e.g., `docs`, `blog`).
-returns | void | required | Mounts the engine with a per-namespace configuration.
+router | ActionDispatch::Routing::Mapper | required |  | The Rails router instance (usually `self` inside `routes.draw`).
+namespace | String | required |  | URL prefix (e.g., `docs`, `blog`).
+returns | void | required |  | Mounts the engine with a per-namespace configuration.
 :::
 
 :::signature Trifle::Docs::Engine.draw
-returns | void | required | Adds the engine routes once (root/search/*url).
+returns | void | required |  | Adds the engine routes once (root/search/*url).
 :::
 
 ## Mounting multiple namespaces

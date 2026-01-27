@@ -31,10 +31,10 @@ Replace `<TRIFLE_APP_URL>` with `https://app.trifle.io` (SaaS) or your self-host
 Fetch a time series for a metric key.
 
 :::signature GET /api/v1/metrics
-key | String | optional | Metric key. If omitted, the system key is used.
-from | ISO8601 | required | Start timestamp.
-to | ISO8601 | required | End timestamp.
-granularity | String | required | Bucket size (e.g. `5m`, `1h`, `1d`).
+key | String | optional | `__system__key__` | Metric key. If omitted, the system key is used.
+from | ISO8601 | required |  | Start timestamp.
+to | ISO8601 | required |  | End timestamp.
+granularity | String | required |  | Bucket size (e.g. `5m`, `1h`, `1d`).
 :::
 
 :::callout note "System key"
@@ -212,9 +212,9 @@ echo $body;
 Ingest metrics into Trifle (project tokens only).
 
 :::signature POST /api/v1/metrics
-key | String | required | Metric key (e.g. `event::signup`).
-at | ISO8601 | required | Timestamp of the event.
-values | Map | required | Metrics payload. Leaves must be numeric.
+key | String | required |  | Metric key (e.g. `event::signup`).
+at | ISO8601 | required |  | Timestamp of the event.
+values | Map | required |  | Metrics payload. Leaves must be numeric.
 :::
 
 ### Request
@@ -436,14 +436,14 @@ echo $body;
 Query, aggregate, or format a metric series.
 
 :::signature POST /api/v1/metrics/query
-key | String | required | Metric key.
-from | ISO8601 | required | Start timestamp.
-to | ISO8601 | required | End timestamp.
-granularity | String | required | Bucket size (e.g. `5m`, `1h`).
-mode | String | required | `aggregate`, `timeline`, or `category`. (`format` is an alias.)
-value_path | String | required | Dot path into the metric payload.
-aggregator | String | required | Only for `aggregate`. One of `sum`, `mean`, `min`, `max`.
-slices | Integer | optional | Number of slices for the aggregation. Default: `1`.
+key | String | required |  | Metric key.
+from | ISO8601 | required |  | Start timestamp.
+to | ISO8601 | required |  | End timestamp.
+granularity | String | required |  | Bucket size (e.g. `5m`, `1h`).
+mode | String | required |  | `aggregate`, `timeline`, or `category`. (`format` is an alias.)
+value_path | String | required |  | Dot path into the metric payload.
+aggregator | String | required |  | Only for `aggregate`. One of `sum`, `mean`, `min`, `max`.
+slices | Integer | optional | `1` | Number of slices for the aggregation.
 :::
 
 :::callout note "Slices"

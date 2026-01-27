@@ -9,10 +9,10 @@ nav_order: 3
 `beam/4` stores status-style metrics (latest value per key).
 
 :::signature Trifle.Stats.beam
-key | String | required | Status key.
-at | DateTime | required | Timestamp of the ping.
-values | map | required | Payload to store.
-config | Trifle.Stats.Configuration | optional | Overrides global config.
+key | String | required |  | Status key.
+at | DateTime | required |  | Timestamp of the ping.
+values | map | required |  | Payload to store.
+config | Trifle.Stats.Configuration | optional | `nil` | Overrides global config.
 :::
 
 ## Example

@@ -11,10 +11,22 @@ You don't need to use it with Rails, but you still need to run `Trifle::Stats.co
 Configuration allows you to specify:
 
 :::signature Trifle::Stats.configure
-driver | Trifle::Stats::Driver | required | Backend driver used to store and retrieve data.
-granularities | Array | required | List of timeline granularities you would like to track. Value must be list of strings in format of "#{number}#{unit}". For example `['10m', '1h', '6h', '1d', '1w', '1mo']`.
-time_zone | TZInfo | optional | Time zone to properly generate timeline buckets. Value must be valid TZ string identifier. Defaults to `'GMT'`.
-beginning_of_week | String | optional | First day of a week to properly calculate weekly buckets. Defaults to `'monday'`.
+driver | Trifle::Stats::Driver | required |  | Backend driver used to store and retrieve data.
+granularities | Array | optional | `["1m","1h","1d","1w","1mo","1q","1y"]` | List of timeline granularities you would like to track. Value must be list of strings in format of "#{number}#{unit}". For example `['10m', '1h', '6h', '1d', '1w', '1mo']`.
+time_zone | String | optional | `"GMT"` | Time zone to properly generate timeline buckets. Value must be valid TZ string identifier.
+beginning_of_week | Symbol/String | optional | `:monday` | First day of a week to properly calculate weekly buckets.
+buffer_enabled | Boolean | optional | `true` | Enable in-memory buffer before writes.
+buffer_duration | Float | optional | `1` | Flush interval (seconds).
+buffer_size | Integer | optional | `256` | Max buffered operations before flush.
+buffer_aggregate | Boolean | optional | `true` | Aggregate increments by key before flush.
+:::
+
+:::callout note "Buffering"
+Disable buffering to write directly to the driver:
+
+```ruby
+config.buffer_enabled = false
+```
 :::
 
 Gem fallbacks to global configuration if custom configuration is not passed to method. You can do this by creating initializer, or calling it on the beginning of your ruby script.

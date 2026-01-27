@@ -38,9 +38,9 @@ Requires Go `1.22+`.
 ### Flags (override env vars)
 
 :::signature Common flags
---url | String | optional | Trifle base URL (fallback: `TRIFLE_URL`).
---token | String | optional | API token (fallback: `TRIFLE_TOKEN`).
---timeout | Duration | optional | HTTP timeout (default: `30s`).
+--url | String | optional |  | Trifle base URL (fallback: `TRIFLE_URL`).
+--token | String | optional |  | API token (fallback: `TRIFLE_TOKEN`).
+--timeout | Duration | optional | `30s` | HTTP timeout.
 :::
 
 :::callout note "SaaS vs self-hosted"

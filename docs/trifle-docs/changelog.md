@@ -6,6 +6,13 @@ nav_order: 100
 
 # Changelog
 
+### **0.7.0** - *January 27, 2026*
+  - Feature: Automatically generate sitemap.xml.
+  - Feature: Support format=md URL param and Accept: text/markdown header to display raw Markdown files.
+ gg
+### **0.6.0** - *January 27, 2026*
+  - Feature: Automatically generate llms.txt and llms-full.txt.
+
 ### **0.5.0** - *December 11, 2025*
   - Feature: Detect AI browsers and render markdown-friendly page instead.
 

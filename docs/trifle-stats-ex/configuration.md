@@ -46,11 +46,13 @@ Trifle.Stats.track("event::uploads", DateTime.utc_now(), %{count: 1}, config)
 
 - `driver` (required) — driver instance (`Trifle.Stats.Driver.Mongo.new/…`, etc.)
 - `time_zone` — TZ string (default: `"GMT"`)
-- `time_zone_database` — time zone database module
+- `time_zone_database` — time zone database module (default: `Tzdata.TimeZoneDatabase`)
 - `beginning_of_week` — `:monday` or `:sunday` (default: `:monday`)
-- `track_granularities` — list like `["1m", "1h", "1d", "1w"]`
+- `track_granularities` — list like `["1m", "1h", "1d", "1w"]` (default: all)
 - `separator` — key separator for joined identifiers (default: `"::"`)
+- `designator` — designator struct for `assort/4` bucketing
 - `driver_options` — driver-specific options (see below)
+- `buffer_enabled` / `buffer_duration` / `buffer_size` — buffered write controls
 
 ## Driver options
 

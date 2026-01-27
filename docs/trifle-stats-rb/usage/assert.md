@@ -13,10 +13,10 @@ Asserting values works same way like incrementing, but instead of increment, it 
 Use when you want to track counters at specific times, ie end of day count.
 
 :::signature assert(key: String, at: Time, values: Hash, **options) -> nil
-key | String | required | Identifier for the metric (e.g., `event::logs`).
-at | Time | required | Timestamp for the sample, usually `Time.now` or `Time.zone.now`. `Trifle::Stats` will convert to configured timezone.
-values | Hash<String, Numeric|Hash> | required | Nested hashes are allowed; every leaf must be numeric (Integer, Float, BigDecimal).
-config | Trifle::Stats::Configuration | optional | Override configuration for this call. Defaults to the global configuration when omitted.
+key | String | required |  | Identifier for the metric (e.g., `event::logs`).
+at | Time | required |  | Timestamp for the sample, usually `Time.now` or `Time.zone.now`. `Trifle::Stats` will convert to configured timezone.
+values | Hash<String, Numeric or Hash> | required |  | Nested hashes are allowed; every leaf must be numeric (Integer, Float, BigDecimal).
+config | Trifle::Stats::Configuration | optional | `nil` | Override configuration for this call. Defaults to the global configuration when omitted.
 :::
 
 ## Examples

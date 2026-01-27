@@ -9,9 +9,9 @@ nav_order: 4
 `scan/2` retrieves the latest status for a key (written by `beam/4`).
 
 :::signature Trifle.Stats.scan
-key | String | required | Status key.
-config | Trifle.Stats.Configuration | optional | Overrides global config.
-returns | {:ok, map} | required | Latest status payload.
+key | String | required |  | Status key.
+config | Trifle.Stats.Configuration | optional | `nil` | Overrides global config.
+returns | {:ok, map} | required |  | Latest status payload.
 :::
 
 ## Example
