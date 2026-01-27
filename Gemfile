@@ -7,4 +7,5 @@ ruby '3.3.5'
 
 gem 'puma'
 gem 'trifle-docs', github: 'trifle-io/trifle-docs', branch: :main
+# gem 'trifle-docs', path: '../trifle-docs'
 gem 'rackup'

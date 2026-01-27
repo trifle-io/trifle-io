@@ -130,6 +130,12 @@ echo $body;
 - In that mode, the API is read-only (database sources only).
 :::
 
+## OpenAPI
+
+Machine-readable spec is available at:
+
+`/trifle-app/api/openapi.yaml`
+
 ## Error format
 
 ### Response

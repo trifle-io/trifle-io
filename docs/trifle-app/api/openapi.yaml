@@ -1,0 +1,825 @@
+openapi: 3.0.0
+info:
+  title: Trifle App API
+  version: 1.0.0
+  description: HTTP API for Trifle App metrics, dashboards, monitors, and transponders.
+servers:
+  - url: https://app.trifle.io/api/v1
+    description: Trifle SaaS
+  - url: https://<your-host>/api/v1
+    description: Self-hosted
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Health
+  - name: Source
+  - name: Metrics
+  - name: Transponders
+  - name: Dashboards
+  - name: Monitors
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /source:
+    get:
+      tags: [Source]
+      summary: Fetch source configuration
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SourceResponse"
+
+  /metrics:
+    get:
+      tags: [Metrics]
+      summary: Fetch series data
+      parameters:
+        - in: query
+          name: key
+          schema:
+            type: string
+          description: Metric key (optional). If omitted, returns system series.
+          example: event::signup
+        - in: query
+          name: from
+          required: true
+          schema:
+            type: string
+            format: date-time
+          example: "2026-01-24T00:00:00Z"
+        - in: query
+          name: to
+          required: true
+          schema:
+            type: string
+            format: date-time
+          example: "2026-01-25T00:00:00Z"
+        - in: query
+          name: granularity
+          required: true
+          schema:
+            type: string
+          example: 1h
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetricsSeriesResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      tags: [Metrics]
+      summary: Push metrics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MetricsCreateRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetricsCreateResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /metrics/query:
+    post:
+      tags: [Metrics]
+      summary: Query metrics (aggregate, timeline, category)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MetricsQueryRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetricsQueryResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Query error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /transponders:
+    get:
+      tags: [Transponders]
+      summary: List transponders
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Transponder"
+    post:
+      tags: [Transponders]
+      summary: Create transponder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransponderRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Transponder"
+
+  /transponders/{id}:
+    put:
+      tags: [Transponders]
+      summary: Update transponder
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransponderRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Transponder"
+    delete:
+      tags: [Transponders]
+      summary: Delete transponder
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Transponder"
+
+  /dashboards:
+    get:
+      tags: [Dashboards]
+      summary: List dashboards
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Dashboard"
+    post:
+      tags: [Dashboards]
+      summary: Create dashboard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DashboardRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Dashboard"
+
+  /dashboards/{id}:
+    get:
+      tags: [Dashboards]
+      summary: Fetch dashboard
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Dashboard"
+    put:
+      tags: [Dashboards]
+      summary: Update dashboard
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DashboardRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Dashboard"
+    delete:
+      tags: [Dashboards]
+      summary: Delete dashboard
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Dashboard"
+
+  /monitors:
+    get:
+      tags: [Monitors]
+      summary: List monitors
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Monitor"
+    post:
+      tags: [Monitors]
+      summary: Create monitor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MonitorRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Monitor"
+
+  /monitors/{id}:
+    get:
+      tags: [Monitors]
+      summary: Fetch monitor
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Monitor"
+    put:
+      tags: [Monitors]
+      summary: Update monitor
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MonitorRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Monitor"
+    delete:
+      tags: [Monitors]
+      summary: Delete monitor
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Monitor"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+        timestamp:
+          type: string
+          format: date-time
+        api_version:
+          type: string
+          example: v1
+        server_version:
+          type: string
+          example: 0.11.8
+
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: object
+          additionalProperties: true
+
+    SourceResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            api_version:
+              type: string
+            server_version:
+              type: string
+            id:
+              type: string
+            type:
+              type: string
+              example: database
+            display_name:
+              type: string
+              example: Main
+            default_timeframe:
+              type: string
+              example: 24h
+            default_granularity:
+              type: string
+              example: 1h
+            available_granularities:
+              type: array
+              items:
+                type: string
+            time_zone:
+              type: string
+              example: UTC
+
+    MetricsSeriesResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            at:
+              type: array
+              items:
+                type: string
+                format: date-time
+            values:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+
+    MetricsCreateRequest:
+      type: object
+      required: [key, values, at]
+      properties:
+        key:
+          type: string
+          example: event::signup
+        at:
+          type: string
+          format: date-time
+          example: "2026-01-24T12:00:00Z"
+        values:
+          type: object
+          additionalProperties: true
+          example: { count: 1 }
+
+    MetricsCreateResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            created:
+              type: string
+              example: ok
+
+    MetricsQueryRequest:
+      type: object
+      required: [key, from, to, granularity]
+      properties:
+        mode:
+          type: string
+          enum: [aggregate, timeline, category]
+          description: Required unless format is provided.
+        format:
+          type: string
+          description: Alias for mode (aggregate, timeline, category)
+        key:
+          type: string
+        value_path:
+          type: string
+          description: Required for aggregate/timeline/category
+        aggregator:
+          type: string
+          description: Required for aggregate (sum, mean, min, max)
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        granularity:
+          type: string
+        slices:
+          type: integer
+          minimum: 1
+      example:
+        mode: aggregate
+        key: event::signup
+        value_path: count
+        aggregator: sum
+        from: "2026-01-24T00:00:00Z"
+        to: "2026-01-25T00:00:00Z"
+        granularity: 1h
+        slices: 1
+
+    MetricsQueryResponse:
+      type: object
+      additionalProperties: true
+
+    Transponder:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        key:
+          type: string
+        type:
+          type: string
+          example: Trifle.Stats.Transponder.Expression
+        config:
+          type: object
+          additionalProperties: true
+        enabled:
+          type: boolean
+        order:
+          type: integer
+        source_type:
+          type: string
+        source_id:
+          type: string
+
+    TransponderRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        key:
+          type: string
+        type:
+          type: string
+        config:
+          type: object
+          additionalProperties: true
+        paths:
+          type: array
+          items:
+            type: string
+        expression:
+          type: string
+        response_path:
+          type: string
+        enabled:
+          type: boolean
+        order:
+          type: integer
+
+    Dashboard:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        key:
+          type: string
+        visibility:
+          type: boolean
+        locked:
+          type: boolean
+        source_type:
+          type: string
+        source_id:
+          type: string
+        organization_id:
+          type: string
+        user_id:
+          type: string
+        database_id:
+          type: string
+        group_id:
+          type: string
+          nullable: true
+        position:
+          type: integer
+        default_timeframe:
+          type: string
+        default_granularity:
+          type: string
+        payload:
+          type: object
+          additionalProperties: true
+        segments:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        inserted_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    DashboardRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        key:
+          type: string
+        source_type:
+          type: string
+        source_id:
+          type: string
+        visibility:
+          type: boolean
+        locked:
+          type: boolean
+        payload:
+          type: object
+          additionalProperties: true
+        segments:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        position:
+          type: integer
+        default_timeframe:
+          type: string
+        default_granularity:
+          type: string
+        group_id:
+          type: string
+        database_id:
+          type: string
+        source:
+          type: object
+          additionalProperties: true
+
+    Monitor:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+          enum: [report, alert]
+        status:
+          type: string
+          enum: [active, paused]
+        source_type:
+          type: string
+        source_id:
+          type: string
+        description:
+          type: string
+        locked:
+          type: boolean
+        dashboard_id:
+          type: string
+        alert_metric_key:
+          type: string
+        alert_metric_path:
+          type: string
+        alert_timeframe:
+          type: string
+        alert_granularity:
+          type: string
+        alert_notify_every:
+          type: integer
+        report_settings:
+          type: object
+          additionalProperties: true
+        delivery_channels:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        delivery_media:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        alerts:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        inserted_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    MonitorRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [report, alert]
+        status:
+          type: string
+          enum: [active, paused]
+        source_type:
+          type: string
+        source_id:
+          type: string
+        description:
+          type: string
+        locked:
+          type: boolean
+        target:
+          type: object
+          additionalProperties: true
+        segment_values:
+          type: object
+          additionalProperties: true
+        dashboard_id:
+          type: string
+        report_settings:
+          type: object
+          additionalProperties: true
+        delivery_channels:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        delivery_media:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        alert_metric_key:
+          type: string
+        alert_metric_path:
+          type: string
+        alert_timeframe:
+          type: string
+        alert_granularity:
+          type: string
+        alert_notify_every:
+          type: integer
+        alerts:
+          type: array
+          items:
+            type: object
+            additionalProperties: true

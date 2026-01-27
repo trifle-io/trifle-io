@@ -13,10 +13,6 @@ The Trifle CLI talks to the Trifle App API (`/api/v1`) to fetch or submit metric
 - Dashboards and monitors are managed via the API or UI.
 :::
 
-:::callout note "Transponder deletes"
-- Delete a transponder via `trifle transponders delete --id <TRANSPONDER_ID>`.
-:::
-
 ## Install
 
 :::tabs

@@ -1,0 +1,133 @@
+# Trifle
+
+> Swiss Army knife of analytics, logging, and tracing tools (Ruby + Elixir) with a dashboarding app.
+
+## What this site contains
+- Product docs for the Trifle gems and Trifle App.
+- API/CLI/MCP reference for Trifle App.
+- Examples intended for agents (copy/paste ready).
+
+## Products
+
+### Trifle App (UI + API + CLI + MCP)
+Purpose: dashboards + monitors for Trifle Stats data, with an API for metrics and transponders.
+Auth: API token (Bearer) + base URL (`TRIFLE_URL`).
+SaaS vs self-hosted: SaaS includes Projects; self-hosted defaults to Database-only sources.
+Key docs: /trifle-app/ /trifle-app/api/ /trifle-app/cli /trifle-app/mcp /trifle-app/deployment/
+
+Example (CLI):
+```sh
+trifle metrics push --key event::signup --values '{"count":1}'
+```
+
+Example (API):
+```sh
+curl -X POST "$TRIFLE_URL/api/v1/metrics" \
+  -H "Authorization: Bearer $TRIFLE_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"key":"event::signup","at":"2026-01-27T12:00:00Z","values":{"count":1}}'
+```
+
+### Trifle::Stats (Ruby)
+Purpose: time-series metrics with pluggable drivers and granularities.
+Install: `gem "trifle-stats"`
+Key methods: `configure`, `track`, `assert`, `values`, `series`, `beam`, `scan`.
+Drivers: Redis, Postgres, MongoDB, SQLite, Process.
+
+Example:
+```ruby
+require "redis"
+
+Trifle::Stats.configure do |c|
+  c.driver = Trifle::Stats::Driver::Redis.new(Redis.new)
+  c.granularities = ["1h", "1d"]
+  c.time_zone = "UTC"
+end
+
+Trifle::Stats.track(key: "event::signup", at: Time.now.utc, values: { count: 1 })
+from = Time.now.utc - 3600
+series = Trifle::Stats.values(key: "event::signup", from: from, to: Time.now.utc, granularity: "1h")
+```
+
+### Trifle.Stats (Elixir)
+Purpose: time-series metrics for Elixir/Phoenix.
+Install: `{:trifle_stats, "~> 1.1"}`
+Key functions: `configure`, `track`, `assert`, `values`, `assort`, `beam`, `scan`.
+Drivers: Process, MongoDB, Postgres, Redis, SQLite.
+
+Example:
+```elixir
+{:ok, pid} = Trifle.Stats.Driver.Process.start_link()
+config_driver = Trifle.Stats.Driver.Process.new(pid)
+
+Trifle.Stats.configure(
+  driver: config_driver,
+  time_zone: "UTC",
+  track_granularities: [:hour, :day]
+)
+
+Trifle.Stats.track("event::signup", DateTime.utc_now(), %{count: 1})
+from = DateTime.add(DateTime.utc_now(), -3600, :second)
+series = Trifle.Stats.values("event::signup", from, DateTime.utc_now(), :hour)
+```
+
+### Trifle::Docs (Ruby)
+Purpose: map a folder of Markdown/textile/static files to URLs.
+Install: `gem "trifle-docs"`
+Key methods: `content`, `raw_content`, `meta`, `sitemap`, `collection`, `search`.
+
+Example:
+```ruby
+Trifle::Docs.configure do |c|
+  c.path = Rails.root.join("docs")
+  c.register_harvester(Trifle::Docs::Harvester::Markdown)
+  c.register_harvester(Trifle::Docs::Harvester::File)
+end
+
+Trifle::Docs.content(url: "getting_started")
+```
+
+### Trifle::Logs (Ruby)
+Purpose: file-backed logs with fast paging search.
+Install: `gem "trifle-logs"`
+Key methods: `dump`, `searcher` (with `perform`, `next`, `prev`).
+
+Example:
+```ruby
+Trifle::Logs.configure do |c|
+  c.driver = Trifle::Logs::Driver::File.new(path: "/var/logs/trifle")
+end
+
+Trifle::Logs.dump("billing", { event: "invoice_charged", amount: 42 })
+searcher = Trifle::Logs.searcher("billing", pattern: "invoice")
+result = searcher.perform
+```
+
+### Trifle::Traces (Ruby)
+Purpose: execution tracing with callbacks.
+Install: `gem "trifle-traces"`
+Key methods: `trace`, `tag`, `artifact`, `tracer=`, `fail!`, `warn!`, `ignore!`.
+
+Example:
+```ruby
+Trifle::Traces.tracer = Trifle::Traces::Tracer::Hash.new(key: "jobs/invoice_charge")
+
+Trifle::Traces.trace("Charge invoice") { charge_invoice(42) }
+Trifle::Traces.tag("invoice:42")
+Trifle::Traces.tracer.wrapup
+```
+
+## Conventions and data model
+- Metric keys are strings like `event::signup` or `service.latency`.
+- Timeframes use RFC3339 timestamps; granularities use `1h`, `5m`, `1d`.
+- Metric payloads are JSON objects with numeric leaf values.
+
+## Reference links
+- Trifle App API: /trifle-app/api/
+- Trifle App CLI: /trifle-app/cli
+- Trifle App MCP: /trifle-app/mcp
+- Trifle::Stats (Ruby) usage: /trifle-stats-rb/usage
+- Trifle.Stats (Elixir) usage: /trifle-stats-ex/usage
+- Trifle::Docs usage: /trifle-docs/usage
+- Trifle::Logs usage: /trifle-logs/usage
+- Trifle::Traces usage: /trifle-traces/usage

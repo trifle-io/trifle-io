@@ -1,6 +1,6 @@
 # Default values for trifle-io.
 
-replicaCount: 2
+replicaCount: 8
 
 image:
   repository: trifle/docs
