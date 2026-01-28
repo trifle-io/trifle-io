@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/trifle-io/trifle-docs.git
-  revision: 61d7cfb3881bdfb0726a1840793530815dc3296e
+  revision: 3654687fc86b35c63ef04663b742eab365d9ae42
   branch: main
   specs:
-    trifle-docs (0.7.0)
+    trifle-docs (0.7.1)
       redcarpet
       rouge
       sinatra

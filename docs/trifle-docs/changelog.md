@@ -6,6 +6,9 @@ nav_order: 100
 
 # Changelog
 
+### **0.7.1** - *January 28, 2026*
+  - Feature: AI browsers receive text/plain header for markdown rendered files.
+
 ### **0.7.0** - *January 27, 2026*
   - Feature: Automatically generate sitemap.xml.
   - Feature: Support format=md URL param and Accept: text/markdown header to display raw Markdown files.
