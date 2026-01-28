@@ -1,0 +1,17 @@
+# Trifle docs — LLM routing
+
+This file is intentionally short. Use plugin-specific llms files for detailed documentation.
+
+## How to navigate
+- For a quick overview of the whole project, read `/llms.txt`.
+- For a quick overview of a plugin, read `/<plugin>/llms.txt`.
+- For full docs for a plugin, read `/<plugin>/llms-full.txt`.
+
+## Plugins and their llms files
+- Trifle App (UI + API + CLI + MCP): `/trifle-app/llms.txt`, `/trifle-app/llms-full.txt`
+- Trifle::Stats (Ruby): `/trifle-stats-rb/llms.txt`, `/trifle-stats-rb/llms-full.txt`
+- Trifle.Stats (Elixir): `/trifle-stats-ex/llms.txt`, `/trifle-stats-ex/llms-full.txt`
+- Trifle::Docs (Ruby): `/trifle-docs/llms.txt`, `/trifle-docs/llms-full.txt`
+- Trifle::Logs (Ruby): `/trifle-logs/llms.txt`, `/trifle-logs/llms-full.txt`
+- Trifle::Traces (Ruby): `/trifle-traces/llms.txt`, `/trifle-traces/llms-full.txt`
+
