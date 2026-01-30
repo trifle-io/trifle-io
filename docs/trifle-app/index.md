@@ -33,7 +33,7 @@ Building charts is easy; aligning teams around data is not. Trifle App gives non
 - Dashboards, monitors, and report delivery
 - Integrations with Slack, Discord, Google SSO, and more
 - Self-hosted deployment with Helm or a SaaS option
-- Developer tooling: [CLI](/trifle-app/cli) and [MCP server](/trifle-app/mcp)
+- Developer tooling: [CLI](/trifle-cli/) and [MCP server](/trifle-cli/mcp)
 
 ## Core concepts
 

@@ -131,3 +131,7 @@ Trifle::Traces.tracer.wrapup
 - Trifle::Docs usage: /trifle-docs/usage
 - Trifle::Logs usage: /trifle-logs/usage
 - Trifle::Traces usage: /trifle-traces/usage
+
+## Notes
+- Use /sitemap.xml for site-wide discovery if needed.
+- Prefer plugin docs over blog posts for authoritative details.

@@ -21,12 +21,21 @@ Apps you can run to make your use of below plugins easier.
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 :::card "Trifle App" "Dashboards + API" "Docs" "/trifle-app/"
-Visual and automation layer for Trifle Stats. Dashboards, monitors, API, CLI, MCP.
+Visual and automation layer for Trifle Stats. Dashboards, monitors, API, and tokens.
 
 ```sh
 trifle metrics push \
   --key event::signup \
   --values '{"count":1}'
+```
+:::
+
+:::card "Trifle CLI" "API + SQLite" "Docs" "/trifle-cli/"
+Command-line tooling for Trifle metrics with API or local SQLite drivers, plus MCP server mode.
+
+```sh
+trifle metrics setup --driver sqlite --db ./stats.db
+trifle metrics get --driver sqlite --db ./stats.db --key event::signup --granularity 1h
 ```
 :::
 </div>
@@ -38,31 +47,6 @@ trifle metrics push \
 These are gems and plugins you can plug into your app to start building.
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-:::card "Trifle::Docs" "Ruby · Static docs router" "Docs" "/trifle-docs/"
-Map a folder of Markdown/textile/static files to URLs and render them in-app.
-
-```ruby
-Trifle::Docs.configure do |c|
-  c.path = Rails.root.join("docs")
-  c.register_harvester(Trifle::Docs::Harvester::Markdown)
-end
-
-Trifle::Docs.content(url: "getting_started")
-```
-:::
-
-:::card "Trifle::Logs" "Ruby · File-backed logs" "Docs" "/trifle-logs/"
-Dump logs to disk and search them locally with fast paging.
-
-```ruby
-Trifle::Logs.configure do |c|
-  c.driver = Trifle::Logs::Driver::File.new(path: "/var/logs/trifle")
-end
-
-Trifle::Logs.dump("billing", { event: "invoice_charged" })
-```
-:::
-
 :::card "Trifle::Stats" "Ruby · Time-series metrics" "Docs" "/trifle-stats-rb/"
 Track counters and numeric payloads, then read back series by granularity.
 
@@ -92,6 +76,22 @@ Trifle.Stats.track("event::signup", DateTime.utc_now(), %{count: 1})
 ```
 :::
 
+:::card "TrifleStats" "Go · Time-series metrics" "Docs" "/trifle-stats-go/"
+Go library for tracking counters and reading series with SQLite.
+
+```go
+import TrifleStats "github.com/trifle-io/trifle_stats_go"
+
+db, _ := sql.Open("sqlite", "file:stats.db?cache=shared&mode=rwc")
+driver := TrifleStats.NewSQLiteDriver(db, "trifle_stats", TrifleStats.JoinedFull)
+_ = driver.Setup()
+
+cfg := TrifleStats.DefaultConfig()
+cfg.Driver = driver
+TrifleStats.Track(cfg, "event::signup", time.Now().UTC(), map[string]any{"count": 1})
+```
+:::
+
 :::card "Trifle::Traces" "Ruby · Execution tracing" "Docs" "/trifle-traces/"
 Capture messages, return values, and metadata from code blocks.
 
@@ -102,6 +102,31 @@ Trifle::Traces.tracer = Trifle::Traces::Tracer::Hash.new(
 
 Trifle::Traces.trace("Charge invoice") { charge_invoice(42) }
 Trifle::Traces.tracer.wrapup
+```
+:::
+
+:::card "Trifle::Docs" "Ruby · Static docs router" "Docs" "/trifle-docs/"
+Map a folder of Markdown/textile/static files to URLs and render them in-app.
+
+```ruby
+Trifle::Docs.configure do |c|
+  c.path = Rails.root.join("docs")
+  c.register_harvester(Trifle::Docs::Harvester::Markdown)
+end
+
+Trifle::Docs.content(url: "getting_started")
+```
+:::
+
+:::card "Trifle::Logs" "Ruby · File-backed logs" "Docs" "/trifle-logs/"
+Dump logs to disk and search them locally with fast paging.
+
+```ruby
+Trifle::Logs.configure do |c|
+  c.driver = Trifle::Logs::Driver::File.new(path: "/var/logs/trifle")
+end
+
+Trifle::Logs.dump("billing", { event: "invoice_charged" })
 ```
 :::
 </div>

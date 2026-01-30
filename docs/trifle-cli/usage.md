@@ -1,67 +1,10 @@
 ---
-title: CLI
-description: Use the Trifle CLI to query and push metrics.
-nav_order: 4
+title: Usage
+description: Common CLI workflows for metrics and transponders.
+nav_order: 3
 ---
 
-# Trifle CLI
-
-The Trifle CLI talks to the Trifle App API (`/api/v1`) to fetch or submit metrics and manage transponders.
-
-:::callout note "Scope"
-- The CLI currently supports **metrics** and **transponders** only.
-- Dashboards and monitors are managed via the API or UI.
-:::
-
-## Install
-
-:::tabs
-@tab Download
-- Download a release from GitHub (macOS/Linux).
-- Place `trifle` somewhere on your PATH.
-
-@tab Build locally
-```sh
-cd cli
-go build -o trifle .
-```
-Requires Go `1.22+`.
-:::
-
-## Configuration
-
-### Environment variables
-
-- `TRIFLE_URL` (required): Base URL for Trifle App.
-- `TRIFLE_TOKEN` (required for non-interactive): API token.
-
-### Flags (override env vars)
-
-:::signature Common flags
---url | String | optional |  | Trifle base URL (fallback: `TRIFLE_URL`).
---token | String | optional |  | API token (fallback: `TRIFLE_TOKEN`).
---timeout | Duration | optional | `30s` | HTTP timeout.
-:::
-
-:::callout note "SaaS vs self-hosted"
-- SaaS: `TRIFLE_URL=https://app.trifle.io`
-- Self-hosted: `TRIFLE_URL=https://<your-host>`
-:::
-
-:::callout warn "URL scheme matters"
-- If you omit the scheme, the CLI assumes `http://`.
-- Use `https://` for SaaS and most self-hosted deployments.
-:::
-
-:::callout warn "Token scopes"
-- Read-only tokens work for all `metrics` read commands and `transponders list`.
-- Write tokens are required for `metrics push` and MCP `write_metric`.
-:::
-
-:::callout note "Interactive prompt"
-- If no token is provided, the CLI prompts on stdin.
-- MCP mode skips prompting (token required upfront).
-:::
+# Usage
 
 ## Quick start
 
@@ -80,6 +23,14 @@ export TRIFLE_URL="https://trifle.example.com"
 export TRIFLE_TOKEN="<READ_TOKEN>"
 
 trifle metrics get --key event::signup --from 2026-01-24T00:00:00Z --to 2026-01-25T00:00:00Z --granularity 1h
+```
+
+@tab SQLite (local)
+```sh
+trifle metrics setup --driver sqlite --db ./stats.db
+
+trifle metrics push --driver sqlite --db ./stats.db --key event::signup --values '{"count":1}'
+trifle metrics get --driver sqlite --db ./stats.db --key event::signup --granularity 1h
 ```
 
 @tab One-off (flags)
@@ -101,24 +52,53 @@ trifle metrics get \
 - If `--granularity` is omitted, the CLI uses the source default from `/api/v1/source`.
 - Value paths (`--value-path`) must be **single paths** (no wildcards).
 
+## SQLite driver
+
+Use `--driver sqlite` with a local SQLite database. Initialize the schema once:
+
+```sh
+trifle metrics setup --driver sqlite --db ./stats.db
+```
+
+If you configure sqlite as a named source, select it with `--source`:
+
+```sh
+trifle metrics get --source sqlite --key event::signup --granularity 1h
+```
+
+Supported commands:
+- `metrics push` (with `--mode track|assert`)
+- `metrics get` (with `--skip-blanks`)
+- `metrics keys` (reads `__system__key__` when available)
+- `metrics aggregate`
+- `metrics timeline`
+- `metrics category`
+
 ## Metrics
 
 ### List keys
 
 Fetch available metric keys from the system series.
 
+:::tabs
+@tab API
 ```sh
 trifle metrics keys --from 2026-01-24T00:00:00Z --to 2026-01-25T00:00:00Z
 ```
 
+@tab SQLite
+```sh
+trifle metrics keys --driver sqlite --db ./stats.db --granularity 1h
+```
+:::
+
 Output formats:
 
+:::tabs
+@tab JSON
 ```sh
-trifle metrics keys --format table
-trifle metrics keys --format csv
+trifle metrics keys --format json
 ```
-
-Sample JSON output:
 
 ```json
 {
@@ -136,7 +116,10 @@ Sample JSON output:
 }
 ```
 
-Sample table output:
+@tab Table
+```sh
+trifle metrics keys --format table
+```
 
 ```
 metric_key      observations
@@ -145,8 +128,22 @@ event::signup   42
 service.latency 18
 ```
 
-### Fetch raw series
+@tab CSV
+```sh
+trifle metrics keys --format csv
+```
 
+```
+metric_key,observations
+event::signup,42
+service.latency,18
+```
+:::
+
+### Fetch series
+
+:::tabs
+@tab API
 ```sh
 trifle metrics get \
   --key event::signup \
@@ -154,6 +151,17 @@ trifle metrics get \
   --to 2026-01-25T00:00:00Z \
   --granularity 1h
 ```
+
+@tab SQLite
+```sh
+trifle metrics get \
+  --driver sqlite \
+  --db ./stats.db \
+  --key event::signup \
+  --granularity 1h \
+  --skip-blanks
+```
+:::
 
 Sample output:
 
@@ -169,8 +177,62 @@ Sample output:
 }
 ```
 
+### Push a metric
+
+:::tabs
+@tab API
+```sh
+trifle metrics push \
+  --key event::signup \
+  --at 2026-01-24T12:00:00Z \
+  --values '{"count": 1, "duration": 0.42}'
+```
+
+@tab SQLite
+```sh
+trifle metrics push \
+  --driver sqlite \
+  --db ./stats.db \
+  --mode assert \
+  --key event::signup \
+  --at 2026-01-24T12:00:00Z \
+  --values '{"count": 5}'
+```
+:::
+
+:::callout note "Values must be numeric"
+- Trifle accepts nested maps, but every leaf must be numeric.
+:::
+
+Sample output:
+
+```json
+{ "data": { "created": "ok" } }
+```
+
+From a file:
+
+```sh
+trifle metrics push \
+  --key checkout.completed \
+  --values-file ./metric_payload.json
+```
+
+Example payload file:
+
+```json
+{
+  "count": 1,
+  "amount": 129.99,
+  "country": { "US": 1 },
+  "channel": { "organic": 1 }
+}
+```
+
 ### Aggregate series
 
+:::tabs
+@tab API
 ```sh
 trifle metrics aggregate \
   --key event::signup \
@@ -181,6 +243,21 @@ trifle metrics aggregate \
   --granularity 1h \
   --format table
 ```
+
+@tab SQLite
+```sh
+trifle metrics aggregate \
+  --driver sqlite \
+  --db ./stats.db \
+  --key event::signup \
+  --value-path count \
+  --aggregator sum \
+  --from 2026-01-24T00:00:00Z \
+  --to 2026-01-25T00:00:00Z \
+  --granularity 1h \
+  --format table
+```
+:::
 
 Sample JSON output (when `--format json`):
 
@@ -214,6 +291,8 @@ Sample JSON output (when `--format json`):
 
 ### Timeline format
 
+:::tabs
+@tab API
 ```sh
 trifle metrics timeline \
   --key service.latency \
@@ -222,6 +301,19 @@ trifle metrics timeline \
   --to 2026-01-25T00:00:00Z \
   --granularity 1h
 ```
+
+@tab SQLite
+```sh
+trifle metrics timeline \
+  --driver sqlite \
+  --db ./stats.db \
+  --key service.latency \
+  --value-path p95 \
+  --from 2026-01-24T00:00:00Z \
+  --to 2026-01-25T00:00:00Z \
+  --granularity 1h
+```
+:::
 
 Sample output:
 
@@ -250,6 +342,8 @@ Sample output:
 
 ### Category format
 
+:::tabs
+@tab API
 ```sh
 trifle metrics category \
   --key event::signup \
@@ -258,6 +352,19 @@ trifle metrics category \
   --to 2026-01-25T00:00:00Z \
   --granularity 1h
 ```
+
+@tab SQLite
+```sh
+trifle metrics category \
+  --driver sqlite \
+  --db ./stats.db \
+  --key event::signup \
+  --value-path country \
+  --from 2026-01-24T00:00:00Z \
+  --to 2026-01-25T00:00:00Z \
+  --granularity 1h
+```
+:::
 
 Sample output:
 
@@ -280,44 +387,6 @@ Sample output:
   },
   "available_paths": ["count", "country.US", "country.UK"],
   "matched_paths": ["country.US", "country.UK"]
-}
-```
-
-### Push a metric
-
-```sh
-trifle metrics push \
-  --key event::signup \
-  --at 2026-01-24T12:00:00Z \
-  --values '{"count": 1, "duration": 0.42}'
-```
-
-:::callout note "Values must be numeric"
-- Trifle accepts nested maps, but every leaf must be numeric.
-:::
-
-Sample output:
-
-```json
-{ "data": { "created": "ok" } }
-```
-
-From a file:
-
-```sh
-trifle metrics push \
-  --key checkout.completed \
-  --values-file ./metric_payload.json
-```
-
-Example payload file:
-
-```json
-{
-  "count": 1,
-  "amount": 129.99,
-  "country": { "US": 1 },
-  "channel": { "organic": 1 }
 }
 ```
 
@@ -378,33 +447,9 @@ Example file:
 {
   "name": "Double count",
   "key": "event::signup",
-  "config": {
-    "paths": ["count"],
-    "expression": "a * 2",
-    "response_path": "count_twice"
-  }
-}
-```
-
-Sample output:
-
-```json
-{
-  "data": {
-    "id": "transponder-uuid",
-    "name": "Double count",
-    "key": "event::signup",
-    "type": "Trifle.Stats.Transponder.Expression",
-    "config": {
-      "paths": ["count"],
-      "expression": "a * 2",
-      "response_path": "count_twice"
-    },
-    "enabled": true,
-    "order": 1,
-    "source_type": "database",
-    "source_id": "db-uuid"
-  }
+  "paths": ["count"],
+  "expression": "a * 2",
+  "response_path": "double_count"
 }
 ```
 
@@ -413,70 +458,13 @@ Sample output:
 ```sh
 trifle transponders update \
   --id <TRANSPONDER_ID> \
-  --payload '{ "enabled": false }'
+  --payload '{
+    "expression": "a / b"
+  }'
 ```
-
-Sample output:
-
-```json
-{
-  "data": {
-    "id": "transponder-uuid",
-    "name": "Success rate",
-    "key": "event::signup",
-    "type": "Trifle.Stats.Transponder.Expression",
-    "config": {
-      "paths": ["success", "count"],
-      "expression": "a / b",
-      "response_path": "success_rate"
-    },
-    "enabled": false,
-    "order": 1,
-    "source_type": "database",
-    "source_id": "db-uuid"
-  }
-}
-```
-
-:::callout note "Payload format"
-- `--payload` and `--payload-file` must be JSON objects.
-:::
 
 ### Delete a transponder
 
 ```sh
 trifle transponders delete --id <TRANSPONDER_ID>
 ```
-
-Sample output:
-
-```json
-{
-  "data": {
-    "id": "transponder-uuid",
-    "name": "Success rate",
-    "key": "event::signup",
-    "type": "Trifle.Stats.Transponder.Expression",
-    "config": {
-      "paths": ["success", "count"],
-      "expression": "a / b",
-      "response_path": "success_rate"
-    },
-    "enabled": false,
-    "order": 1,
-    "source_type": "database",
-    "source_id": "db-uuid"
-  }
-}
-```
-
-## Troubleshooting
-
-:::callout note "No output?"
-- Use `--from` + `--to` to widen the timeframe.
-- Confirm your token scope with `/api/v1/source`.
-:::
-
-:::callout warn "Self-hosted defaults"
-- If you self-host and keep projects disabled, `metrics push` will return `403`.
-:::

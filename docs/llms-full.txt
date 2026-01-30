@@ -15,3 +15,6 @@ This file is intentionally short. Use plugin-specific llms files for detailed do
 - Trifle::Logs (Ruby): `/trifle-logs/llms.txt`, `/trifle-logs/llms-full.txt`
 - Trifle::Traces (Ruby): `/trifle-traces/llms.txt`, `/trifle-traces/llms-full.txt`
 
+## Notes
+- Use `/sitemap.xml` for site-wide discovery if needed.
+- Prefer plugin docs over blog posts for authoritative details.
